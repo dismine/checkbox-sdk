@@ -20,9 +20,7 @@ class CheckBoxClient(BaseCheckBoxClient):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self._session = Client(
-            proxies=self.proxy, timeout=Timeout(timeout=self.timeout), verify=self.verify_ssl
-        )
+        self._session = Client(proxies=self.proxy, timeout=Timeout(timeout=self.timeout), verify=self.verify_ssl)
 
     def emit(
         self,
@@ -43,14 +41,13 @@ class CheckBoxClient(BaseCheckBoxClient):
                 json=call.payload,
             )
         except HTTPError as e:
-            raise CheckBoxError(e)
+            raise CheckBoxError(e) from e
         except NetworkError as e:
-            raise CheckBoxNetworkError(e)
+            raise CheckBoxNetworkError(e) from e
 
+        logger.debug("Request response: %s", response)
         self._check_response(response=response)
-        result = call.parse_response(storage=storage, response=response)
-
-        return result
+        return call.parse_response(storage=storage, response=response)
 
     def refresh_info(self, storage: Optional[SessionStorage] = None):
         storage = storage or self.storage
@@ -67,18 +64,23 @@ class CheckBoxClient(BaseCheckBoxClient):
         license_key: Optional[str] = None,
         storage: Optional[SessionStorage] = None,
     ) -> None:
+        """
+        Authenticate using cashier's login credentials.
+
+        This method sets the cash license key, signs in using the provided cashier's login and password,
+        and refreshes the user (cashier) information.
+
+        Args:
+            login (str): The user's login.
+            password (str): The user's password.
+            license_key (Optional[str]): The cash register license key to set.
+            storage (Optional[SessionStorage]): The session storage to use.
+
+        Returns:
+            None
+        """
         self._set_license_key(storage=storage, license_key=license_key)
         self(cashier.SignIn(login=login, password=password), storage=storage)
-        self.refresh_info(storage=storage)
-
-    def authenticate_signature(
-        self,
-        signature: bytes,
-        license_key: Optional[str] = None,
-        storage: Optional[SessionStorage] = None,
-    ) -> None:
-        self._set_license_key(storage=storage, license_key=license_key)
-        self(cashier.SignInSignature(signature=signature), storage=storage)
         self.refresh_info(storage=storage)
 
     def authenticate_pin_code(
@@ -87,6 +89,20 @@ class CheckBoxClient(BaseCheckBoxClient):
         license_key: Optional[str] = None,
         storage: Optional[SessionStorage] = None,
     ) -> None:
+        """
+        Authenticate using a PIN code (recommended method).
+
+        This method sets the cash license key, signs in using the provided cashier's PIN code,
+        and refreshes the user (cashier) information.
+
+        Args:
+            pin_code (str): The PIN code for cashier authentication.
+            license_key (Optional[str]): The cash register license key to set.
+            storage (Optional[SessionStorage]): The session storage to use.
+
+        Returns:
+            None
+        """
         self._set_license_key(storage=storage, license_key=license_key)
         self(cashier.SignInPinCode(pin_code=pin_code), storage=storage)
         self.refresh_info(storage=storage)
@@ -97,6 +113,20 @@ class CheckBoxClient(BaseCheckBoxClient):
         license_key: Optional[str] = None,
         storage: Optional[SessionStorage] = None,
     ) -> None:
+        """
+        Authenticate using a token.
+
+        This method sets the cash license key, assigns the token to the storage,
+        and refreshes the user (cashier) information. Use this method if you already have an access token.
+
+        Args:
+            token (str): The token for authentication.
+            license_key (Optional[str]): The cash register license key to set.
+            storage (Optional[SessionStorage]): The session storage to use.
+
+        Returns:
+            None
+        """
         storage = storage or self.storage
         self._set_license_key(storage=storage, license_key=license_key)
         storage.token = token
@@ -251,12 +281,11 @@ class CheckBoxClient(BaseCheckBoxClient):
                 f"{closing_transaction['response_error_message']!r}"
             )
 
-        zreport_transaction = self.wait_transaction(
+        # zreport transaction
+        return self.wait_transaction(
             transaction_id=shift["closing_transaction"]["id"],
             timeout=transaction_timeout,
         )
-
-        return zreport_transaction
 
     def create_receipt(
         self,
@@ -276,22 +305,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         if not wait:
             return receipt
 
-        shift = self.wait_status(
-            receipts.GetReceipt(receipt_id=receipt["id"]),
-            storage=storage,
-            relax=relax,
-            field="status",
-            expected_value={"DONE", "ERROR"},
-            timeout=timeout,
-        )
-        if shift["status"] == "ERROR":
-            initial_transaction = shift["transaction"]
-            raise StatusException(
-                "Receipt can not be created in due to transaction status moved to "
-                f"{initial_transaction['status']!r}: {initial_transaction['response_status']!r} "
-                f"{initial_transaction['response_error_message']!r}"
-            )
-        return shift
+        return self._check_status(receipt, storage, relax, timeout)
 
     def create_external_receipt(
         self,
@@ -304,22 +318,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         receipt = self(receipts.AddExternal(receipt, **payload), storage=storage)
         logger.info("Trying to create external receipt %s", receipt["id"])
 
-        shift = self.wait_status(
-            receipts.GetReceipt(receipt_id=receipt["id"]),
-            storage=storage,
-            relax=relax,
-            field="status",
-            expected_value={"DONE", "ERROR"},
-            timeout=timeout,
-        )
-        if shift["status"] == "ERROR":
-            initial_transaction = shift["transaction"]
-            raise StatusException(
-                "Receipt can not be created in due to transaction status moved to "
-                f"{initial_transaction['status']!r}: {initial_transaction['response_status']!r} "
-                f"{initial_transaction['response_error_message']!r}"
-            )
-        return shift
+        return self._check_status(receipt, storage, relax, timeout)
 
     def create_service_receipt(
         self,
@@ -332,30 +331,13 @@ class CheckBoxClient(BaseCheckBoxClient):
         storage: Optional[SessionStorage] = None,
     ):
         receipt = self(
-            receipts.CreateServiceReceipt(
-                payment=payment, id=id, fiscal_code=fiscal_code, fiscal_date=fiscal_date
-            ),
+            receipts.CreateServiceReceipt(payment=payment, id=id, fiscal_code=fiscal_code, fiscal_date=fiscal_date),
             storage=storage,
             # request_timeout=timeout,
         )
         logger.info("Trying to create receipt %s", receipt["id"])
 
-        shift = self.wait_status(
-            receipts.GetReceipt(receipt_id=receipt["id"]),
-            storage=storage,
-            relax=relax,
-            field="status",
-            expected_value={"DONE", "ERROR"},
-            timeout=timeout,
-        )
-        if shift["status"] == "ERROR":
-            initial_transaction = shift["transaction"]
-            raise StatusException(
-                "Receipt can not be created in due to transaction status moved to "
-                f"{initial_transaction['status']!r}: {initial_transaction['response_status']!r} "
-                f"{initial_transaction['response_error_message']!r}"
-            )
-        return shift
+        return self._check_status(receipt, storage, relax, timeout)
 
     def create_cash_withdrawal_receipt(
         self,
@@ -376,6 +358,15 @@ class CheckBoxClient(BaseCheckBoxClient):
         )
         logger.info("Trying to create receipt %s", receipt["id"])
 
+        return self._check_status(receipt, storage, relax, timeout)
+
+    def _check_status(
+        self,
+        receipt: Dict[str, Any],
+        storage: Optional[SessionStorage] = None,
+        relax: int = DEFAULT_REQUESTS_RELAX,
+        timeout: Optional[int] = None,
+    ):
         shift = self.wait_status(
             receipts.GetReceipt(receipt_id=receipt["id"]),
             storage=storage,
@@ -387,9 +378,8 @@ class CheckBoxClient(BaseCheckBoxClient):
         if shift["status"] == "ERROR":
             initial_transaction = shift["transaction"]
             raise StatusException(
-                "Receipt can not be created in due to transaction status moved to "
-                f"{initial_transaction['status']!r}: {initial_transaction['response_status']!r} "
-                f"{initial_transaction['response_error_message']!r}"
+                f"Receipt can not be created in due to transaction status moved to {initial_transaction['status']!r}: "
+                f"{initial_transaction['response_status']!r} {initial_transaction['response_error_message']!r}"
             )
         return shift
 

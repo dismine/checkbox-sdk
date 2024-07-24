@@ -40,18 +40,6 @@ class SignInPinCode(_SignInMixin, BaseMethod):
         return {"pin_code": self.pin_code}
 
 
-class SignInSignature(_SignInMixin, BaseMethod):
-    uri = SignIn.uri + "Signature"
-
-    def __init__(self, signature: bytes):
-        self.signature = signature
-
-    @property
-    def payload(self):
-        signature = base64.standard_b64encode(self.signature).decode()
-        return {"signature": signature}
-
-
 class GetMe(BaseMethod):
     method = HTTPMethod.GET
     uri = URI_PREFIX + "me"

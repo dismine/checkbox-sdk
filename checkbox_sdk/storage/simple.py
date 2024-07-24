@@ -36,6 +36,4 @@ class SessionStorage:
 
     @property
     def token_data(self) -> Optional[Dict[str, Any]]:
-        if self.token:
-            return jwt.decode(self.token, verify=False)
-        return None
+        return jwt.decode(self.token, verify=False) if self.token else None

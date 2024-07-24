@@ -2,10 +2,13 @@ from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from enum import Enum, auto
 from typing import Any, Dict, Optional
+import logging
 
 from httpx import Response
 
 from checkbox_sdk.storage.simple import SessionStorage
+
+logger = logging.getLogger(__name__)
 
 
 class HTTPMethod(Enum):
@@ -65,10 +68,11 @@ class BaseMethod(AbstractMethod, ABC):
 
     def _parse_server_date(self, response: Response) -> Optional[datetime]:
         try:
-            return datetime.strptime(
-                response.headers.get("Date", None), "%a, %d %b %Y %H:%M:%S GMT"
-            ).replace(tzinfo=timezone.utc)
+            return datetime.strptime(response.headers.get("Date", None), "%a, %d %b %Y %H:%M:%S GMT").replace(
+                tzinfo=timezone.utc
+            )
         except ValueError:
+            logger.info("Unable to parse server date")
             return None
 
 

@@ -23,7 +23,7 @@ class BaseCheckBoxClient(ABC):
         trust_env: bool = True,
         api_version: str = API_VERSION,
         storage: Optional[SessionStorage] = None,
-        client_name: str = "CheckBox Python SDK",
+        client_name: str = "checkbox-sdk",
         client_version: str = __version__,
         integration_key: Optional[str] = None,
     ) -> None:
