@@ -22,6 +22,7 @@ flake8 = "^4.0.1"
 autoflake = "^1.4"
 ipython = "^7.17.0"
 pytz = "^2023.3"
+sourcery = "^1.21.0"
 
 [tool.black]
 line-length = 119

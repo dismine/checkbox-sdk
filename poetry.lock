@@ -526,6 +526,18 @@ files = [
 ]
 
 [[package]]
+name = "sourcery"
+version = "1.21.0"
+description = "Magically refactor Python"
+optional = false
+python-versions = "*"
+files = [
+    {file = "sourcery-1.21.0-py2.py3-none-macosx_10_9_universal2.whl", hash = "sha256:a6f8cf3e34331a1e7f050d2037b39ea45cd276617a231f54044e2fa52f615113"},
+    {file = "sourcery-1.21.0-py2.py3-none-manylinux1_x86_64.whl", hash = "sha256:5fd7fb4e497335cdbf505e31f8fd14b4e27c516d7bf4a63d22ae24f47af2b125"},
+    {file = "sourcery-1.21.0-py2.py3-none-win_amd64.whl", hash = "sha256:22e2c17cba47b3bbdbe56c2fa14423d1f1e8077a16a0e8d42a32c914e279e25e"},
+]
+
+[[package]]
 name = "tomli"
 version = "2.0.1"
 description = "A lil' TOML parser"
@@ -576,4 +588,4 @@ files = [
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.8"
-content-hash = "e4e015f5b8c54b307f280fb055f7d19328f53845119e3810c4b7f4cfc1b1fd2d"
+content-hash = "77f9c903b0b57bb31d28a88d4b5c5e070196f61f9af0da4ed8cb312827780627"
