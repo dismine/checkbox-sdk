@@ -132,6 +132,20 @@ class CheckBoxClient(BaseCheckBoxClient):
         storage.token = token
         self.refresh_info(storage=storage)
 
+    def sign_out(self, storage: Optional[SessionStorage] = None) -> None:
+        """
+        Sign out cashier.
+
+        This method signs out the current user (cashier) by calling the SignOut endpoint.
+
+        Args:
+            storage (Optional[SessionStorage]): The session storage to use.
+
+        Returns:
+            None
+        """
+        self(cashier.SignOut(), storage=storage)
+
     def get_shifts(
         self,
         statuses: Optional[List[str]] = None,
@@ -148,7 +162,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         method: BaseMethod,
         expected_value: Set[Any],
         field: str = "status",
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
     ):
@@ -176,7 +190,7 @@ class CheckBoxClient(BaseCheckBoxClient):
 
     def create_shift(
         self,
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
         **kwargs: Any,
@@ -216,7 +230,7 @@ class CheckBoxClient(BaseCheckBoxClient):
 
     def close_shift(
         self,
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
         **payload,
@@ -250,7 +264,7 @@ class CheckBoxClient(BaseCheckBoxClient):
 
     def close_shift_online(
         self,
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
         transaction_timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
@@ -290,7 +304,7 @@ class CheckBoxClient(BaseCheckBoxClient):
     def create_receipt(
         self,
         receipt: Optional[Dict[str, Any]] = None,
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
         wait: bool = True,
@@ -301,24 +315,24 @@ class CheckBoxClient(BaseCheckBoxClient):
             storage=storage,
             # request_timeout=timeout,
         )
-        logger.info("Trying create receipt %s", receipt["id"])
+        logger.info("Trying create receipt %s", receipt["id"])  # type: ignore[index]
         if not wait:
             return receipt
 
-        return self._check_status(receipt, storage, relax, timeout)
+        return self._check_status(receipt, storage, relax, timeout)  # type: ignore[index,arg-type]
 
     def create_external_receipt(
         self,
         receipt: Optional[Dict[str, Any]] = None,
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
         **payload,
     ):
         receipt = self(receipts.AddExternal(receipt, **payload), storage=storage)
-        logger.info("Trying to create external receipt %s", receipt["id"])
+        logger.info("Trying to create external receipt %s", receipt["id"])  # type: ignore[index]
 
-        return self._check_status(receipt, storage, relax, timeout)
+        return self._check_status(receipt, storage, relax, timeout)  # type: ignore[index,arg-type]
 
     def create_service_receipt(
         self,
@@ -326,7 +340,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         id: Optional[str] = None,
         fiscal_code: Optional[str] = None,
         fiscal_date: Optional[datetime.datetime] = None,
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
     ):
@@ -345,7 +359,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         id: Optional[str] = None,
         fiscal_code: Optional[str] = None,
         fiscal_date: Optional[datetime.datetime] = None,
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
     ):
@@ -364,7 +378,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         self,
         receipt: Dict[str, Any],
         storage: Optional[SessionStorage] = None,
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
     ):
         shift = self.wait_status(
@@ -393,7 +407,7 @@ class CheckBoxClient(BaseCheckBoxClient):
     def wait_transaction(
         self,
         transaction_id: str,
-        relax: int = DEFAULT_REQUESTS_RELAX,
+        relax: float = DEFAULT_REQUESTS_RELAX,
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
     ):

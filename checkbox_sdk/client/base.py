@@ -49,7 +49,12 @@ class BaseCheckBoxClient(ABC):
         return headers
 
     @abstractmethod
-    def emit(self, storage: SessionStorage, method: AbstractMethod):
+    def emit(
+        self,
+        call: AbstractMethod,
+        storage: Optional[SessionStorage] = None,
+        request_timeout: Optional[float] = None,
+    ):
         pass
 
     def __call__(self, *args, **kwargs):
@@ -58,17 +63,13 @@ class BaseCheckBoxClient(ABC):
     @classmethod
     def _check_response(cls, response: Response):
         if response.status_code >= 500:
-            raise CheckBoxError(
-                f"Failed to make request [status={response.status_code}, text={response.text!r}]"
-            )
+            raise CheckBoxError(f"Failed to make request [status={response.status_code}, text={response.text!r}]")
         if response.status_code == 422:
             raise CheckBoxAPIValidationError(status=response.status_code, content=response.json())
         if response.status_code >= 400:
             raise CheckBoxAPIError(status=response.status_code, content=response.json())
 
-    def _set_license_key(
-        self, storage: Optional[SessionStorage], license_key: Optional[str]
-    ) -> None:
+    def _set_license_key(self, storage: Optional[SessionStorage], license_key: Optional[str]) -> None:
         if license_key is None:
             return
         storage = storage or self.storage

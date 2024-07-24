@@ -18,7 +18,7 @@ class CheckBoxAPIError(CheckBoxError):
     ):
         self.status = status
         self.content = content
-        self.message = content.get("message", content)
+        self.message = content.get("message", content) if self.content else content
         self.request_id = request_id
 
     def __str__(self):
