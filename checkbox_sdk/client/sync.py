@@ -1,7 +1,7 @@
 import datetime
 import logging
 import time
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional, Set, Generator
 
 from httpcore import NetworkError
 from httpx import Client, HTTPError, Timeout
@@ -145,6 +145,27 @@ class CheckBoxClient(BaseCheckBoxClient):
             None
         """
         self(cashier.SignOut(), storage=storage)
+
+    def get_cash_registers(
+        self, storage: Optional[SessionStorage] = None, limit: int = 10, offset: int = 0
+    ) -> Generator:
+        """
+        Generator to retrieve a list of available cash registers.
+
+        This function fetches cash registers using pagination and yields the results.
+
+        Args:
+            storage (Optional[SessionStorage]): The session storage to use.
+            limit (int): The maximum number of cash registers to retrieve.
+            offset (int): The offset for pagination.
+
+        Returns:
+            Generator: Yields the information of available cash registers.
+        """
+        get_cash_registers = cash_register.GetCashRegisters(limit=limit, offset=offset)
+        while (shifts_result := self(get_cash_registers, storage=storage))["results"]:
+            get_cash_registers.resolve_pagination(shifts_result).shift_next_page()
+            yield from shifts_result["results"]
 
     def get_shifts(
         self,

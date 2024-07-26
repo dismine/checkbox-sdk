@@ -1,5 +1,9 @@
 import pytest
 
+from checkbox_sdk.client.sync import CheckBoxClient
+from checkbox_sdk.storage.simple import SessionStorage
+
+
 # This code is used to facilitate testing by allowing dynamic input of credentials
 # such as cashier's login, pin code, and cash register license key.
 # Hardcoding these credentials is not an option as each user must pass their own data.
@@ -17,16 +21,27 @@ def pytest_addoption(parser):
     parser.addoption("--license_key", action="store", help="Cash register license key")
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def login(request):
     return request.config.getoption("--login")
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def pincode(request):
     return request.config.getoption("--pincode")
 
 
-@pytest.fixture
+@pytest.fixture(scope="session")
 def license_key(request):
     return request.config.getoption("--license_key")
+
+
+@pytest.fixture(scope="session")
+def auth_token(pincode, license_key):
+    # Will be executed before the first test
+    storage = SessionStorage()
+    client = CheckBoxClient(storage=storage)
+    client.authenticate_pin_code(pin_code=pincode, license_key=license_key)
+    yield storage.token
+    # Will be executed after the last test
+    client.sign_out(storage)
