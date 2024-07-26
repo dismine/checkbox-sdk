@@ -1,7 +1,7 @@
 import datetime
 import logging
 import time
-from typing import Any, Dict, List, Optional, Set, Generator
+from typing import Any, Dict, List, Optional, Set, Generator, Union
 
 from httpcore import NetworkError
 from httpx import Client, HTTPError, Timeout
@@ -166,6 +166,99 @@ class CheckBoxClient(BaseCheckBoxClient):
         while (shifts_result := self(get_cash_registers, storage=storage))["results"]:
             get_cash_registers.resolve_pagination(shifts_result).shift_next_page()
             yield from shifts_result["results"]
+
+    def get_cash_register(
+        self,
+        cash_register_id: Optional[str] = None,
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict:
+        """
+        Retrieves information about a cash register using the Checkbox SDK client based on the UUID.
+
+        This function retrieves information about a specific cash register identified by its UUID. If the UUID is not
+        provided, it attempts to use the cash register UUID from the session storage. If no UUID is found, it
+        raises a CheckBoxError.
+
+        Args:
+            cash_register_id (Optional[str]): The UUID of the cash register to retrieve information for.
+            storage (Optional[SessionStorage]): An optional session storage to use.
+
+        Returns:
+            Dict: Information about the cash register as a dictionary.
+        """
+
+        storage = storage or self.storage
+
+        if not cash_register_id:
+            if not storage.license_key:
+                raise CheckBoxError("Field cash_register_id is required")
+
+            cash_register_id = storage.cash_register.get("id")  # type: ignore[attr-defined]
+            if not cash_register_id:
+                raise CheckBoxError("Cash register ID not found in session storage")
+        elif not isinstance(cash_register_id, str):
+            raise CheckBoxError("Cash register ID must be a string")
+
+        return self(cash_register.GetCashRegister(cash_register_id=cash_register_id), storage=storage)
+
+    def ping_tax_service(
+        self,
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict[str, Any]:
+        """
+        Pings the tax service using the Checkbox SDK client and returns the response as a dictionary.
+
+        This function sends a ping request to the tax service using the Checkbox SDK client and returns the response
+        as a dictionary.
+
+        Args:
+            storage (Optional[SessionStorage]): An optional session storage to use.
+
+        Returns:
+            Dict: The response from the tax service as a dictionary.
+        """
+        return self(cash_register.PingTaxService(), storage=storage)
+
+    def go_online(
+        self,
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict[str, str]:
+        """
+        Puts the cash register online using the Checkbox SDK.
+
+        This function puts the client online to enable online operations using the Checkbox SDK.
+
+        Args:
+            storage (Optional[SessionStorage]): An optional session storage to use.
+
+        Returns:
+            Dict[str, str]: The response from putting the client online as a dictionary.
+        """
+
+        return self(cash_register.GoOnline(), storage=storage)
+
+    def go_offline(
+        self,
+        go_offline_date: Optional[Union[datetime.datetime, str]] = None,
+        fiscal_code: Optional[str] = None,
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict[str, str]:
+        """
+        Puts the cash register offline using the Checkbox SDK.
+
+        This function puts the cash register offline to disable online operations using the Checkbox SDK.
+
+        Args:
+            go_offline_date (Optional[Union[datetime.datetime, str]]): The date and time to go offline after the last
+            successful transaction.
+            fiscal_code (Optional[str]): The fiscal code that was not used before.
+            storage (Optional[SessionStorage]): An optional session storage to use.
+
+        Returns:
+            Dict[str, str]: The response from putting the cash register offline as a dictionary.
+        """
+
+        return self(cash_register.GoOffline(go_offline_date=go_offline_date, fiscal_code=fiscal_code), storage=storage)
 
     def get_shifts(
         self,
@@ -418,11 +511,31 @@ class CheckBoxClient(BaseCheckBoxClient):
             )
         return shift
 
-    def get_offline_codes(self, count: int = 2000):
-        logger.info("Ask offline codes (count=%d)", count)
-        self(cash_register.AskOfflineCodes(count=count, sync=True))
+    def get_offline_codes(self, ask_count: int = 2000, threshold: int = 500) -> List[str]:
+        """
+        Retrieves offline codes for fiscal transactions using the Checkbox SDK.
+
+        This function requests and loads offline codes for fiscal transactions, returning a list of fiscal codes.
+
+        Args:
+            ask_count (int): The number of offline codes to retrieve (default is 2000).
+            threshold (int): The number of minimal number of offline codes after which new set will be asked from the
+            tax server
+
+        Returns:
+            List[str]: A list of fiscal codes for offline transactions.
+        """
+        logger.info("Checking available number of offline codes...")
+        response = self(cash_register.GetOfflineCodesCount())
+        if not response.get("enough_offline_codes", False):
+            return []
+
+        if response.get("available", 0) <= threshold:
+            logger.info("Ask for more offline codes (count=%d)", ask_count)
+            self(cash_register.AskOfflineCodes(count=ask_count, sync=True))
+
         logger.info("Load offline codes...")
-        codes = self(cash_register.GetOfflineCodes(count=count))
+        codes = self(cash_register.GetOfflineCodes(count=ask_count))
         return [item["fiscal_code"] for item in codes]
 
     def wait_transaction(

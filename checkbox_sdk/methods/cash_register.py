@@ -29,6 +29,11 @@ class GetCashRegisterInfo(BaseMethod):
         return result
 
 
+class PingTaxService(BaseMethod):
+    uri: str = "cash-registers/ping-tax-service"
+    method = HTTPMethod.POST
+
+
 class AskOfflineCodes(BaseMethod):
     uri = "cash-registers/ask-offline-codes"
 
@@ -97,3 +102,7 @@ class UpdateForceSeamlessMode(BaseMethod):
         payload = super().payload
         payload["new_status"] = self.new_status
         return payload
+
+
+class GetOfflineCodesCount(BaseMethod):
+    uri = "cash-registers/get-offline-codes-count"

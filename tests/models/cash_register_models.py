@@ -65,6 +65,15 @@ class OrdersSourceEnum(str, Enum):
     FOXTROT = "FOXTROT"
 
 
+class PingStatusEnum(str, Enum):
+    CREATED = "CREATED"
+    PENDING = "PENDING"
+    SIGNED = "SIGNED"
+    DELIVERED = "DELIVERED"
+    DONE = "DONE"
+    ERROR = "ERROR"
+
+
 class OrganizationSchema(CheckboxBaseModel):
     id: UUID
     title: str
@@ -335,3 +344,8 @@ class CashRegistersInfoSchema(CheckboxBaseModel):
     object_type: Optional[str] = None
     show_type_object: Optional[bool] = None
     date_field: Optional[datetime] = Field(None, alias="@date")
+
+
+class PingSchema(CheckboxBaseModel):
+    status: PingStatusEnum
+    error: Optional[str] = None
