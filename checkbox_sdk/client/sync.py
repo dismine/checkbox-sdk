@@ -263,10 +263,35 @@ class CheckBoxClient(BaseCheckBoxClient):
     def get_shifts(
         self,
         statuses: Optional[List[str]] = None,
-        limit: int = 10,
+        desc: Optional[bool] = False,
+        from_date: Optional[Union[datetime.datetime, str]] = None,
+        to_date: Optional[Union[datetime.datetime, str]] = None,
+        limit: Optional[int] = 10,
+        offset: Optional[int] = 0,
         storage: Optional[SessionStorage] = None,
-    ):
-        get_shift = shifts.GetShifts(statuses=statuses, limit=limit)
+    ) -> Generator:
+        """
+        Retrieves shifts information using the Checkbox SDK.
+
+        This function retrieves shifts information based on specified filters like statuses, date range, limit, and
+        offset, yielding results in batches.
+
+        Args:
+            statuses (Optional[List[str]]): A list of statuses to filter shifts.
+            desc (Optional[bool]): A flag to indicate descending order (default is False).
+            from_date (Optional[Union[datetime.datetime, str]]): The start date for filtering shifts.
+            to_date (Optional[Union[datetime.datetime, str]]): The end date for filtering shifts.
+            limit (Optional[int]): The maximum number of shifts to retrieve (default is 10).
+            offset (Optional[int]): The offset for pagination (default is 0).
+            storage (Optional[SessionStorage]): An optional session storage to use.
+
+        Returns:
+            Generator: A generator yielding shifts information in batches.
+        """
+
+        get_shift = shifts.GetShifts(
+            statuses=statuses, desc=desc, from_date=from_date, to_date=to_date, limit=limit, offset=offset
+        )
         while (shifts_result := self(get_shift, storage=storage))["results"]:
             get_shift.resolve_pagination(shifts_result).shift_next_page()
             yield from shifts_result["results"]
@@ -308,7 +333,22 @@ class CheckBoxClient(BaseCheckBoxClient):
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
         **kwargs: Any,
-    ):
+    ) -> Dict:
+        """
+        Creates a shift using the Checkbox SDK and handles shift status checks and exceptions.
+
+        This function creates a shift, refreshes information, and ensures the shift is successfully opened or handles
+        exceptions if the shift cannot be opened.
+
+        Args:
+            relax (float): The relaxation time for requests (default is DEFAULT_REQUESTS_RELAX).
+            timeout (Optional[int]): The timeout duration for the request.
+            storage (Optional[SessionStorage]): An optional session storage to use.
+            **kwargs (Any): Additional keyword arguments for creating the shift.
+
+        Returns:
+            Dict: Information about the created or updated shift.
+        """
         storage = storage or self.storage
         self.refresh_info(storage=storage)
         if storage.shift is not None:
@@ -348,7 +388,23 @@ class CheckBoxClient(BaseCheckBoxClient):
         timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
         **payload,
-    ):
+    ) -> Union[Dict, None]:
+        """
+        Closes a shift using the Checkbox SDK and handles shift status checks and exceptions.
+
+        This function closes the current shift, refreshes information, and ensures the shift is successfully closed or
+        handles exceptions if the shift cannot be closed.
+
+        Args:
+            relax (float): The relaxation time for requests (default is DEFAULT_REQUESTS_RELAX).
+            timeout (Optional[int]): The timeout duration for the request.
+            storage (Optional[SessionStorage]): An optional session storage to use.
+            **payload: Additional keyword arguments for closing the shift.
+
+        Returns:
+            Union[Dict, None]: The Z report of the closed shift or None if the shift is already closed.
+        """
+
         storage = storage or self.storage
         self.refresh_info(storage=storage)
         if storage.shift is None:

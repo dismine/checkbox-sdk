@@ -23,7 +23,7 @@ def test_get_cash_registers(auth_token, license_key):
 def test_get_cash_register(auth_token, license_key):
     # sourcery skip: no-conditionals-in-tests
     if not license_key:
-        pytest.skip("License key is empty")
+        pytest.fail("License key is empty")
 
     storage = SessionStorage()
     client = CheckBoxClient(storage=storage)
@@ -56,7 +56,7 @@ def test_get_cash_register(auth_token, license_key):
 def test_ping_tax_service(auth_token, license_key):
     # sourcery skip: no-conditionals-in-tests
     if not license_key:
-        pytest.skip("License key is empty")
+        pytest.fail("License key is empty")
 
     storage = SessionStorage()
     client = CheckBoxClient(storage=storage)
@@ -73,11 +73,14 @@ def test_ping_tax_service(auth_token, license_key):
 def test_go_online(auth_token, license_key):
     # sourcery skip: no-conditionals-in-tests
     if not license_key:
-        pytest.skip("License key is empty")
+        pytest.fail("License key is empty")
 
     storage = SessionStorage()
     client = CheckBoxClient(storage=storage)
     client.authenticate_token(auth_token, license_key=license_key)
+
+    register = client.get_cash_register(storage.cash_register["id"])
+    assert register["is_test"], "Not test cash register"
 
     response = client.go_online(storage)
     assert response["status"] == "ok"
@@ -89,11 +92,14 @@ def test_go_online(auth_token, license_key):
 def test_go_offline(auth_token, license_key):
     # sourcery skip: no-conditionals-in-tests
     if not license_key:
-        pytest.skip("License key is empty")
+        pytest.fail("License key is empty")
 
     storage = SessionStorage()
     client = CheckBoxClient(storage=storage)
     client.authenticate_token(auth_token, license_key=license_key)
+
+    register = client.get_cash_register(storage.cash_register["id"])
+    assert register["is_test"], "Not test cash register"
 
     if storage.cash_register["offline_mode"]:
         pytest.skip("Cash register in offline mode")
