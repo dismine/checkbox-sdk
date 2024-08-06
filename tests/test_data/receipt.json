@@ -1,0 +1,37 @@
+{
+  "goods": [
+    {
+      "good": {
+        "code": "T100",
+        "name": "Тестовий товар 1",
+        "price": 5500
+      },
+      "quantity": 1000
+    },
+    {
+      "good": {
+        "code": "T200",
+        "name": "Тестовий товар 2",
+        "price": 15200
+      },
+      "quantity": 1000
+    }
+  ],
+  "delivery": {
+    "email": "dismine@gmail.com"
+  },
+  "discounts": [
+    {
+      "type": "DISCOUNT",
+      "mode": "VALUE",
+      "value": 2500,
+      "name": "Знижка"
+    }
+  ],
+  "payments": [
+    {
+      "type": "CASHLESS",
+      "value": 18200
+    }
+  ]
+}

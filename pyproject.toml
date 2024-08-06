@@ -30,6 +30,7 @@ mypy = "^1.11.0"
 coverage = "^7.6.0"
 types-pyjwt = "^1.7.1"
 pydantic = "^2.8.2"
+pytest-asyncio = "^0.23.8"
 
 [tool.black]
 line-length = 119

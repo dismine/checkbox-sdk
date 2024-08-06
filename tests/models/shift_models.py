@@ -142,7 +142,7 @@ class ZReportSchema(CheckboxBaseModel):
     extra_charge_sum: Optional[int]
     transaction_fail: Optional[bool] = False
     rates: Optional[List[RateSchema]]
-    fiscal_api_type: Optional[FiscalApiTypeEnum]
+    fiscal_api_type: Optional[FiscalApiTypeEnum] = None
 
 
 class TransactionSchema(CheckboxBaseModel):
@@ -208,11 +208,11 @@ class ShiftSchema(CheckboxBaseModel):
     updated_at: Optional[datetime]
     balance: Optional[BalanceSchema]
     taxes: List[TaxesSchema]
-    fiscal_api_type: Optional[FiscalApiTypeEnum]
-    evpez_shift_id: Optional[str]
+    fiscal_api_type: Optional[FiscalApiTypeEnum] = None
+    evpez_shift_id: Optional[str] = None
     emergency_close: Optional[bool]
     emergency_close_details: Optional[str]
-    cashier: CashierSchema
+    cashier: Optional[CashierSchema] = None
 
 
 class CashRegisterSchema(CheckboxBaseModel):
