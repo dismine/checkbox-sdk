@@ -54,61 +54,69 @@ def test_get_receipts_search(auth_token, license_key):
                 pytest.fail(f"Receipt validation schema failed: {e}")
 
 
-def test_receipts(auth_token, license_key):
+def test_receipts(auth_token, license_key, check_receipt_creation):
+    # sourcery skip: no-conditionals-in-tests
+    if not check_receipt_creation:
+        pytest.skip("Skip testing receipt creation")
+
     assert license_key, "License key is empty"
 
     storage = SessionStorage()
     with CheckBoxClient(storage=storage) as client:
-        client.cashier.authenticate_token(auth_token, license_key=license_key)
+        create_receipt(client, auth_token, license_key, storage)
 
-        assert storage.cash_register["is_test"], "Not test cash register"
 
-        current_date = datetime.now().date()
-        auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
+def create_receipt(client, auth_token, license_key, storage):
+    client.cashier.authenticate_token(auth_token, license_key=license_key)
 
-        with contextlib.suppress(CheckBoxAPIError):
-            shift = client.shifts.create_shift(timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat())
-            try:
-                model = ShiftSchema(**shift)
-                assert model is not None
-            except ValidationError as e:
-                pytest.fail(f"Shift validation schema failed: {e}")
+    assert storage.cash_register["is_test"], "Not test cash register"
 
-            assert shift["status"] == "OPENED", "Failed to open shift"
+    current_date = datetime.now().date()
+    auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
 
-        payment_value = 550 * 100
-        payment = {"value": payment_value}
-        response = create_service_receipt(client, payment, "SERVICE_IN")
-        assert response["payments"][0]["value"] == payment_value
-
-        base_path = pathlib.Path(__file__).resolve().parent.parent
-        receipt_path = base_path / "test_data/receipt.json"
-        receipt_data = json.loads(receipt_path.resolve().read_text())
-        receipt = client.receipts.create_receipt(
-            receipt=receipt_data,
-            timeout=5,
-            storage=storage,
-        )
-
+    with contextlib.suppress(CheckBoxAPIError):
+        shift = client.shifts.create_shift(timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat())
         try:
-            model = ReceiptSchema(**receipt)
+            model = ShiftSchema(**shift)
             assert model is not None
         except ValidationError as e:
-            pytest.fail(f"Receipt validation schema failed: {e}")
+            pytest.fail(f"Shift validation schema failed: {e}")
 
-        payment = {"value": -payment_value}
-        response = create_service_receipt(client, payment, "SERVICE_OUT")
-        assert response["payments"][0]["value"] == payment_value
+        assert shift["status"] == "OPENED", "Failed to open shift"
 
-        with contextlib.suppress(ValueError):
-            z_report = client.shifts.close_shift(timeout=5, storage=storage)
-            try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
-                    model = ZReportSchema(**z_report)
-                    assert model is not None
-            except ValidationError as e:
-                pytest.fail(f"Z report validation schema failed: {e}")
+    payment_value = 550 * 100
+    payment = {"value": payment_value}
+    response = create_service_receipt(client, payment, "SERVICE_IN")
+    assert response["payments"][0]["value"] == payment_value
+
+    base_path = pathlib.Path(__file__).resolve().parent.parent
+    receipt_path = base_path / "test_data/receipt.json"
+    receipt_data = json.loads(receipt_path.resolve().read_text())
+    receipt = client.receipts.create_receipt(
+        receipt=receipt_data,
+        timeout=5,
+        storage=storage,
+    )
+
+    try:
+        model = ReceiptSchema(**receipt)
+        assert model is not None
+    except ValidationError as e:
+        pytest.fail(f"Receipt validation schema failed: {e}")
+
+    payment = {"value": -payment_value}
+    response = create_service_receipt(client, payment, "SERVICE_OUT")
+    assert response["payments"][0]["value"] == payment_value
+
+    with contextlib.suppress(ValueError):
+        z_report = client.shifts.close_shift(timeout=5, storage=storage)
+        try:
+            # sourcery skip: no-conditionals-in-tests
+            if z_report:
+                model = ZReportSchema(**z_report)
+                assert model is not None
+        except ValidationError as e:
+            pytest.fail(f"Z report validation schema failed: {e}")
 
 
 def create_service_receipt(client, payment, type):

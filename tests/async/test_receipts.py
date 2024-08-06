@@ -57,7 +57,11 @@ async def test_get_receipts_search(auth_token, license_key):
 
 
 @pytest.mark.asyncio
-async def test_receipts(auth_token, license_key):
+async def test_receipts(auth_token, license_key, check_receipt_creation):
+    # sourcery skip: no-conditionals-in-tests
+    if not check_receipt_creation:
+        pytest.skip("Skip testing receipt creation")
+
     assert license_key, "License key is empty"
 
     storage = SessionStorage()
