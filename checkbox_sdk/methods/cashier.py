@@ -1,5 +1,3 @@
-import base64
-
 from httpx import Response
 
 from checkbox_sdk.methods.base import BaseMethod, HTTPMethod
@@ -18,7 +16,7 @@ class _SignInMixin:
 
 
 class SignIn(_SignInMixin, BaseMethod):
-    uri = URI_PREFIX + "signin"
+    uri = f"{URI_PREFIX}signin"
 
     def __init__(self, login: str, password: str):
         self.login = login
@@ -30,7 +28,7 @@ class SignIn(_SignInMixin, BaseMethod):
 
 
 class SignInPinCode(_SignInMixin, BaseMethod):
-    uri = SignIn.uri + "PinCode"
+    uri = f"{SignIn.uri}PinCode"
 
     def __init__(self, pin_code: str):
         self.pin_code = pin_code
@@ -40,19 +38,9 @@ class SignInPinCode(_SignInMixin, BaseMethod):
         return {"pin_code": self.pin_code}
 
 
-class GetMe(BaseMethod):
-    method = HTTPMethod.GET
-    uri = URI_PREFIX + "me"
-
-    def parse_response(self, storage: SessionStorage, response: Response):
-        result = super().parse_response(storage=storage, response=response)
-        storage.cashier = result
-        return result
-
-
 class SignOut(BaseMethod):
     method = HTTPMethod.POST
-    uri = URI_PREFIX + "signout"
+    uri = f"{URI_PREFIX}signout"
 
     def parse_response(self, storage: SessionStorage, response: Response):
         result = super().parse_response(storage=storage, response=response)
@@ -64,8 +52,18 @@ class SignOut(BaseMethod):
         return result
 
 
+class GetMe(BaseMethod):
+    method = HTTPMethod.GET
+    uri = f"{URI_PREFIX}me"
+
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        storage.cashier = result
+        return result
+
+
 class GetActiveShift(BaseMethod):
-    uri = URI_PREFIX + "shift"
+    uri = f"{URI_PREFIX}shift"
 
     def parse_response(self, storage: SessionStorage, response: Response):
         result = super().parse_response(storage=storage, response=response)
@@ -74,8 +72,12 @@ class GetActiveShift(BaseMethod):
 
 
 class GetSignatureKey(BaseMethod):
-    uri = URI_PREFIX + "check-signature"
+    uri = f"{URI_PREFIX}check-signature"
 
     def parse_response(self, storage: SessionStorage, response: Response):
         result = super().parse_response(storage=storage, response=response)
         return result.get("shift_open_possibility", True)
+
+
+class GetAllTaxesByCashier(BaseMethod):
+    uri = f"{URI_PREFIX}tax"

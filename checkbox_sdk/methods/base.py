@@ -1,8 +1,8 @@
+import logging
 from abc import ABC, abstractmethod
 from datetime import datetime, timezone
 from enum import Enum, auto
 from typing import Any, Dict, Optional
-import logging
 
 from httpx import Response
 
@@ -21,6 +21,9 @@ class HTTPMethod(Enum):
 
 class AbstractMethod(ABC):
     method: HTTPMethod = HTTPMethod.GET
+    # Some APIs do not follow regular convention: base_url/api/api_version/uri.
+    # For example, /_internal/orders/{order_id}
+    internal: bool = False
 
     @property
     @abstractmethod
@@ -42,6 +45,11 @@ class AbstractMethod(ABC):
     def headers(self):
         pass
 
+    @property
+    @abstractmethod
+    def files(self):
+        pass
+
     @abstractmethod
     def parse_response(self, storage: SessionStorage, response: Response):
         pass
@@ -58,6 +66,10 @@ class BaseMethod(AbstractMethod, ABC):
 
     @property
     def headers(self):
+        return {}
+
+    @property
+    def files(self):
         return {}
 
     def parse_response(self, storage: SessionStorage, response: Response):

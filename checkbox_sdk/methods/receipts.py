@@ -1,35 +1,163 @@
 import datetime
-from typing import Any, Dict, Optional
+from typing import Dict, Optional, List, Union
+from uuid import UUID
 
 from httpx import Response
 
 from checkbox_sdk.methods.base import BaseMethod, HTTPMethod, PaginationMixin
 from checkbox_sdk.storage.simple import SessionStorage
 
+URI_PREFIX = "receipts/"
+
 
 class GetReceipts(PaginationMixin, BaseMethod):
     uri = "receipts"
 
+    def __init__(
+        self,
+        fiscal_code: Optional[str] = None,
+        serial: Optional[int] = None,
+        desc: Optional[bool] = False,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+        if fiscal_code is not None and serial is not None:
+            raise ValueError("'fiscal_code' and 'serial' can not be passed together")
+
+        self.fiscal_code = fiscal_code
+        self.serial = serial
+        self.desc = desc
+
+    @property
+    def query(self):
+        query = super().query
+
+        if self.fiscal_code is not None:
+            query["fiscal_code"] = self.fiscal_code
+
+        if self.serial is not None:
+            query["serial"] = self.serial
+
+        if self.desc is not None:
+            query["desc"] = self.desc
+
+        return query
+
+
+class GetReceiptsSearch(PaginationMixin, BaseMethod):
+    uri = f"{URI_PREFIX}search"
+
+    def __init__(
+        self,
+        fiscal_code: Optional[str] = None,
+        barcode: Optional[str] = None,
+        shift_id: Optional[List[str]] = None,
+        branch_id: Optional[List[str]] = None,
+        cash_register_id: Optional[List[str]] = None,
+        stock_code: Optional[str] = None,
+        desc: Optional[bool] = False,
+        from_date: Optional[Union[datetime.datetime, str]] = None,
+        to_date: Optional[Union[datetime.datetime, str]] = None,
+        self_receipts: Optional[bool] = True,
+        *args,
+        **kwargs,
+    ):
+        super().__init__(*args, **kwargs)
+
+        self.fiscal_code = fiscal_code
+        self.barcode = barcode
+        self.shift_id = shift_id
+        self.branch_id = branch_id
+        self.cash_register_id = cash_register_id
+        self.stock_code = stock_code
+        self.from_date = from_date
+        self.to_date = to_date
+        self.desc = desc
+        self.self_receipts = self_receipts
+
+    @property
+    def query(self):
+        query = super().query
+
+        if self.fiscal_code is not None:
+            query["fiscal_code"] = self.fiscal_code
+
+        if self.barcode is not None:
+            query["barcode"] = self.barcode
+
+        if self.shift_id is not None:
+            query["shift_id"] = self.shift_id
+
+        if self.branch_id is not None:
+            query["branch_id"] = self.branch_id
+
+        if self.cash_register_id is not None:
+            query["cash_register_id"] = self.cash_register_id
+
+        if self.stock_code is not None:
+            query["stock_code"] = self.stock_code
+
+        if isinstance(self.from_date, datetime.datetime):
+            query["from_date"] = self.from_date.isoformat()
+        elif self.from_date:
+            query["from_date"] = self.from_date
+
+        if isinstance(self.to_date, datetime.datetime):
+            query["to_date"] = self.to_date.isoformat()
+        elif self.to_date:
+            query["to_date"] = self.to_date
+
+        if self.desc is not None:
+            query["desc"] = self.desc
+
+        if self.self_receipts is not None:
+            query["self_receipts"] = self.self_receipts
+
+        return query
+
 
 class GetReceipt(BaseMethod):
-    def __init__(self, receipt_id: str):
+    def __init__(self, receipt_id: Union[str, UUID]):
         self.receipt_id = receipt_id
 
     @property
     def uri(self) -> str:
-        return f"receipts/{self.receipt_id}"
+        receipt_id_str = str(self.receipt_id) if isinstance(self.receipt_id, UUID) else self.receipt_id
+        return f"{URI_PREFIX}{receipt_id_str}"
+
+
+class CreateBulkReceipts(BaseMethod):
+    method = HTTPMethod.POST
+    uri = f"{URI_PREFIX}bulk-sell"
+
+    def __init__(
+        self,
+        receipts: Optional[List[Dict]] = None,
+        **payload,
+    ):
+        if receipts is not None and payload:
+            raise ValueError("'receipts' and '**payload' can not be passed together")
+        self.receipts = receipts or payload
+
+    @property
+    def payload(self):
+        payload = super().payload
+        payload["receipts"] = self.receipts
+        return payload
 
 
 class CreateReceipt(BaseMethod):
     method = HTTPMethod.POST
-    uri = "receipts/sell"
+    uri = f"{URI_PREFIX}sell"
 
     def __init__(
         self,
         receipt: Optional[Dict] = None,
         **payload,
     ):
-        if receipt is not None and payload is not None:
+        if receipt is not None and payload:
             raise ValueError("'receipt' and '**payload' can not be passed together")
         self.receipt = receipt or payload
 
@@ -52,53 +180,32 @@ class CreateReceipt(BaseMethod):
         return result
 
 
-class DeleteReceipt(BaseMethod):
-    method = HTTPMethod.DELETE
-
-    def __init__(self, receipt_id: str):
-        self.receipt_id = receipt_id
-
-    @property
-    def uri(self) -> str:
-        return f"receipts/{self.receipt_id}"
+class CreateReceiptOffline(CreateReceipt):
+    uri = f"{URI_PREFIX}sell-offline"
 
 
-class CreateServiceReceipt(BaseMethod):
+class AddExternal(CreateReceipt):
+    uri = f"{URI_PREFIX}add-external"
+
+
+class CreateServiceReceipt(CreateReceipt):
+    uri = f"{URI_PREFIX}service"
+
+
+class ServiceCurrency(CreateReceipt):
+    uri = f"{URI_PREFIX}service-currency"
+
+
+class CurrencyExchange(CreateReceipt):
+    uri = f"{URI_PREFIX}currency-exchange"
+
+
+class CreateCashWithdrawalReceipt(CreateReceipt):
     method = HTTPMethod.POST
-    uri = "receipts/service"
-
-    def __init__(
-        self,
-        payment: Dict[str, Any],
-        id: Optional[str] = None,
-        fiscal_code: Optional[str] = None,
-        fiscal_date: Optional[datetime.datetime] = None,
-    ):
-        self.payment = payment
-        self.id = id
-        self.fiscal_code = fiscal_code
-        self.fiscal_date = fiscal_date
-
-    @property
-    def payload(self):
-        payload = super().payload
-        payload["payment"] = self.payment
-        if self.id:
-            payload["id"] = self.id
-        if self.fiscal_code:
-            payload["fiscal_code"] = self.fiscal_code
-        if self.fiscal_date:
-            payload["fiscal_date"] = self.fiscal_date
-        return payload
-
-    def parse_response(self, storage: SessionStorage, response: Response):
-        result = super().parse_response(storage=storage, response=response)
-        storage.shift = result["shift"]
-        return result
 
 
 class GetReceiptVisualization(GetReceipt):
-    def __init__(self, receipt_id: str, fmt: str = "text", **query):
+    def __init__(self, receipt_id: Union[str, UUID], fmt: str = "text", **query):
         super().__init__(receipt_id=receipt_id)
         self.format = fmt
         self.params = query
@@ -118,28 +225,66 @@ class GetReceiptVisualization(GetReceipt):
         return response.content
 
 
+class GetReceiptVisualizationHtml(GetReceiptVisualization):
+    def __init__(
+        self,
+        receipt_id: Union[str, UUID],
+        is_second_copy: Optional[bool] = False,
+        simple: Optional[bool] = False,
+        show_buttons: Optional[bool] = None,
+        x_show_buttons: Optional[bool] = None,
+    ):
+        super().__init__(
+            receipt_id=receipt_id, fmt="html", is_second_copy=is_second_copy, simple=simple, show_buttons=show_buttons
+        )
+        self.x_show_buttons = x_show_buttons
+
+    @property
+    def headers(self):
+        headers = super(GetReceiptVisualizationHtml, self).headers
+        if self.x_show_buttons is not None:
+            headers.update({"X-Show-Buttons": self.x_show_buttons})
+        return headers
+
+
+class GetReceiptVisualizationPdf(GetReceiptVisualization):
+    def __init__(
+        self,
+        receipt_id: Union[str, UUID],
+        is_second_copy: Optional[bool] = False,
+        download: Optional[bool] = False,
+    ):
+        super().__init__(receipt_id=receipt_id, fmt="pdf", is_second_copy=is_second_copy, download=download)
+
+
 class GetReceiptVisualizationText(GetReceiptVisualization):
-    def __init__(self, receipt_id: str, width: int = 50):
-        super().__init__(receipt_id=receipt_id, fmt="text", width=width)
+    def __init__(
+        self, receipt_id: Union[str, UUID], is_second_copy: Optional[bool] = False, width: Optional[int] = 42
+    ):
+        super().__init__(receipt_id=receipt_id, fmt="text", is_second_copy=is_second_copy, width=width)
 
     def parse_response(self, storage: SessionStorage, response: Response):
         result = super().parse_response(storage=storage, response=response)
         return result.decode()
 
 
-class GetReceiptVisualizationHtml(GetReceiptVisualization):
-    def __init__(self, receipt_id: str):
-        super().__init__(receipt_id=receipt_id, fmt="html")
-
-
-class GetReceiptVisualizationPdf(GetReceiptVisualization):
-    def __init__(self, receipt_id: str):
-        super().__init__(receipt_id=receipt_id, fmt="pdf")
-
-
 class GetReceiptVisualizationPng(GetReceiptVisualization):
-    def __init__(self, receipt_id: str):
-        super().__init__(receipt_id=receipt_id, fmt="png")
+    def __init__(
+        self,
+        receipt_id: Union[str, UUID],
+        is_second_copy: Optional[bool] = False,
+        width: Optional[int] = 30,
+        paper_width: Optional[int] = 58,
+        qrcode_scale: Optional[int] = 75,
+    ):
+        super().__init__(
+            receipt_id=receipt_id,
+            fmt="png",
+            is_second_copy=is_second_copy,
+            width=width,
+            paper_width=paper_width,
+            qrcode_scale=qrcode_scale,
+        )
 
 
 class GetReceiptVisualizationQrCode(GetReceiptVisualization):
@@ -147,34 +292,22 @@ class GetReceiptVisualizationQrCode(GetReceiptVisualization):
         super().__init__(receipt_id=receipt_id, fmt="qrcode")
 
 
-class AddExternal(BaseMethod):
-    method = HTTPMethod.POST
-    uri = "receipts/add-external"
-
-    def __init__(
-        self,
-        receipt: Optional[Dict] = None,
-        **payload,
-    ):
-        if receipt is not None and payload is not None:
-            raise ValueError("'receipt' and '**payload' can not be passed together")
-        self.receipt = receipt or payload
-
-    @property
-    def payload(self):
-        return self.receipt
+class GetReceiptVisualizationXml(GetReceiptVisualization):
+    def __init__(self, receipt_id: Union[str, UUID]):
+        super().__init__(receipt_id=receipt_id, fmt="xml")
 
 
 class SendEmail(BaseMethod):
     method = HTTPMethod.POST
 
-    def __init__(self, receipt_id: str, email: str):
+    def __init__(self, receipt_id: Union[str, UUID], email: str):
         self.receipt_id = receipt_id
         self.email = email
 
     @property
     def uri(self) -> str:
-        return f"receipts/{self.receipt_id}/email"
+        receipt_id_str = str(self.receipt_id) if isinstance(self.receipt_id, UUID) else self.receipt_id
+        return f"{URI_PREFIX}{receipt_id_str}/email"
 
     @property
     def payload(self):
@@ -184,59 +317,15 @@ class SendEmail(BaseMethod):
 class SendSMS(BaseMethod):
     method = HTTPMethod.POST
 
-    def __init__(self, receipt_id: str, phone: str):
+    def __init__(self, receipt_id: Union[str, UUID], phone: str):
         self.receipt_id = receipt_id
         self.phone = phone
 
     @property
     def uri(self) -> str:
-        return f"receipts/{self.receipt_id}/sms"
+        receipt_id_str = str(self.receipt_id) if isinstance(self.receipt_id, UUID) else self.receipt_id
+        return f"{URI_PREFIX}{receipt_id_str}/sms"
 
     @property
     def payload(self):
         return {"phone": self.phone}
-
-
-class CreateCashWithdrawalReceipt(BaseMethod):
-    method = HTTPMethod.POST
-    uri = "receipts/cash-withdrawal"
-
-    def __init__(
-        self,
-        payment: Dict[str, Any],
-        id: Optional[str] = None,
-        fiscal_code: Optional[str] = None,
-        fiscal_date: Optional[datetime.datetime] = None,
-    ):
-        self.payment = payment
-        self.id = id
-        self.fiscal_code = fiscal_code
-        self.fiscal_date = fiscal_date
-
-    @property
-    def payload(self):
-        payload = super().payload
-        payload["payment"] = self.payment
-        if self.id:
-            payload["id"] = self.id
-        if self.fiscal_code:
-            payload["fiscal_code"] = self.fiscal_code
-        if self.fiscal_date:
-            payload["fiscal_date"] = self.fiscal_date
-        return payload
-
-
-class ReplaceFiscalCode(BaseMethod):
-    method = HTTPMethod.PATCH
-
-    def __init__(self, receipt_id: str, new_fiscal_code: str):
-        self.receipt_id = receipt_id
-        self.new_fiscal_code = new_fiscal_code
-
-    @property
-    def uri(self) -> str:
-        return f"receipts/{self.receipt_id}/offline"
-
-    @property
-    def payload(self):
-        return {"fiscal_code": self.new_fiscal_code}
