@@ -2,16 +2,24 @@ from typing import List, Optional
 
 from checkbox_sdk.methods.base import BaseMethod, PaginationMixin
 
+URI_PREFIX = "transactions/"
+
 
 class GetTransactions(PaginationMixin, BaseMethod):
     uri = "transactions"
 
     def __init__(
-        self, status: Optional[List[str]] = None, type: Optional[List[str]] = None, *args, **kwargs
+        self,
+        status: Optional[List[str]] = None,
+        type: Optional[List[str]] = None,
+        desc: Optional[bool] = False,
+        *args,
+        **kwargs,
     ):
         super().__init__(*args, **kwargs)
         self.status = status
         self.type = type
+        self.desc = desc
 
     @property
     def query(self):
@@ -20,6 +28,8 @@ class GetTransactions(PaginationMixin, BaseMethod):
             query["status"] = self.status
         if self.type is not None:
             query["type"] = self.type
+        if self.desc is not None:
+            query["desc"] = self.desc
         return query
 
 
@@ -29,4 +39,4 @@ class GetTransaction(BaseMethod):
 
     @property
     def uri(self) -> str:
-        return f"transactions/{self.transaction_id}"
+        return f"{URI_PREFIX}{self.transaction_id}"

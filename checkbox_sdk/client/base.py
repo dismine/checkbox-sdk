@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Union, Optional
 
 from httpx import Response
 
@@ -69,7 +69,7 @@ class BaseCheckBoxClient(ABC):
         if response.status_code >= 400:
             raise CheckBoxAPIError(status=response.status_code, content=response.json())
 
-    def _set_license_key(self, storage: Optional[SessionStorage], license_key: Optional[str]) -> None:
+    def set_license_key(self, storage: Optional[SessionStorage], license_key: Optional[str]) -> None:
         if license_key is None:
             return
         storage = storage or self.storage

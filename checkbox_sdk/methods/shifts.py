@@ -67,6 +67,42 @@ class CreateShift(BaseMethod):
         return result
 
 
+class GetShift(BaseMethod):
+    def __init__(self, shift_id: str):
+        self.shift_id = shift_id
+
+    @property
+    def uri(self) -> str:
+        return f"shifts/{self.shift_id}"
+
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        if storage.shift and storage.shift["id"] == result["id"]:
+            storage.shift = result
+        return result
+
+
+class CloseShiftBySeniorCashier(BaseMethod):
+    def __init__(self, shift_id: str, **payload):
+        self.shift_id = shift_id
+        self._payload = payload
+
+    @property
+    def uri(self) -> str:
+        return f"shifts/{self.shift_id}/close"
+
+    @property
+    def payload(self):
+        payload = super().payload
+        payload.update(self._payload)
+        return payload
+
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        storage.shift = result
+        return result
+
+
 class CloseShift(BaseMethod):
     method = HTTPMethod.POST
     uri = "shifts/close"
@@ -84,31 +120,3 @@ class CloseShift(BaseMethod):
         result = super().parse_response(storage=storage, response=response)
         storage.shift = result
         return result
-
-
-class GetShift(BaseMethod):
-    def __init__(self, shift_id: str):
-        self.shift_id = shift_id
-
-    @property
-    def uri(self) -> str:
-        return f"shifts/{self.shift_id}"
-
-    def parse_response(self, storage: SessionStorage, response: Response):
-        result = super().parse_response(storage=storage, response=response)
-        if storage.shift and storage.shift["id"] == result["id"]:
-            storage.shift = result
-        return result
-
-
-class GetShiftLastReceiptID(BaseMethod):
-    def __init__(self, shift_id: str):
-        self.shift_id = shift_id
-
-    @property
-    def uri(self) -> str:
-        return f"shifts/last_receipt_id/{self.shift_id}"
-
-    def parse_response(self, storage: SessionStorage, response: Response):
-        result = super().parse_response(storage=storage, response=response)
-        return result["status"], result["last_receipt_id"]

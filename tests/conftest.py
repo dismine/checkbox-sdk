@@ -1,6 +1,6 @@
 import pytest
 
-from checkbox_sdk.client.sync import CheckBoxClient
+from checkbox_sdk.client.synchronous import CheckBoxClient
 from checkbox_sdk.storage.simple import SessionStorage
 
 
@@ -41,7 +41,8 @@ def auth_token(pincode, license_key):
     # Will be executed before the first test
     storage = SessionStorage()
     client = CheckBoxClient(storage=storage)
-    client.authenticate_pin_code(pin_code=pincode, license_key=license_key)
+    client.cashier.authenticate_pin_code(pin_code=pincode, license_key=license_key)
     yield storage.token
     # Will be executed after the last test
-    client.sign_out(storage)
+    client.cashier.sign_out(storage)
+    client.close()
