@@ -11,12 +11,14 @@ from checkbox_sdk.exceptions import CheckBoxNetworkError, CheckBoxError
 from checkbox_sdk.methods import cash_register, cashier
 from checkbox_sdk.methods.base import AbstractMethod, BaseMethod
 from checkbox_sdk.storage.simple import SessionStorage
-from .api.cash_registers import AsyncCashRegisters
-from .api.cashier import AsyncCashier
-from .api.receipts import AsyncReceipts
-from .api.shifts import AsyncShifts
-from .api.tax import AsyncTax
-from .api.transactions import AsyncTransactions
+from .api import (
+    AsyncCashRegisters,
+    AsyncCashier,
+    AsyncReceipts,
+    AsyncShifts,
+    AsyncTax,
+    AsyncTransactions,
+)
 
 logger = logging.getLogger(__name__)
 
