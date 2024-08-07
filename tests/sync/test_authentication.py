@@ -104,3 +104,11 @@ def authenticate_token(client, token, license_key, storage2):
     assert storage2.cashier is None, "The cashier should be None"
     assert storage2.token is None, "The token should be None"
     assert storage2.token_data is None, "The token data should be None"
+
+
+def test_cashier_signature(auth_token, license_key):
+    storage = SessionStorage()
+    with CheckBoxClient(storage=storage) as client:
+        client.cashier.authenticate_token(auth_token, license_key=license_key)
+        signature = client.cashier.check_signature()
+        assert signature is True

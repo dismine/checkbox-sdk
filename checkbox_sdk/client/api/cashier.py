@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Dict, Any
 
 from checkbox_sdk.methods import cashier
 from checkbox_sdk.storage.simple import SessionStorage
@@ -97,6 +97,18 @@ class Cashier:
         """
         self.client(cashier.SignOut(), storage=storage)
 
+    def check_signature(self, storage: Optional[SessionStorage] = None) -> Dict[str, Any]:
+        """
+        Checks the signature using the client with the provided storage.
+
+        Args:
+            storage: An optional session storage to use for the signature check.
+
+        Returns:
+            A dictionary containing the signature key.
+
+        """
+        return self.client(cashier.GetSignatureKey(), storage=storage)
 
 class AsyncCashier:
     def __init__(self, client):
@@ -190,3 +202,16 @@ class AsyncCashier:
             None
         """
         await self.client(cashier.SignOut(), storage=storage)
+
+    async def check_signature(self, storage: Optional[SessionStorage] = None) -> Dict[str, Any]:
+        """
+        Checks the signature asynchronously using the client with the provided storage.
+
+        Args:
+            storage: An optional session storage to use for the signature check.
+
+        Returns:
+            A dictionary containing the signature key.
+
+        """
+        return await self.client(cashier.GetSignatureKey(), storage=storage)
