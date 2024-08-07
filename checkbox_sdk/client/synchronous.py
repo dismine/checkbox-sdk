@@ -18,6 +18,7 @@ from .api import (
     Shifts,
     Tax,
     Transactions,
+    Organization,
 )
 
 logger = logging.getLogger(__name__)
@@ -34,6 +35,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         self.receipts = Receipts(self)
         self.transactions = Transactions(self)
         self.tax = Tax(self)
+        self.organization = Organization(self)
 
     def __del__(self):
         # Attempt to close the session if it hasn't been already
