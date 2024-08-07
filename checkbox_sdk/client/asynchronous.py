@@ -15,6 +15,7 @@ from .api.cash_registers import AsyncCashRegisters
 from .api.cashier import AsyncCashier
 from .api.receipts import AsyncReceipts
 from .api.shifts import AsyncShifts
+from .api.tax import AsyncTax
 from .api.transactions import AsyncTransactions
 
 logger = logging.getLogger(__name__)
@@ -30,6 +31,7 @@ class AsyncCheckBoxClient(BaseCheckBoxClient):
         self.shifts = AsyncShifts(self)
         self.receipts = AsyncReceipts(self)
         self.transactions = AsyncTransactions(self)
+        self.tax = AsyncTax(self)
 
     async def __aenter__(self):
         return self

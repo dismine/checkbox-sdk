@@ -110,6 +110,20 @@ class Cashier:
         """
         return self.client(cashier.GetSignatureKey(), storage=storage)
 
+    def get_all_taxes_by_cashier(self, storage: Optional[SessionStorage] = None) -> Dict[str, Any]:
+        """
+        Retrieves all taxes associated with a cashier using the client with the provided storage.
+
+        Args:
+            storage: An optional session storage to use for the retrieval.
+
+        Returns:
+            A dictionary containing all taxes associated with the cashier.
+
+        """
+        return self.client(cashier.GetAllTaxesByCashier(), storage=storage)
+
+
 class AsyncCashier:
     def __init__(self, client):
         self.client = client
@@ -215,3 +229,16 @@ class AsyncCashier:
 
         """
         return await self.client(cashier.GetSignatureKey(), storage=storage)
+
+    async def get_all_taxes_by_cashier(self, storage: Optional[SessionStorage] = None) -> Dict[str, Any]:
+        """
+        Retrieves all taxes associated with a cashier asynchronously using the client with the provided storage.
+
+        Args:
+            storage: An optional session storage to use for the retrieval.
+
+        Returns:
+            A dictionary containing all taxes associated with the cashier.
+
+        """
+        return await self.client(cashier.GetAllTaxesByCashier(), storage=storage)

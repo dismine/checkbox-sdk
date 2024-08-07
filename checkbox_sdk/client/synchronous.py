@@ -15,6 +15,7 @@ from .api.cash_registers import CashRegisters
 from .api.cashier import Cashier
 from .api.receipts import Receipts
 from .api.shifts import Shifts
+from .api.tax import Tax
 from .api.transactions import Transactions
 
 logger = logging.getLogger(__name__)
@@ -30,6 +31,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         self.shifts = Shifts(self)
         self.receipts = Receipts(self)
         self.transactions = Transactions(self)
+        self.tax = Tax(self)
 
     def __del__(self):
         # Attempt to close the session if it hasn't been already
