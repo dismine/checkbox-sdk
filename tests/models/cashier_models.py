@@ -47,3 +47,11 @@ class CashierSchema(CheckboxBaseModel):
     updated_at: Optional[datetime]
     certificate_end: Optional[datetime]
     blocked: Optional[str]
+
+
+class TokenSchema(CheckboxBaseModel):
+    token_type: str
+    jti: UUID
+    sub: UUID
+    nbf: int
+    iat: int

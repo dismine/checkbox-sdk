@@ -5,6 +5,7 @@ from checkbox_sdk.client.asynchronous import AsyncCheckBoxClient
 from checkbox_sdk.exceptions import CheckBoxAPIError
 from checkbox_sdk.storage.simple import SessionStorage
 from ..models.cash_register_models import CashRegistersInfoSchema
+from ..models.cashier_models import TokenSchema
 
 
 @pytest.mark.asyncio
@@ -43,6 +44,13 @@ async def test_authenticate_pin_code(pincode, license_key):
         await client.cashier.authenticate_pin_code(pin_code=pincode, license_key=license_key)
         assert isinstance(storage.token, str), "The result should be a string"
         assert storage.token, "The token should be a non-empty string"
+
+        token_data = storage.token_data
+        try:
+            model = TokenSchema(**token_data)
+            assert model is not None
+        except ValidationError as e:  # pragma: no cover
+            pytest.fail(f"Token validation schema failed: {e}")
 
         # sourcery skip: no-conditionals-in-tests
         if license_key:
@@ -98,3 +106,4 @@ async def authenticate_token(client, token, license_key, storage2):
     assert storage2.shift is None, "The shift should be None"
     assert storage2.cashier is None, "The cashier should be None"
     assert storage2.token is None, "The token should be None"
+    assert storage2.token_data is None, "The token data should be None"
