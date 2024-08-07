@@ -168,6 +168,64 @@ class CashRegisters:
         codes = self.client(cash_register.GetOfflineCodes(count=ask_count))
         return [item["fiscal_code"] for item in codes]
 
+    def get_offline_time(
+        self,
+        from_date: Optional[Union[datetime.datetime, str]] = None,
+        to_date: Optional[Union[datetime.datetime, str]] = None,
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict[str, Any]:
+        """
+        Retrieves the offline time information using the client with the provided storage.
+
+        Args:
+            from_date: The start date for the offline time query.
+            to_date: The end date for the offline time query.
+            storage: An optional session storage to use for the retrieval.
+
+        Returns:
+            A dictionary containing the offline time information.
+
+        """
+        return self.client(cash_register.GetOfflineTime(from_date=from_date, to_date=to_date), storage=storage)
+
+    def get_cash_register_shifts(
+        self,
+        storage: Optional[SessionStorage] = None,
+        statuses: Optional[List[str]] = None,
+        desc: Optional[bool] = False,
+        from_date: Optional[Union[datetime.datetime, str]] = None,
+        to_date: Optional[Union[datetime.datetime, str]] = None,
+        limit: Optional[int] = 25,
+        offset: Optional[int] = 0,
+    ) -> Generator:
+        """
+        Retrieves cash register shifts using the client with the provided storage and filter options.
+
+        Args:
+            storage: An optional session storage to use for the retrieval.
+            statuses: An optional list of status strings to filter the shifts.
+            desc: A boolean indicating whether to sort the shifts in descending order.
+            from_date: The start date for the shift query.
+            to_date: The end date for the shift query.
+            limit: The maximum number of shifts to retrieve.
+            offset: The offset for pagination.
+
+        Yields:
+            Generator yielding cash register shift results.
+
+        """
+        get_cash_register_shifts = cash_register.GetCashRegisterShifts(
+            statuses=statuses,
+            desc=desc,
+            from_date=from_date,
+            to_date=to_date,
+            limit=limit,
+            offset=offset,
+        )
+        while (shifts_result := self.client(get_cash_register_shifts, storage=storage))["results"]:
+            get_cash_register_shifts.resolve_pagination(shifts_result).shift_next_page()
+            yield from shifts_result["results"]
+
 
 class AsyncCashRegisters:
     def __init__(self, client):
@@ -336,3 +394,70 @@ class AsyncCashRegisters:
         logger.info("Load offline codes...")
         codes = await self.client(cash_register.GetOfflineCodes(count=ask_count))
         return [item["fiscal_code"] for item in codes]
+
+    async def get_offline_time(
+        self,
+        from_date: Optional[Union[datetime.datetime, str]] = None,
+        to_date: Optional[Union[datetime.datetime, str]] = None,
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict[str, Any]:
+        """
+        Retrieves the offline time information using the client with the provided storage.
+
+        Args:
+            from_date: The start date for the offline time query.
+            to_date: The end date for the offline time query.
+            storage: An optional session storage to use for the retrieval.
+
+        Returns:
+            A dictionary containing the offline time information.
+
+        """
+        return await self.client(cash_register.GetOfflineTime(from_date=from_date, to_date=to_date), storage=storage)
+
+    async def get_cash_register_shifts(
+        self,
+        storage: Optional[SessionStorage] = None,
+        statuses: Optional[List[str]] = None,
+        desc: Optional[bool] = False,
+        from_date: Optional[Union[datetime.datetime, str]] = None,
+        to_date: Optional[Union[datetime.datetime, str]] = None,
+        limit: Optional[int] = 25,
+        offset: Optional[int] = 0,
+    ) -> AsyncGenerator:
+        """
+        Asynchronously retrieves cash register shifts using the client with the provided storage and filter options.
+
+        Args:
+            storage: An optional session storage to use for the retrieval.
+            statuses: An optional list of status strings to filter the shifts.
+            desc: A boolean indicating whether to sort the shifts in descending order.
+            from_date: The start date for the shift query.
+            to_date: The end date for the shift query.
+            limit: The maximum number of shifts to retrieve.
+            offset: The offset for pagination.
+
+        Yields:
+            AsyncGenerator yielding cash register shift results.
+
+        """
+        get_cash_register_shifts = cash_register.GetCashRegisterShifts(
+            statuses=statuses,
+            desc=desc,
+            from_date=from_date,
+            to_date=to_date,
+            limit=limit,
+            offset=offset,
+        )
+        while True:
+            shifts_result = await self.client(get_cash_register_shifts, storage=storage)
+            results = shifts_result.get("results", [])
+
+            if not results:
+                break
+
+            for result in results:
+                yield result
+
+            get_cash_register_shifts.resolve_pagination(shifts_result)
+            get_cash_register_shifts.shift_next_page()

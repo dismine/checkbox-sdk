@@ -4,7 +4,8 @@ from pydantic import ValidationError
 from checkbox_sdk.client.asynchronous import AsyncCheckBoxClient
 from checkbox_sdk.exceptions import CheckBoxError
 from checkbox_sdk.storage.simple import SessionStorage
-from ..models.cash_register_models import CashRegistersSchema, PingSchema
+from ..models.cash_register_models import CashRegistersSchema, PingSchema, OfflineTimeSchema
+from ..models.shift_models import ShiftSchema
 
 
 @pytest.mark.asyncio
@@ -114,3 +115,36 @@ async def test_go_offline(auth_token, license_key):
 
             response = await client.cash_registers.go_offline(storage=storage)
             assert response["status"] == "ok"
+
+
+@pytest.mark.asyncio
+async def test_get_offline_time(license_key):
+    assert license_key, "License key is empty"
+
+    storage = SessionStorage()
+    async with AsyncCheckBoxClient(storage=storage) as client:
+        client.set_license_key(storage, license_key)
+
+        offline_time = await client.cash_registers.get_offline_time()
+        try:
+            model = OfflineTimeSchema(**offline_time)
+            assert model is not None
+        except ValidationError as e:  # pragma: no cover
+            pytest.fail(f"Offline time validation schema failed: {e}")
+
+
+@pytest.mark.asyncio
+async def test_get_cash_register_shifts(license_key):
+    assert license_key, "License key is empty"
+
+    storage = SessionStorage()
+    async with AsyncCheckBoxClient() as client:
+        client.set_license_key(storage, license_key)
+
+        # sourcery skip: no-loop-in-tests
+        async for register in client.cash_registers.get_cash_register_shifts(storage=storage):
+            try:
+                model = ShiftSchema(**register)
+                assert model is not None
+            except ValidationError as e:  # pragma: no cover
+                pytest.fail(f"Shift validation schema failed: {e}")

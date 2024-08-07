@@ -1,6 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from enum import Enum
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
 from pydantic import Field
@@ -99,3 +99,19 @@ class CashRegistersInfoSchema(CheckboxBaseModel):
 class PingSchema(CheckboxBaseModel):
     status: PingStatusEnum
     error: Optional[str] = None
+
+
+class OfflineTimeStatusSchema(CheckboxBaseModel):
+    current: Optional[timedelta] = None
+    total: Optional[timedelta] = None
+
+
+class OfflineTimeSessionSchema(CheckboxBaseModel):
+    start: Optional[datetime]
+    end: Optional[datetime]
+    duration: Optional[timedelta]
+
+
+class OfflineTimeSchema(CheckboxBaseModel):
+    status: OfflineTimeStatusSchema
+    sessions: List[OfflineTimeSessionSchema]
