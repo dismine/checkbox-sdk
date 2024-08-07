@@ -28,31 +28,31 @@ class AbstractMethod(ABC):
     @property
     @abstractmethod
     def uri(self) -> str:
-        pass
+        pass  # pragma: no cover
 
     @property
     @abstractmethod
     def query(self):
-        pass
+        pass  # pragma: no cover
 
     @property
     @abstractmethod
     def payload(self):
-        pass
+        pass  # pragma: no cover
 
     @property
     @abstractmethod
     def headers(self):
-        pass
+        pass  # pragma: no cover
 
     @property
     @abstractmethod
     def files(self):
-        pass
+        pass  # pragma: no cover
 
     @abstractmethod
     def parse_response(self, storage: SessionStorage, response: Response):
-        pass
+        pass  # pragma: no cover
 
 
 class BaseMethod(AbstractMethod, ABC):

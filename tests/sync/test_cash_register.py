@@ -16,7 +16,7 @@ def test_get_cash_registers(auth_token, license_key):
             try:
                 model = CashRegistersSchema(**register)
                 assert model is not None
-            except ValidationError as e:
+            except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Cash register validation schema failed: {e}")
 
 
@@ -43,7 +43,7 @@ def get_cash_register(client, auth_token, license_key, storage):
     try:
         model = CashRegistersSchema(**register)
         assert model is not None
-    except ValidationError as e:
+    except ValidationError as e:  # pragma: no cover
         pytest.fail(f"Cash register validation schema failed: {e}")
 
     register = client.cash_registers.get_cash_register()
@@ -51,7 +51,7 @@ def get_cash_register(client, auth_token, license_key, storage):
     try:
         model = CashRegistersSchema(**register)
         assert model is not None
-    except ValidationError as e:
+    except ValidationError as e:  # pragma: no cover
         pytest.fail(f"Cash register validation schema failed: {e}")
 
 
@@ -66,7 +66,7 @@ def test_ping_tax_service(auth_token, license_key):
         try:
             model = PingSchema(**ping)
             assert model is not None
-        except ValidationError as e:
+        except ValidationError as e:  # pragma: no cover
             pytest.fail(f"Cash register validation schema failed: {e}")
 
 
@@ -102,7 +102,7 @@ def test_go_offline(auth_token, license_key):
         assert register["is_test"], "Not test cash register"
 
         if storage.cash_register["offline_mode"]:
-            pytest.skip("Cash register in offline mode")
+            pytest.skip("Cash register in offline mode")  # pragma: no cover
         else:
             fiscal_codes = client.cash_registers.get_offline_codes()
             assert fiscal_codes, "List of fiscal codes is empty"

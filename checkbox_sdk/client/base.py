@@ -55,7 +55,7 @@ class BaseCheckBoxClient(ABC):
         storage: Optional[SessionStorage] = None,
         request_timeout: Optional[float] = None,
     ):
-        pass
+        pass  # pragma: no cover
 
     def __call__(self, *args, **kwargs):
         return self.emit(*args, **kwargs)

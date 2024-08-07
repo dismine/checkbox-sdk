@@ -22,5 +22,5 @@ async def test_get_shifts(auth_token, license_key):
             try:
                 model = ShiftInfoSchema(**shift)
                 assert model is not None
-            except ValidationError as e:
+            except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Shift validation schema failed: {e}")

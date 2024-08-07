@@ -28,7 +28,7 @@ async def test_get_receipts(auth_token, license_key):
             try:
                 model = ReceiptSchema(**receipt)
                 assert model is not None
-            except ValidationError as e:
+            except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Receipt validation schema failed: {e}")
 
 
@@ -52,7 +52,7 @@ async def test_get_receipts_search(auth_token, license_key):
             try:
                 model = ReceiptSchema(**receipt)
                 assert model is not None
-            except ValidationError as e:
+            except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Receipt validation schema failed: {e}")
 
 
@@ -80,7 +80,7 @@ async def test_receipts(auth_token, license_key, check_receipt_creation):
             try:
                 model = ShiftSchema(**shift)
                 assert model is not None
-            except ValidationError as e:
+            except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Shift validation schema failed: {e}")
 
             assert shift["status"] == "OPENED", "Failed to open shift"
@@ -102,7 +102,7 @@ async def test_receipts(auth_token, license_key, check_receipt_creation):
         try:
             model = ReceiptSchema(**receipt)
             assert model is not None
-        except ValidationError as e:
+        except ValidationError as e:  # pragma: no cover
             pytest.fail(f"Receipt validation schema failed: {e}")
 
         payment = {"value": -payment_value}
@@ -116,7 +116,7 @@ async def test_receipts(auth_token, license_key, check_receipt_creation):
                 if z_report:
                     model = ZReportSchema(**z_report)
                     assert model is not None
-            except ValidationError as e:
+            except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Z report validation schema failed: {e}")
 
 
@@ -125,7 +125,7 @@ async def create_service_receipt(client, payment, type):
     try:
         model = ReceiptSchema(**result)
         assert model is not None
-    except ValidationError as e:
+    except ValidationError as e:  # pragma: no cover
         pytest.fail(f"Service receipt validation schema failed: {e}")
 
     assert result["type"] == type

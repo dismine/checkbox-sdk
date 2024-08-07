@@ -22,7 +22,7 @@ async def test_authenticate_login(login, license_key):
             try:
                 model = CashRegistersInfoSchema(**storage.cash_register)
                 assert model is not None
-            except ValidationError as e:
+            except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Cash register validation schema failed: {e}")
 
         token = storage.token
@@ -51,7 +51,7 @@ async def test_authenticate_pin_code(pincode, license_key):
             try:
                 model = CashRegistersInfoSchema(**storage.cash_register)
                 assert model is not None
-            except ValidationError as e:
+            except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Cash register validation schema failed: {e}")
 
         token = storage.token
@@ -91,7 +91,7 @@ async def authenticate_token(client, token, license_key, storage2):
         try:
             model = CashRegistersInfoSchema(**storage2.cash_register)
             assert model is not None
-        except ValidationError as e:
+        except ValidationError as e:  # pragma: no cover
             pytest.fail(f"Cash register validation schema failed: {e}")
 
     await client.cashier.sign_out(storage2)
