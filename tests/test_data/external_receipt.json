@@ -1,4 +1,7 @@
 {
+  "total_payment": 18200,
+  "total_sum": 18200,
+  "total_rest": 0,
   "goods": [
     {
       "good": {
@@ -6,7 +9,9 @@
         "name": "Тестовий товар 1",
         "price": 5500
       },
-      "quantity": 1000
+      "sum": 5500,
+      "quantity": 1000,
+      "taxes": []
     },
     {
       "good": {
@@ -14,7 +19,9 @@
         "name": "Тестовий товар 2",
         "price": 15200
       },
-      "quantity": 1000
+      "sum": 15200,
+      "quantity": 1000,
+      "taxes": []
     }
   ],
   "discounts": [
@@ -22,7 +29,8 @@
       "type": "DISCOUNT",
       "mode": "VALUE",
       "value": 2500,
-      "name": "Знижка"
+      "name": "Знижка",
+      "sum": -2500
     }
   ],
   "payments": [
@@ -30,5 +38,6 @@
       "type": "CASHLESS",
       "value": 18200
     }
-  ]
+  ],
+  "taxes": []
 }

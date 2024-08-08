@@ -22,6 +22,8 @@ def pytest_addoption(parser):
     # Checkbox has limitation on number of created test receipts. 100 on month. To avoid reaching this limit test this
     # part only when necessary.
     parser.addoption("--check_receipt_creation", action="store_true", default=False, help="Check receipt creation")
+    parser.addoption("--client_email", action="store", help="Email address on which send receipts")
+    parser.addoption("--client_phone", action="store", help="Enable tests which require sending sms")
 
 
 @pytest.fixture(scope="session")
@@ -54,3 +56,13 @@ def auth_token(pincode, license_key):
 @pytest.fixture(scope="session")
 def check_receipt_creation(request):
     return request.config.getoption("--check_receipt_creation")
+
+
+@pytest.fixture(scope="session")
+def client_email(request):
+    return request.config.getoption("--client_email")
+
+
+@pytest.fixture(scope="session")
+def client_phone(request):
+    return request.config.getoption("--client_phone")

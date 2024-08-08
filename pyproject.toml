@@ -7,7 +7,7 @@ maintainers = ["Roman Telezhynskyi <dismine@gmail.com>"]
 repository = "https://github.com/dismine/checkbox-sdk"
 readme = "README.md"
 license = "MIT"
-packages = [{include = "checkbox_sdk"}]
+packages = [{ include = "checkbox_sdk" }]
 keywords = ["python", "sdk"]
 
 [tool.poetry.dependencies]
@@ -31,6 +31,7 @@ coverage = "^7.6.0"
 types-pyjwt = "^1.7.1"
 pydantic = "^2.8.2"
 pytest-asyncio = "^0.23.8"
+python-magic = "^0.4.27"
 
 [tool.black]
 line-length = 119
@@ -60,3 +61,7 @@ build-backend = "poetry.masonry.api"
 addopts = [
     "--import-mode=importlib",
 ]
+log_cli = true
+log_cli_level = "CRITICAL"
+log_cli_format = "%(asctime)s [%(levelname)8s] %(message)s (%(filename)s:%(lineno)s)"
+log_cli_date_format = "%Y-%m-%d %H:%M:%S"

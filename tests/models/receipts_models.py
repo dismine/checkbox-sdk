@@ -263,3 +263,9 @@ class ReceiptSchema(CheckboxBaseModel):
     pre_payment_relation_id: Optional[str]
     control_number: Optional[str]
     shift: ShiftSchema
+
+
+class BulkReceiptSchema(CheckboxBaseModel):
+    id: Optional[str]
+    status: str
+    message: Optional[str]

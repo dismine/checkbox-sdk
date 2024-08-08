@@ -213,7 +213,11 @@ class GetReceiptVisualization(GetReceipt):
     @property
     def query(self):
         query = super().query
-        query.update(self.params)
+
+        # Clean query before passing to URL. Remove None values
+        cleaned_params = {k: v for k, v in self.params.items() if v is not None}
+        query.update(cleaned_params)
+
         return query
 
     @property
@@ -288,7 +292,7 @@ class GetReceiptVisualizationPng(GetReceiptVisualization):
 
 
 class GetReceiptVisualizationQrCode(GetReceiptVisualization):
-    def __init__(self, receipt_id: str):
+    def __init__(self, receipt_id: Union[str, UUID]):
         super().__init__(receipt_id=receipt_id, fmt="qrcode")
 
 
