@@ -1,5 +1,6 @@
 import datetime
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Dict
+from uuid import UUID
 
 from httpx import Response
 
@@ -83,18 +84,24 @@ class GetShift(BaseMethod):
 
 
 class CloseShiftBySeniorCashier(BaseMethod):
-    def __init__(self, shift_id: str, **payload):
+    method = HTTPMethod.POST
+
+    def __init__(self, shift_id: Union[str, UUID], shift: Optional[Dict] = None, **payload):
         self.shift_id = shift_id
-        self._payload = payload
+
+        if shift is not None and payload:
+            raise ValueError("'shift' and '**payload' can not be passed together")
+        self.shift = shift or payload
 
     @property
     def uri(self) -> str:
-        return f"shifts/{self.shift_id}/close"
+        shift_id_str = str(self.shift_id) if isinstance(self.shift_id, UUID) else self.shift_id
+        return f"shifts/{shift_id_str}/close"
 
     @property
     def payload(self):
         payload = super().payload
-        payload.update(self._payload)
+        payload.update(self.shift)
         return payload
 
     def parse_response(self, storage: SessionStorage, response: Response):

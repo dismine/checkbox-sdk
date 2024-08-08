@@ -1,6 +1,7 @@
 import datetime
 import logging
 from typing import Any, Dict, List, Optional, Generator, Union, AsyncGenerator
+from uuid import UUID
 
 from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import StatusException
@@ -162,7 +163,24 @@ class Shifts:
         transaction_timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
         **payload,
-    ):
+    ) -> Union[Dict, None]:
+        """
+        Closes a shift online with the provided payload and options, waiting for the shift to be closed.
+
+        Args:
+            relax: The relaxation factor for requests.
+            timeout: The timeout duration for the request.
+            transaction_timeout: The timeout duration for the transaction.
+            storage: An optional session storage to use for the operation.
+            **payload: Additional keyword arguments for the shift closure.
+
+        Raises:
+            StatusException: If the shift cannot be closed due to transaction status.
+
+        Returns:
+            The zreport transaction for the closed shift, or None if the shift is already closed.
+
+        """
         storage = storage or self.client.storage
         self.client.refresh_info(storage=storage)
         if storage.shift is None:
@@ -191,6 +209,64 @@ class Shifts:
         # zreport transaction
         return self.client.transactions.wait_transaction(
             transaction_id=shift["closing_transaction"]["id"],
+            timeout=transaction_timeout,
+        )
+
+    def close_shift_by_senior_cashier(
+        self,
+        shift_id: Union[str, UUID],
+        relax: float = DEFAULT_REQUESTS_RELAX,
+        timeout: Optional[int] = None,
+        transaction_timeout: Optional[int] = None,
+        storage: Optional[SessionStorage] = None,
+        shift: Optional[Dict] = None,
+        **payload,
+    ) -> Dict:
+        """
+        Closes a shift by a senior cashier with the provided shift ID, payload, and options.
+
+        Args:
+            shift_id: The ID of the shift to be closed.
+            relax: The relaxation factor for requests.
+            timeout: The timeout duration for the request.
+            transaction_timeout: The timeout duration for the transaction.
+            storage: An optional session storage to use for the operation.
+            shift: An optional dictionary representing the shift details.
+            **payload: Additional keyword arguments for the shift closure.
+
+        Raises:
+            StatusException: If the shift cannot be closed due to transaction status.
+
+        Returns:
+            The zreport transaction for the closed shift.
+
+        """
+        shift_response = self.client(
+            shifts.CloseShiftBySeniorCashier(shift_id, shift=shift, **payload),
+            storage=storage,
+            request_timeout=timeout,
+        )
+        logger.info("Trying to close shift %s", shift_response["id"])
+
+        shift_status = self.client.wait_status(
+            shifts.GetShift(shift_id=shift_response["id"]),
+            storage=storage,
+            relax=relax,
+            field="status",
+            expected_value={"OPENED", "CLOSED"},
+            timeout=timeout,
+        )
+        if shift_status["status"] == "OPENED":
+            closing_transaction = shift_status["closing_transaction"]
+            raise StatusException(
+                "Shift can not be closed in due to transaction status moved to "
+                f"{closing_transaction['status']!r}: {closing_transaction['response_status']!r} "
+                f"{closing_transaction['response_error_message']!r}"
+            )
+
+        # zreport transaction
+        return self.client.transactions.wait_transaction(
+            transaction_id=shift_status["closing_transaction"]["id"],
             timeout=transaction_timeout,
         )
 
@@ -357,7 +433,24 @@ class AsyncShifts:
         transaction_timeout: Optional[int] = None,
         storage: Optional[SessionStorage] = None,
         **payload,
-    ):
+    ) -> Union[Dict, None]:
+        """
+        Asynchronously closes a shift online with the provided payload and options, waiting for the shift to be closed.
+
+        Args:
+            relax: The relaxation factor for requests.
+            timeout: The timeout duration for the request.
+            transaction_timeout: The timeout duration for the transaction.
+            storage: An optional session storage to use for the operation.
+            **payload: Additional keyword arguments for the shift closure.
+
+        Raises:
+            StatusException: If the shift cannot be closed due to transaction status.
+
+        Returns:
+            The zreport transaction for the closed shift, or None if the shift is already closed.
+
+        """
         storage = storage or self.client.storage
         await self.client.refresh_info(storage=storage)
         if storage.shift is None:
@@ -386,5 +479,62 @@ class AsyncShifts:
         # zreport transaction
         return await self.client.transactions.wait_transaction(
             transaction_id=shift["closing_transaction"]["id"],
+            timeout=transaction_timeout,
+        )
+
+    async def close_shift_by_senior_cashier(
+        self,
+        shift_id: Union[str, UUID],
+        relax: float = DEFAULT_REQUESTS_RELAX,
+        timeout: Optional[int] = None,
+        transaction_timeout: Optional[int] = None,
+        storage: Optional[SessionStorage] = None,
+        shift: Optional[Dict] = None,
+        **payload,
+    ) -> Dict:
+        """
+        Asynchronously closes a shift by a senior cashier with the provided shift ID, payload, and options.
+
+        Args:
+            shift_id: The ID of the shift to be closed.
+            relax: The relaxation factor for requests.
+            timeout: The timeout duration for the request.
+            transaction_timeout: The timeout duration for the transaction.
+            storage: An optional session storage to use for the operation.
+            shift: An optional dictionary representing the shift details.
+            **payload: Additional keyword arguments for the shift closure.
+
+        Raises:
+            StatusException: If the shift cannot be closed due to transaction status.
+
+        Returns:
+            The zreport transaction for the closed shift, or None if the shift is already closed.
+        """
+        shift_response = await self.client(
+            shifts.CloseShiftBySeniorCashier(shift_id, shift=shift, **payload),
+            storage=storage,
+            request_timeout=timeout,
+        )
+        logger.info("Trying to close shift %s", shift_response["id"])
+
+        shift_status = await self.client.wait_status(
+            shifts.GetShift(shift_id=shift_response["id"]),
+            storage=storage,
+            relax=relax,
+            field="status",
+            expected_value={"OPENED", "CLOSED"},
+            timeout=timeout,
+        )
+        if shift_status["status"] == "OPENED":
+            closing_transaction = shift_status["closing_transaction"]
+            raise StatusException(
+                "Shift can not be closed in due to transaction status moved to "
+                f"{closing_transaction['status']!r}: {closing_transaction['response_status']!r} "
+                f"{closing_transaction['response_error_message']!r}"
+            )
+
+        # zreport transaction
+        return await self.client.transactions.wait_transaction(
+            transaction_id=shift_status["closing_transaction"]["id"],
             timeout=transaction_timeout,
         )
