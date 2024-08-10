@@ -23,6 +23,7 @@ from .api import (
     Reports,
     ExtendedReports,
     Goods,
+    Currency,
     Webhook,
     Branches,
 )
@@ -46,6 +47,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         self.reports = Reports(self)
         self.extended_reports = ExtendedReports(self)
         self.goods = Goods(self)
+        self.currency = Currency(self)
         self.webhook = Webhook(self)
         self.branches = Branches(self)
 

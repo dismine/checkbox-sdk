@@ -1,6 +1,7 @@
 from .branches import Branches, AsyncBranches
 from .cash_registers import CashRegisters, AsyncCashRegisters
 from .cashier import Cashier, AsyncCashier
+from .currency import Currency, AsyncCurrency
 from .extended_reports import ExtendedReports, AsyncExtendedReports
 from .goods import Goods, AsyncGoods
 from .organization import Organization, AsyncOrganization
@@ -35,6 +36,8 @@ __all__ = [
     "AsyncExtendedReports",
     "Goods",
     "AsyncGoods",
+    "Currency",
+    "AsyncCurrency",
     "Webhook",
     "AsyncWebhook",
     "Branches",
