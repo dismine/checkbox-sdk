@@ -1,0 +1,19 @@
+{
+  "goods": [
+    {
+      "good": {
+        "code": "T100",
+        "name": "Тестова послуга",
+        "price": 15500
+      },
+      "quantity": 1000
+    }
+  ],
+  "discounts": [],
+  "payments": [
+    {
+      "type": "CASHLESS",
+      "value": 10000
+    }
+  ]
+}

@@ -250,6 +250,10 @@ class GetReceiptVisualizationHtml(GetReceiptVisualization):
             headers.update({"X-Show-Buttons": self.x_show_buttons})
         return headers
 
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        return result.decode()
+
 
 class GetReceiptVisualizationPdf(GetReceiptVisualization):
     def __init__(
@@ -299,6 +303,10 @@ class GetReceiptVisualizationQrCode(GetReceiptVisualization):
 class GetReceiptVisualizationXml(GetReceiptVisualization):
     def __init__(self, receipt_id: Union[str, UUID]):
         super().__init__(receipt_id=receipt_id, fmt="xml")
+
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        return result.decode()
 
 
 class SendEmail(BaseMethod):

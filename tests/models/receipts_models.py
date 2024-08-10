@@ -225,6 +225,28 @@ class ServiceReceiptServiceCurrencyExchangeSchema(CheckboxBaseModel):
     value: float
 
 
+class PrePaymentReceiptSchema(CheckboxBaseModel):
+    id: UUID
+    serial: int
+    status: ReceiptStatusEnum
+    goods: List[ReceiptGoodsSchema]
+    payments: List[Union[CashPaymentSchema, CardPaymentSchema]]
+    total_sum: int
+    total_payment: int
+    total_rest: int
+    round_sum: Optional[int]
+    fiscal_code: Optional[str]
+    fiscal_date: Optional[datetime]
+    delivered_at: Optional[datetime]
+    taxes: List[ServiceReceiptTaxesSchema]
+    discounts: Optional[List[ReceiptDiscountsSchema]]
+    created_at: datetime
+    updated_at: Optional[datetime]
+    is_created_offline: Optional[bool] = False
+    is_sent_dps: Optional[bool] = False
+    fiscal_api_type: Optional[ReceiptFiscalApiTypeEnum] = None
+
+
 class ReceiptSchema(CheckboxBaseModel):
     id: UUID
     serial: int
