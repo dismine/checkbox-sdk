@@ -1,5 +1,6 @@
 from .cash_registers import CashRegisters, AsyncCashRegisters
 from .cashier import Cashier, AsyncCashier
+from .extended_reports import ExtendedReports, AsyncExtendedReports
 from .organization import Organization, AsyncOrganization
 from .prepayment_receipts import PrepaymentReceipts, AsyncPrepaymentReceipts
 from .receipts import Receipts, AsyncReceipts
@@ -27,4 +28,6 @@ __all__ = [
     "AsyncPrepaymentReceipts",
     "Reports",
     "AsyncReports",
+    "ExtendedReports",
+    "AsyncExtendedReports",
 ]
