@@ -148,7 +148,7 @@ def create_receipt(client, auth_token, license_key, storage, client_email):
     receipt_data = json.loads(receipt_path.resolve().read_text())
 
     if client_email:
-        receipt_data["delivery"] = {"email": "dismine@gmail.com"}
+        receipt_data["delivery"] = {"email": client_email}
 
     receipt = client.receipts.create_receipt(
         receipt=receipt_data,
@@ -217,7 +217,7 @@ def create_bulk_receipts(client, auth_token, license_key, storage, client_email)
     receipt_data = json.loads(receipt_path.resolve().read_text())
 
     if client_email:
-        receipt_data["delivery"] = {"email": "dismine@gmail.com"}
+        receipt_data["delivery"] = {"email": client_email}
 
     results = client.receipts.create_bulk_receipts(
         receipt_list=[receipt_data],
@@ -299,7 +299,7 @@ def create_receipt_offline(client, auth_token, license_key, storage, client_emai
     receipt_data["fiscal_date"] = datetime.now().isoformat()
 
     if client_email:
-        receipt_data["delivery"] = {"email": "dismine@gmail.com"}
+        receipt_data["delivery"] = {"email": client_email}
 
     receipt = client.receipts.create_receipt_offline(
         receipt=receipt_data,
@@ -384,7 +384,7 @@ def create_external_receipt(client, auth_token, license_key, storage, client_ema
     receipt_data["fiscal_date"] = datetime.now().isoformat()
 
     if client_email:
-        receipt_data["delivery"] = {"email": "dismine@gmail.com"}
+        receipt_data["delivery"] = {"email": client_email}
 
     receipt = client.receipts.create_external_receipt(
         receipt=receipt_data,

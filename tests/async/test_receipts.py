@@ -149,7 +149,7 @@ async def test_receipts(auth_token, license_key, check_receipt_creation, client_
         receipt_data = json.loads(receipt_path.resolve().read_text())
 
         if client_email:
-            receipt_data["delivery"] = {"email": "dismine@gmail.com"}
+            receipt_data["delivery"] = {"email": client_email}
 
         receipt = await client.receipts.create_receipt(
             receipt=receipt_data,
@@ -217,7 +217,7 @@ async def test_bulk_receipts(auth_token, license_key, check_receipt_creation, cl
         receipt_data = json.loads(receipt_path.resolve().read_text())
 
         if client_email:
-            receipt_data["delivery"] = {"email": "dismine@gmail.com"}
+            receipt_data["delivery"] = {"email": client_email}
 
         results = await client.receipts.create_bulk_receipts(
             receipt_list=[receipt_data],
@@ -298,7 +298,7 @@ async def test_receipts_offline(auth_token, license_key, check_receipt_creation,
         receipt_data["fiscal_date"] = datetime.now().isoformat()
 
         if client_email:
-            receipt_data["delivery"] = {"email": "dismine@gmail.com"}
+            receipt_data["delivery"] = {"email": client_email}
 
         receipt = await client.receipts.create_receipt_offline(
             receipt=receipt_data,
@@ -382,7 +382,7 @@ async def test_external_receipt(auth_token, license_key, check_receipt_creation,
         receipt_data["fiscal_date"] = datetime.now().isoformat()
 
         if client_email:
-            receipt_data["delivery"] = {"email": "dismine@gmail.com"}
+            receipt_data["delivery"] = {"email": client_email}
 
         receipt = await client.receipts.create_external_receipt(
             receipt=receipt_data,
