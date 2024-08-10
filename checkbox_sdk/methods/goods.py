@@ -139,8 +139,13 @@ class ExportGoodsTaskStatus(BaseMethod):
 
 
 class ExportGoodsFile(BaseMethod):
-    def __init__(self, task_id: Union[str, UUID]):
+    def __init__(
+        self,
+        task_id: Union[str, UUID],
+        export_extension: str,
+    ):
         self.task_id = task_id
+        self.export_extension = export_extension
 
     @property
     def uri(self) -> str:
@@ -148,8 +153,12 @@ class ExportGoodsFile(BaseMethod):
         return f"{URI_PREFIX}export/file/{task_id_str}"
 
     def parse_response(self, storage: SessionStorage, response: Response):
-        result = super().parse_response(storage=storage, response=response)
-        return result.decode()
+        if self.export_extension == "json":
+            return response.json()
+        elif self.export_extension == "csv":
+            return response.content.decode()
+        else:
+            return response.content
 
 
 class ImportGoodsFromFile(BaseMethod):
@@ -184,8 +193,7 @@ class ImportGoodsFromFile(BaseMethod):
 
     @property
     def files(self):
-        with open(self.file, "rb") as file:
-            return {"file": file.read()}
+        return {"file": open(self.file, "rb")}
 
 
 class ImportGoodsTaskStatus(BaseMethod):
@@ -199,6 +207,8 @@ class ImportGoodsTaskStatus(BaseMethod):
 
 
 class ImportGoodsApplyChanges(BaseMethod):
+    method = HTTPMethod.POST
+
     def __init__(self, task_id: Union[str, UUID]):
         self.task_id = task_id
 

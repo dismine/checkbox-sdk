@@ -1,0 +1,31 @@
+{
+   "goods":[
+      {
+         "good_name":"\u0421\u0456\u043a \u044f\u0431\u043b\u0443\u0447\u043d\u0438\u0439",
+         "code":"123456789",
+         "group":"\u041d\u0430\u043f\u043e\u0457",
+         "barcode":"2000000000010",
+         "barcodes":"2000000000010",
+         "price":"51.00",
+         "is_weight":false,
+         "type":"good",
+         "taxes":"\u0417",
+         "leftovers":null,
+         "uktzed":""
+      },
+      {
+         "good_name":"\u041f\u043e\u043c\u0456\u0434\u043e\u0440 \u0443\u043a\u0440\u0430\u0457\u043d\u0441\u044c\u043a\u0438\u0439",
+         "code":"123457",
+         "group":"\u041e\u0432\u043e\u0447\u0456",
+         "barcode":"2000000000011",
+         "barcodes":"2000000000011",
+         "price":"70.00",
+         "is_weight":false,
+         "type":"good",
+         "taxes":"\u0417",
+         "leftovers":null,
+         "uktzed":""
+      }
+   ],
+   "branches":null
+}
