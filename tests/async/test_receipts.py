@@ -1,4 +1,3 @@
-import contextlib
 import json
 import pathlib
 import time
@@ -12,8 +11,8 @@ from pydantic import ValidationError
 from checkbox_sdk.client.asynchronous import AsyncCheckBoxClient
 from checkbox_sdk.exceptions import CheckBoxAPIError
 from checkbox_sdk.storage.simple import SessionStorage
+from .base import open_shift, close_shift
 from ..models.receipts_models import ReceiptSchema, BulkReceiptSchema
-from ..models.shift_models import ShiftSchema, ZReportSchema
 
 
 @pytest.mark.asyncio
@@ -124,20 +123,7 @@ async def test_receipts(auth_token, license_key, check_receipt_creation, client_
 
         assert storage.cash_register["is_test"], "Not test cash register"
 
-        current_date = datetime.now().date()
-        auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
-
-        with contextlib.suppress(CheckBoxAPIError):
-            shift = await client.shifts.create_shift(
-                timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat()
-            )
-            try:
-                model = ShiftSchema(**shift)
-                assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Shift validation schema failed: {e}")
-
-            assert shift["status"] == "OPENED", "Failed to open shift"
+        await open_shift(client)
 
         payment_value = 550 * 100
         payment = {"value": payment_value}
@@ -167,15 +153,7 @@ async def test_receipts(auth_token, license_key, check_receipt_creation, client_
         response = await create_service_receipt(client, payment, "SERVICE_OUT")
         assert response["payments"][0]["value"] == payment_value
 
-        with contextlib.suppress(ValueError):
-            z_report = await client.shifts.close_shift(timeout=5, storage=storage)
-            try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
-                    model = ZReportSchema(**z_report)
-                    assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Z report validation schema failed: {e}")
+        await close_shift(client)
 
 
 @pytest.mark.asyncio
@@ -192,20 +170,7 @@ async def test_bulk_receipts(auth_token, license_key, check_receipt_creation, cl
 
         assert storage.cash_register["is_test"], "Not test cash register"
 
-        current_date = datetime.now().date()
-        auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
-
-        with contextlib.suppress(CheckBoxAPIError):
-            shift = await client.shifts.create_shift(
-                timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat()
-            )
-            try:
-                model = ShiftSchema(**shift)
-                assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Shift validation schema failed: {e}")
-
-            assert shift["status"] == "OPENED", "Failed to open shift"
+        await open_shift(client)
 
         payment_value = 550 * 100
         payment = {"value": payment_value}
@@ -235,15 +200,7 @@ async def test_bulk_receipts(auth_token, license_key, check_receipt_creation, cl
         response = await create_service_receipt(client, payment, "SERVICE_OUT")
         assert response["payments"][0]["value"] == payment_value
 
-        with contextlib.suppress(ValueError):
-            z_report = await client.shifts.close_shift(timeout=5, storage=storage)
-            try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
-                    model = ZReportSchema(**z_report)
-                    assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Z report validation schema failed: {e}")
+        await close_shift(client)
 
 
 @pytest.mark.asyncio
@@ -260,20 +217,7 @@ async def test_receipts_offline(auth_token, license_key, check_receipt_creation,
 
         assert storage.cash_register["is_test"], "Not test cash register"
 
-        current_date = datetime.now().date()
-        auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
-
-        with contextlib.suppress(CheckBoxAPIError):
-            shift = await client.shifts.create_shift(
-                timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat()
-            )
-            try:
-                model = ShiftSchema(**shift)
-                assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Shift validation schema failed: {e}")
-
-            assert shift["status"] == "OPENED", "Failed to open shift"
+        await open_shift(client)
 
         payment_value = 550 * 100
         payment = {"value": payment_value}
@@ -319,15 +263,7 @@ async def test_receipts_offline(auth_token, license_key, check_receipt_creation,
         response = await create_service_receipt(client, payment, "SERVICE_OUT")
         assert response["payments"][0]["value"] == payment_value
 
-        with contextlib.suppress(ValueError):
-            z_report = await client.shifts.close_shift(timeout=5, storage=storage)
-            try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
-                    model = ZReportSchema(**z_report)
-                    assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Z report validation schema failed: {e}")
+        await close_shift(client)
 
 
 @pytest.mark.asyncio
@@ -344,20 +280,7 @@ async def test_external_receipt(auth_token, license_key, check_receipt_creation,
 
         assert storage.cash_register["is_test"], "Not test cash register"
 
-        current_date = datetime.now().date()
-        auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
-
-        with contextlib.suppress(CheckBoxAPIError):
-            shift = await client.shifts.create_shift(
-                timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat()
-            )
-            try:
-                model = ShiftSchema(**shift)
-                assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Shift validation schema failed: {e}")
-
-            assert shift["status"] == "OPENED", "Failed to open shift"
+        await open_shift(client)
 
         payment_value = 550 * 100
         payment = {"value": payment_value}
@@ -403,15 +326,7 @@ async def test_external_receipt(auth_token, license_key, check_receipt_creation,
         response = await create_service_receipt(client, payment, "SERVICE_OUT")
         assert response["payments"][0]["value"] == payment_value
 
-        with contextlib.suppress(ValueError):
-            z_report = await client.shifts.close_shift(timeout=5, storage=storage)
-            try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
-                    model = ZReportSchema(**z_report)
-                    assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Z report validation schema failed: {e}")
+        await close_shift(client)
 
 
 async def create_service_receipt(client, payment, type):
@@ -441,20 +356,7 @@ async def test_service_currency_receipt(auth_token, license_key, check_receipt_c
 
         assert storage.cash_register["is_test"], "Not test cash register"
 
-        current_date = datetime.now().date()
-        auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
-
-        with contextlib.suppress(CheckBoxAPIError):
-            shift = await client.shifts.create_shift(
-                timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat()
-            )
-            try:
-                model = ShiftSchema(**shift)
-                assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Shift validation schema failed: {e}")
-
-            assert shift["status"] == "OPENED", "Failed to open shift"
+        await open_shift(client)
 
         payment = {
             "type": "ADVANCE",
@@ -478,15 +380,7 @@ async def test_service_currency_receipt(auth_token, license_key, check_receipt_c
             else:
                 raise
 
-        with contextlib.suppress(ValueError):
-            z_report = await client.shifts.close_shift(timeout=5, storage=storage)
-            try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
-                    model = ZReportSchema(**z_report)
-                    assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Z report validation schema failed: {e}")
+        await close_shift(client)
 
 
 @pytest.mark.asyncio
@@ -503,20 +397,7 @@ async def test_currency_exchange_receipt(auth_token, license_key, check_receipt_
 
         assert storage.cash_register["is_test"], "Not test cash register"
 
-        current_date = datetime.now().date()
-        auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
-
-        with contextlib.suppress(CheckBoxAPIError):
-            shift = await client.shifts.create_shift(
-                timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat()
-            )
-            try:
-                model = ShiftSchema(**shift)
-                assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Shift validation schema failed: {e}")
-
-            assert shift["status"] == "OPENED", "Failed to open shift"
+        await open_shift(client)
 
         payment = {
             "type": "SELL",
@@ -543,12 +424,4 @@ async def test_currency_exchange_receipt(auth_token, license_key, check_receipt_
             else:
                 raise
 
-        with contextlib.suppress(ValueError):
-            z_report = await client.shifts.close_shift(timeout=5, storage=storage)
-            try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
-                    model = ZReportSchema(**z_report)
-                    assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Z report validation schema failed: {e}")
+        await close_shift(client)

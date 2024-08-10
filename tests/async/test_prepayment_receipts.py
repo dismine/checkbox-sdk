@@ -1,17 +1,14 @@
-import contextlib
 import json
 import pathlib
-from datetime import datetime
 
 import pytest
 from pydantic import ValidationError
 
 from checkbox_sdk.client.asynchronous import AsyncCheckBoxClient
-from checkbox_sdk.exceptions import CheckBoxAPIError
 from checkbox_sdk.storage.simple import SessionStorage
+from .base import open_shift, close_shift
 from ..models.prepayment_receipts_models import PrepaymentRelationSchema
 from ..models.receipts_models import ReceiptSchema
-from ..models.shift_models import ShiftSchema, ZReportSchema
 
 
 @pytest.mark.asyncio
@@ -27,20 +24,7 @@ async def test_create_prepayment_receipt(auth_token, license_key, check_receipt_
 
         assert storage.cash_register["is_test"], "Not test cash register"
 
-        current_date = datetime.now().date()
-        auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
-
-        with contextlib.suppress(CheckBoxAPIError):
-            shift = await client.shifts.create_shift(
-                timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat()
-            )
-            try:
-                model = ShiftSchema(**shift)
-                assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Shift validation schema failed: {e}")
-
-            assert shift["status"] == "OPENED", "Failed to open shift"
+        await open_shift(client)
 
         base_path = pathlib.Path(__file__).resolve().parent.parent
         receipt_path = base_path / "test_data/prepayment_receipt.json"
@@ -107,14 +91,7 @@ async def test_create_prepayment_receipt(auth_token, license_key, check_receipt_
             except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Receipt validation schema failed: {e}")
 
-        with contextlib.suppress(ValueError):
-            z_report = await client.shifts.close_shift(timeout=5, storage=storage)
-            try:
-                if z_report:
-                    model = ZReportSchema(**z_report)
-                    assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Z report validation schema failed: {e}")
+        await close_shift(client)
 
 
 @pytest.mark.asyncio

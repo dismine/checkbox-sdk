@@ -9,6 +9,8 @@ from ..models.shift_models import ShiftSchema
 
 
 def test_get_cash_registers(auth_token, license_key):
+    assert license_key, "License key is empty"
+
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 

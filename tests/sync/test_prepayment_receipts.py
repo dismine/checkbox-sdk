@@ -1,17 +1,14 @@
-import contextlib
 import json
 import pathlib
-from datetime import datetime
 
 import pytest
 from pydantic import ValidationError
 
 from checkbox_sdk.client.synchronous import CheckBoxClient
-from checkbox_sdk.exceptions import CheckBoxAPIError
 from checkbox_sdk.storage.simple import SessionStorage
+from .base import open_shift, close_shift
 from ..models.prepayment_receipts_models import PrepaymentRelationSchema
 from ..models.receipts_models import ReceiptSchema
-from ..models.shift_models import ShiftSchema, ZReportSchema
 
 
 def test_create_prepayment_receipt(auth_token, license_key, check_receipt_creation, client_email):
@@ -27,18 +24,7 @@ def test_create_prepayment_receipt(auth_token, license_key, check_receipt_creati
 
         assert storage.cash_register["is_test"], "Not test cash register"
 
-        current_date = datetime.now().date()
-        auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
-
-        with contextlib.suppress(CheckBoxAPIError):
-            shift = client.shifts.create_shift(timeout=5, storage=storage, auto_close_at=auto_close_at.isoformat())
-            try:
-                model = ShiftSchema(**shift)
-                assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Shift validation schema failed: {e}")
-
-            assert shift["status"] == "OPENED", "Failed to open shift"
+        open_shift(client)
 
         base_path = pathlib.Path(__file__).resolve().parent.parent
         receipt_path = base_path / "test_data/prepayment_receipt.json"
@@ -107,15 +93,7 @@ def test_create_prepayment_receipt(auth_token, license_key, check_receipt_creati
             except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Receipt validation schema failed: {e}")
 
-        with contextlib.suppress(ValueError):
-            z_report = client.shifts.close_shift(timeout=5, storage=storage)
-            try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
-                    model = ZReportSchema(**z_report)
-                    assert model is not None
-            except ValidationError as e:  # pragma: no cover
-                pytest.fail(f"Z report validation schema failed: {e}")
+        close_shift(client)
 
 
 def test_get_pre_payment_relations_search(auth_token, license_key):

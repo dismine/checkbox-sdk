@@ -1,0 +1,26 @@
+{
+  "payments": [
+  ],
+  "taxes": [
+    {
+      "id": "ed43563c-19e7-4dd8-bc50-7801cabb2d96",
+      "code": 8,
+      "label": "Без ПДВ",
+      "symbol": "З",
+      "rate": 0.0,
+      "extra_rate": 0,
+      "sell_sum": 0,
+      "return_sum": 0,
+      "sales_turnover": 0,
+      "returns_turnover": 0,
+      "no_vat": true,
+      "advanced_code": "None",
+      "created_at": "2021-05-31T17:15:31+00:00",
+      "setup_date": "2021-05-31T17:15:31+00:00"
+    }
+  ],
+  "sell_receipts_count": 0,
+  "return_receipts_count": 0,
+  "balance": 1870000,
+  "initial": 1870000
+}

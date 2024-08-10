@@ -10,13 +10,13 @@ from checkbox_sdk.storage.simple import SessionStorage
 URI_PREFIX = "reports/"
 
 
-class GetPeriodicalReportVisualizationText(BaseMethod):
+class GetPeriodicalReport(BaseMethod):
     uri = f"{URI_PREFIX}periodical"
 
     def __init__(
         self,
-        from_date: Optional[Union[datetime.datetime, str]] = None,
-        to_date: Optional[Union[datetime.datetime, str]] = None,
+        from_date: Union[datetime.datetime, str],
+        to_date: Union[datetime.datetime, str],
         width: Optional[int] = 42,
         is_short: Optional[bool] = False,
     ):
@@ -104,7 +104,7 @@ class GetReports(PaginationMixin, BaseMethod):
         return query
 
 
-class CreateReport(BaseMethod):
+class CreateXReport(BaseMethod):
     method = HTTPMethod.POST
     uri = "reports"
 
@@ -229,3 +229,7 @@ class GetReportVisualizationText(GetReportVisualization):
 class GetReportVisualizationPng(GetReportVisualization):
     def __init__(self, report_id: Union[str, UUID], width: Optional[int] = 34, paper_width: Optional[int] = 58):
         super().__init__(report_id=report_id, fmt="text", width=width, paper_width=paper_width)
+
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        return result.decode()
