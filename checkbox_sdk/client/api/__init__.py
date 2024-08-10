@@ -1,3 +1,4 @@
+from .branches import Branches, AsyncBranches
 from .cash_registers import CashRegisters, AsyncCashRegisters
 from .cashier import Cashier, AsyncCashier
 from .extended_reports import ExtendedReports, AsyncExtendedReports
@@ -33,4 +34,6 @@ __all__ = [
     "AsyncExtendedReports",
     "Goods",
     "AsyncGoods",
+    "Branches",
+    "AsyncBranches",
 ]

@@ -23,6 +23,7 @@ from .api import (
     Reports,
     ExtendedReports,
     Goods,
+    Branches,
 )
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         self.reports = Reports(self)
         self.extended_reports = ExtendedReports(self)
         self.goods = Goods(self)
+        self.branches = Branches(self)
 
     def __del__(self):
         # Attempt to close the session if it hasn't been already

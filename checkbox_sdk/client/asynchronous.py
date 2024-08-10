@@ -23,6 +23,7 @@ from .api import (
     AsyncReports,
     AsyncExtendedReports,
     AsyncGoods,
+    AsyncBranches,
 )
 
 logger = logging.getLogger(__name__)
@@ -44,6 +45,7 @@ class AsyncCheckBoxClient(BaseCheckBoxClient):
         self.reports = AsyncReports(self)
         self.extended_reports = AsyncExtendedReports(self)
         self.goods = AsyncGoods(self)
+        self.branches = AsyncBranches(self)
 
     async def __aenter__(self):
         return self
