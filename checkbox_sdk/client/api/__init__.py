@@ -10,6 +10,7 @@ from .reports import Reports, AsyncReports
 from .shifts import Shifts, AsyncShifts
 from .tax import Tax, AsyncTax
 from .transactions import Transactions, AsyncTransactions
+from .webhook import Webhook, AsyncWebhook
 
 __all__ = [
     "CashRegisters",
@@ -34,6 +35,8 @@ __all__ = [
     "AsyncExtendedReports",
     "Goods",
     "AsyncGoods",
+    "Webhook",
+    "AsyncWebhook",
     "Branches",
     "AsyncBranches",
 ]

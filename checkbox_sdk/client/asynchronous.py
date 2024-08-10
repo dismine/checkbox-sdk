@@ -23,6 +23,7 @@ from .api import (
     AsyncReports,
     AsyncExtendedReports,
     AsyncGoods,
+    AsyncWebhook,
     AsyncBranches,
 )
 
@@ -45,6 +46,7 @@ class AsyncCheckBoxClient(BaseCheckBoxClient):
         self.reports = AsyncReports(self)
         self.extended_reports = AsyncExtendedReports(self)
         self.goods = AsyncGoods(self)
+        self.webhook = AsyncWebhook(self)
         self.branches = AsyncBranches(self)
 
     async def __aenter__(self):
