@@ -46,8 +46,8 @@ class TransactionsSchema(CheckboxBaseModel):
     updated_at: Optional[datetime]
     original_datetime: Optional[datetime]
     previous_hash: Optional[str]
-    request_data: Optional[bytes]
-    request_signature: Optional[bytes]
-    response_id_signature: Optional[bytes]
-    response_data_signature: Optional[bytes]
-    response_data: Optional[bytes]
+    request_data: Optional[bytes] = None
+    request_signature: Optional[bytes] = None
+    response_id_signature: Optional[bytes] = None
+    response_data_signature: Optional[bytes] = None
+    response_data: Optional[bytes] = None
