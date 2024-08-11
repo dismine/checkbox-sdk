@@ -23,6 +23,7 @@ from .api import (
     AsyncReports,
     AsyncExtendedReports,
     AsyncGoods,
+    AsyncOrders,
     AsyncCurrency,
     AsyncWebhook,
     AsyncInvoices,
@@ -49,6 +50,7 @@ class AsyncCheckBoxClient(BaseCheckBoxClient):
         self.reports = AsyncReports(self)
         self.extended_reports = AsyncExtendedReports(self)
         self.goods = AsyncGoods(self)
+        self.orders = AsyncOrders(self)
         self.currency = AsyncCurrency(self)
         self.webhook = AsyncWebhook(self)
         self.invoices = AsyncInvoices(self)

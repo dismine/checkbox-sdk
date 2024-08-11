@@ -81,7 +81,7 @@ class AddOrders(BaseMethod):
 
     def __init__(
         self,
-        orders: Optional[List[Dict]] = None,
+        orders: Optional[Union[List[Dict], Dict]] = None,
         **payload,
     ):
         if orders is not None and payload:
