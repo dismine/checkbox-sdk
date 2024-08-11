@@ -25,6 +25,7 @@ from .api import (
     Goods,
     Currency,
     Webhook,
+    Invoices,
     Branches,
 )
 
@@ -49,6 +50,7 @@ class CheckBoxClient(BaseCheckBoxClient):
         self.goods = Goods(self)
         self.currency = Currency(self)
         self.webhook = Webhook(self)
+        self.invoices = Invoices(self)
         self.branches = Branches(self)
 
     def __del__(self):
