@@ -1,0 +1,31 @@
+{
+  "receipt_body": {
+    "payments": [
+      {
+        "value": 20700,
+        "ettn": "20400012345678",
+        "type": "CASHLESS"
+      }
+    ],
+    "goods": [
+      {
+        "good": {
+          "code": "T100",
+          "name": "Тестовий товар 1",
+          "price": 5500
+        },
+        "quantity": 1000,
+        "is_return": false
+      },
+      {
+        "good": {
+          "code": "T200",
+          "name": "Тестовий товар 2",
+          "price": 15200
+        },
+        "quantity": 1000,
+        "is_return": false
+      }
+    ]
+  }
+}

@@ -1,8 +1,11 @@
 import datetime
-from typing import Optional, Union, List, Dict
+from typing import Optional, Union, Dict
 from uuid import UUID
 
+from httpx import Response
+
 from checkbox_sdk.methods.base import BaseMethod, HTTPMethod, PaginationMixin
+from checkbox_sdk.storage.simple import SessionStorage
 
 URI_PREFIX = "np/"
 
@@ -49,7 +52,7 @@ class PostEttnOrder(BaseMethod):
 
     def __init__(
         self,
-        order: Optional[List[Dict]] = None,
+        order: Optional[Dict] = None,
         **payload,
     ):
         if order is not None and payload:
@@ -61,6 +64,10 @@ class PostEttnOrder(BaseMethod):
         payload = super().payload
         payload.update(self.order)
         return payload
+
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        return result.decode()
 
 
 class PostEttnPrepaymentOrder(BaseMethod):
@@ -69,7 +76,7 @@ class PostEttnPrepaymentOrder(BaseMethod):
 
     def __init__(
         self,
-        order: Optional[List[Dict]] = None,
+        order: Optional[Dict] = None,
         **payload,
     ):
         if order is not None and payload:
@@ -81,6 +88,10 @@ class PostEttnPrepaymentOrder(BaseMethod):
         payload = super().payload
         payload.update(self.order)
         return payload
+
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        return result.decode()
 
 
 class GetEttnOrder(BaseMethod):
@@ -91,6 +102,10 @@ class GetEttnOrder(BaseMethod):
     def uri(self) -> str:
         order_id_str = str(self.order_id) if isinstance(self.order_id, UUID) else self.order_id
         return f"{URI_PREFIX}ettn/{order_id_str}"
+
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        return result.decode()
 
 
 class UpdateEttnOrder(BaseMethod):
@@ -123,6 +138,10 @@ class UpdateEttnOrder(BaseMethod):
 
         return payload
 
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        return result.decode()
+
 
 class DeleteEttnOrder(BaseMethod):
     method = HTTPMethod.DELETE
@@ -137,3 +156,7 @@ class DeleteEttnOrder(BaseMethod):
     def uri(self) -> str:
         order_id_str = str(self.order_id) if isinstance(self.order_id, UUID) else self.order_id
         return f"{URI_PREFIX}ettn/{order_id_str}"
+
+    def parse_response(self, storage: SessionStorage, response: Response):
+        result = super().parse_response(storage=storage, response=response)
+        return result.decode()

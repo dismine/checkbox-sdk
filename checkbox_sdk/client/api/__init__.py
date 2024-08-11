@@ -5,6 +5,7 @@ from .currency import Currency, AsyncCurrency
 from .extended_reports import ExtendedReports, AsyncExtendedReports
 from .goods import Goods, AsyncGoods
 from .invoices import Invoices, AsyncInvoices
+from .nova_post import NovaPost, AsyncNovaPost
 from .organization import Organization, AsyncOrganization
 from .prepayment_receipts import PrepaymentReceipts, AsyncPrepaymentReceipts
 from .receipts import Receipts, AsyncReceipts
@@ -45,4 +46,6 @@ __all__ = [
     "AsyncBranches",
     "Invoices",
     "AsyncInvoices",
+    "NovaPost",
+    "AsyncNovaPost",
 ]

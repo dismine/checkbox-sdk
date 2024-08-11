@@ -26,6 +26,7 @@ from .api import (
     AsyncCurrency,
     AsyncWebhook,
     AsyncInvoices,
+    AsyncNovaPost,
     AsyncBranches,
 )
 
@@ -51,6 +52,7 @@ class AsyncCheckBoxClient(BaseCheckBoxClient):
         self.currency = AsyncCurrency(self)
         self.webhook = AsyncWebhook(self)
         self.invoices = AsyncInvoices(self)
+        self.nova_post = AsyncNovaPost(self)
         self.branches = AsyncBranches(self)
 
     async def __aenter__(self):
