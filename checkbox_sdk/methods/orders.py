@@ -173,7 +173,7 @@ class EditOrder(BaseMethod):
 
     def __init__(
         self,
-        order: Optional[List[Dict]] = None,
+        order: Optional[Dict] = None,
         **payload,
     ):
         if order is not None and payload:

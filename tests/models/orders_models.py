@@ -112,7 +112,7 @@ class ReceiptDraftSchema(CheckboxBaseModel):
     footer: Optional[str]
     barcode: Optional[str]
     delivery: Optional[DeliverySchema]
-    type: Optional[OrderReceiptDraftTypeEnum] = "SELL"
+    type: Optional[OrderReceiptDraftTypeEnum] = OrderReceiptDraftTypeEnum.SELL
 
 
 class OrderSchema(CheckboxBaseModel):
