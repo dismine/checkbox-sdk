@@ -34,9 +34,12 @@ class NovaPost:
             A list of strings containing Ettn orders data based on the specified criteria.
 
         Example:
-            orders = client.nova_post.get_ettn_orders(status="completed", from_date="2024-01-01", to_date="2024-01-31")
-            for order in orders:
-                print(order)
+            .. code-block:: python
+
+                orders = client.nova_post.get_ettn_orders(status="completed", from_date="2024-01-01",
+                                                          to_date="2024-01-31")
+                for order in orders:
+                    print(order)
 
         Notes:
             - This method returns a list of raw Ettn orders data.
@@ -59,8 +62,10 @@ class NovaPost:
             A string containing the response from the system.
 
         Example:
-            response = client.nova_post.post_ettn_order(order=[{"item": "item1", "quantity": 10}])
-            print(response)
+            .. code-block:: python
+
+                response = client.nova_post.post_ettn_order(order=[{"item": "item1", "quantity": 10}])
+                print(response)
 
         Notes:
             - This method sends a POST request to create Ettn orders.
@@ -79,8 +84,10 @@ class NovaPost:
             A string containing the response from the system.
 
         Example:
-            response = client.nova_post.post_ettn_prepayment_order(order=[{"item": "item1", "quantity": 10}])
-            print(response)
+            .. code-block:: python
+
+                response = client.nova_post.post_ettn_prepayment_order(order=[{"item": "item1", "quantity": 10}])
+                print(response)
 
         Notes:
             - This method sends a POST request to create Ettn prepayment orders.
@@ -98,8 +105,10 @@ class NovaPost:
             A string containing the response from the system.
 
         Example:
-            response = client.nova_post.get_ettn_order(order_id="12345")
-            print(response)
+            .. code-block:: python
+
+                response = client.nova_post.get_ettn_order(order_id="12345")
+                print(response)
 
         Notes:
             - This method sends a GET request to retrieve the specified Ettn order.
@@ -121,9 +130,11 @@ class NovaPost:
             A string containing the response from the system.
 
         Example:
-            response = client.nova_post.update_ettn_order(order_id="12345", delivery_phone="555-1234",
-                                                          delivery_email="example@example.com")
-            print(response)
+            .. code-block:: python
+
+                response = client.nova_post.update_ettn_order(order_id="12345", delivery_phone="555-1234",
+                                                              delivery_email="example@example.com")
+                print(response)
 
         Notes:
             - This method sends a PUT request to update the specified Ettn order.
@@ -143,8 +154,10 @@ class NovaPost:
             A string containing the response from the system.
 
         Example:
-            response = client.nova_post.delete_ettn_order(order_id="12345")
-            print(response)
+            .. code-block:: python
+
+                response = client.nova_post.delete_ettn_order(order_id="12345")
+                print(response)
 
         Notes:
             - This method sends a DELETE request to remove the specified Ettn order.
@@ -180,10 +193,12 @@ class AsyncNovaPost:
             A list of strings containing Ettn orders data based on the specified criteria.
 
         Example:
-            orders = await client.nova_post.get_ettn_orders(status="completed", from_date="2024-01-01",
-                                                            to_date="2024-01-31")
-            for order in orders:
-                print(order)
+            .. code-block:: python
+
+                orders = await client.nova_post.get_ettn_orders(status="completed", from_date="2024-01-01",
+                                                                to_date="2024-01-31")
+                for order in orders:
+                    print(order)
 
         Notes:
             - This method returns a list of raw Ettn orders data.
@@ -206,8 +221,10 @@ class AsyncNovaPost:
             A string containing the response from the system.
 
         Example:
-            response = await client.nova_post.post_ettn_order(order=[{"item": "item1", "quantity": 10}])
-            print(response)
+            .. code-block:: python
+
+                response = await client.nova_post.post_ettn_order(order=[{"item": "item1", "quantity": 10}])
+                print(response)
 
         Notes:
             - This method sends a POST request to create Ettn orders.
@@ -226,8 +243,10 @@ class AsyncNovaPost:
             A string containing the response from the system.
 
         Example:
-            response = await client.nova_post.post_ettn_prepayment_order(order=[{"item": "item1", "quantity": 10}])
-            print(response)
+            .. code-block:: python
+
+                response = await client.nova_post.post_ettn_prepayment_order(order=[{"item": "item1", "quantity": 10}])
+                print(response)
 
         Notes:
             - This method sends a POST request to create Ettn prepayment orders.
@@ -245,8 +264,10 @@ class AsyncNovaPost:
             A string containing the response from the system.
 
         Example:
-            response = await client.nova_post.get_ettn_order(order_id="12345")
-            print(response)
+            .. code-block:: python
+
+                response = await client.nova_post.get_ettn_order(order_id="12345")
+                print(response)
 
         Notes:
             - This method sends a GET request to retrieve the specified Ettn order.
@@ -268,9 +289,11 @@ class AsyncNovaPost:
             A string containing the response from the system.
 
         Example:
-            response = await client.nova_post.update_ettn_order(order_id="12345", delivery_phone="555-1234",
-                                                                delivery_email="example@example.com")
-            print(response)
+            .. code-block:: python
+
+                response = await client.nova_post.update_ettn_order(order_id="12345", delivery_phone="555-1234",
+                                                                    delivery_email="example@example.com")
+                print(response)
 
         Notes:
             - This method sends a PUT request to update the specified Ettn order.
@@ -290,8 +313,10 @@ class AsyncNovaPost:
             A string containing the response from the system.
 
         Example:
-            response = await client.nova_post.delete_ettn_order(order_id="12345")
-            print(response)
+            .. code-block:: python
+
+                response = await client.nova_post.delete_ettn_order(order_id="12345")
+                print(response)
 
         Notes:
             - This method sends a DELETE request to remove the specified Ettn order.

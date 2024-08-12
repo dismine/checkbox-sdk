@@ -19,8 +19,10 @@ class Webhook:
             A dictionary containing the details of the current webhook configuration.
 
         Example:
-            response = client.webhook.get_webhook_info()
-            print(response)
+            .. code-block:: python
+
+                response = client.webhook.get_webhook_info()
+                print(response)
 
         Notes:
             - This method sends a GET request to retrieve the current webhook configuration.
@@ -38,8 +40,10 @@ class Webhook:
             A dictionary containing the details of the updated webhook configuration.
 
         Example:
-            response = client.webhook.set_webhook(url="https://example.com/webhook")
-            print(response)
+            .. code-block:: python
+
+                response = client.webhook.set_webhook(url="https://example.com/webhook")
+                print(response)
 
         Notes:
             - This method sends a POST request to update the webhook URL.
@@ -54,8 +58,10 @@ class Webhook:
             A dictionary containing the result of the delete operation.
 
         Example:
-            response = client.webhook.delete_webhook()
-            print(response)
+            .. code-block::
+
+                response = client.webhook.delete_webhook()
+                print(response)
 
         Notes:
             - This method sends a DELETE request to remove the webhook configuration.
@@ -81,8 +87,10 @@ class AsyncWebhook:
             A dictionary containing the details of the current webhook configuration.
 
         Example:
-            response = await client.webhook.get_webhook_info()
-            print(response)
+            .. code-block:: python
+
+                response = await client.webhook.get_webhook_info()
+                print(response)
 
         Notes:
             - This method sends an asynchronous GET request to retrieve the current webhook configuration.
@@ -100,8 +108,10 @@ class AsyncWebhook:
             A dictionary containing the details of the updated webhook configuration.
 
         Example:
-            response = await client.webhook.set_webhook(url="https://example.com/webhook")
-            print(response)
+            .. code-block:: python
+
+                response = await client.webhook.set_webhook(url="https://example.com/webhook")
+                print(response)
 
         Notes:
             - This method sends an asynchronous POST request to update the webhook URL.
@@ -116,8 +126,10 @@ class AsyncWebhook:
             A dictionary containing the result of the delete operation.
 
         Example:
-            response = await client.webhook.delete_webhook()
-            print(response)
+            .. code-block:: python
+
+                response = await client.webhook.delete_webhook()
+                print(response)
 
         Notes:
             - This method sends an asynchronous DELETE request to remove the webhook configuration.

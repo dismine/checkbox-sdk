@@ -46,8 +46,10 @@ class Goods:
             Goods based on the specified criteria.
 
         Example:
-            for good in client.goods.get_goods(group_id="123", query="item"):
-                print(good)
+            .. code-block:: python
+
+                for good in client.goods.get_goods(group_id="123", query="item"):
+                    print(good)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield goods until no more results
@@ -106,8 +108,10 @@ class Goods:
             Groups based on the specified criteria.
 
         Example:
-            for group in client.goods.get_groups(search="Electronics"):
-                print(group)
+            .. code-block:: python
+
+                for group in client.goods.get_groups(search="Electronics"):
+                    print(group)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield groups until no more results
@@ -151,8 +155,10 @@ class Goods:
             A dictionary containing the details of the retrieved good.
 
         Example:
-            good = client.goods.get_good(good_id="123e4567-e89b-12d3-a456-426614174000")
-            print(good)
+            .. code-block:: python
+
+                good = client.goods.get_good(good_id="123e4567-e89b-12d3-a456-426614174000")
+                print(good)
 
         Notes:
             - This method sends a GET request to retrieve the good with the specified ID.
@@ -183,8 +189,10 @@ class Goods:
             The exported goods data as a string or bytes, depending on the format.
 
         Example:
-            export_result = client.goods.export_goods(export_extension="csv")
-            print(export_result)
+            .. code-block:: python
+
+                export_result = client.goods.export_goods(export_extension="csv")
+                print(export_result)
 
         Notes:
             - This method sends a request to export the goods data in the specified format.
@@ -251,8 +259,10 @@ class Goods:
             A dictionary containing the result of the import operation.
 
         Example:
-            result = client.goods.import_goods(file="/path/to/file.csv", ignore_barcode_duplicates=True)
-            print(result)
+            .. code-block:: python
+
+                result = client.goods.import_goods(file="/path/to/file.csv", ignore_barcode_duplicates=True)
+                print(result)
 
         Notes:
             - This method sends a POST request to import goods from the specified file.
@@ -353,8 +363,10 @@ class AsyncGoods:
             Goods based on the specified criteria.
 
         Example:
-            async for good in client.goods.get_goods(group_id="123", query="item"):
-                print(good)
+            .. code-block:: python
+
+                async for good in client.goods.get_goods(group_id="123", query="item"):
+                    print(good)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield goods until no more results
@@ -415,8 +427,10 @@ class AsyncGoods:
             Groups based on the specified criteria.
 
         Example:
-            async for group in client.goods.get_groups(search="Electronics"):
-                print(group)
+            .. code-block:: python
+
+                async for group in client.goods.get_groups(search="Electronics"):
+                    print(group)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield groups until no more results
@@ -462,8 +476,10 @@ class AsyncGoods:
             A dictionary containing the details of the retrieved good.
 
         Example:
-            good = await client.goods.get_good(good_id="123e4567-e89b-12d3-a456-426614174000")
-            print(good)
+            .. code-block:: python
+
+                good = await client.goods.get_good(good_id="123e4567-e89b-12d3-a456-426614174000")
+                print(good)
 
         Notes:
             - This method sends a GET request to retrieve the good with the specified ID asynchronously.
@@ -494,8 +510,10 @@ class AsyncGoods:
             The exported goods data as a string or bytes, depending on the format.
 
         Example:
-            export_result = await client.goods.export_goods(export_extension="csv")
-            print(export_result)
+            .. code-block:: python
+
+                export_result = await client.goods.export_goods(export_extension="csv")
+                print(export_result)
 
         Notes:
             - This method sends a request to export the goods data in the specified format asynchronously.
@@ -562,8 +580,10 @@ class AsyncGoods:
             A dictionary containing the result of the import operation.
 
         Example:
-            result = await client.goods.import_goods(file="/path/to/file.csv", ignore_barcode_duplicates=True)
-            print(result)
+            .. code-block:: python
+
+                result = await client.goods.import_goods(file="/path/to/file.csv", ignore_barcode_duplicates=True)
+                print(result)
 
         Notes:
             - This method sends a POST request to asynchronously import goods from the specified file.

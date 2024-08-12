@@ -23,8 +23,10 @@ class Branches:
             Dictionaries, each containing details of a branch.
 
         Example:
-            for branch in client.branches.get_all_branches():
-                print(branch)
+            .. code-block:: python
+
+                for branch in client.branches.get_all_branches():
+                    print(branch)
 
         Notes:
             - This method handles pagination to retrieve all branches.
@@ -55,8 +57,10 @@ class AsyncBranches:
             Dictionaries, each containing details of a branch.
 
         Example:
-            async for branch in client.branches.get_all_branches():
-                print(branch)
+            .. code-block:: python
+
+                async for branch in client.branches.get_all_branches():
+                    print(branch)
 
         Notes:
             - This method handles pagination to retrieve all branches.

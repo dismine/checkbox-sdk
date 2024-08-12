@@ -22,9 +22,11 @@ class Currency:
             A list of dictionaries, where each dictionary contains details of a currency rate.
 
         Example:
-            rates = client.currency.get_currency_rates(active=True)
-            for rate in rates:
-                print(rate)
+            .. code-block:: python
+
+                rates = client.currency.get_currency_rates(active=True)
+                for rate in rates:
+                    print(rate)
 
         Notes:
             - This method sends a request to retrieve currency rates.
@@ -49,8 +51,10 @@ class Currency:
             A list of dictionaries containing the details of the setup operation.
 
         Example:
-            response = client.currency.setup_currency_rates(rates=[{"currency": "USD", "rate": 1.0}])
-            print(response)
+            .. code-block:: python
+
+                response = client.currency.setup_currency_rates(rates=[{"currency": "USD", "rate": 1.0}])
+                print(response)
 
         Notes:
             - This method sends a POST request to set up currency rates.
@@ -74,8 +78,10 @@ class Currency:
             A dictionary containing the details of the current exchange rate for the specified currency.
 
         Example:
-            response = client.currency.get_currency_rate(currency_code="USD")
-            print(response)
+            .. code-block:: python
+
+                response = client.currency.get_currency_rate(currency_code="USD")
+                print(response)
 
         Notes:
             - This method sends a GET request to retrieve the current exchange rate for the specified currency.
@@ -101,9 +107,11 @@ class AsyncCurrency:
             A list of dictionaries, where each dictionary contains details of a currency rate.
 
         Example:
-            rates = await client.currency.get_currency_rates(active=True)
-            for rate in rates:
-                print(rate)
+            .. code-block:: python
+
+                rates = await client.currency.get_currency_rates(active=True)
+                for rate in rates:
+                    print(rate)
 
         Notes:
             - This method sends an asynchronous request to retrieve currency rates.
@@ -128,8 +136,10 @@ class AsyncCurrency:
             A list of dictionaries containing the details of the setup operation.
 
         Example:
-            response = await client.currency.setup_currency_rates(rates=[{"currency": "USD", "rate": 1.0}])
-            print(response)
+            .. code-block:: python
+
+                response = await client.currency.setup_currency_rates(rates=[{"currency": "USD", "rate": 1.0}])
+                print(response)
 
         Notes:
             - This method sends an asynchronous POST request to set up currency rates.
@@ -153,8 +163,10 @@ class AsyncCurrency:
             A dictionary containing the details of the current exchange rate for the specified currency.
 
         Example:
-            response = await client.currency.get_currency_rate(currency_code="USD")
-            print(response)
+            .. code-block:: python
+
+                response = await client.currency.get_currency_rate(currency_code="USD")
+                print(response)
 
         Notes:
             - This method sends an asynchronous GET request to retrieve the current exchange rate for the specified

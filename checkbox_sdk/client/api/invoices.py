@@ -21,8 +21,10 @@ class Invoices:
             A list of dictionaries containing terminal details.
 
         Example:
-            terminals = client.invoices.get_terminals()
-            print(terminals)
+            .. code-block:: python
+
+                terminals = client.invoices.get_terminals()
+                print(terminals)
 
         Notes:
             - This method sends a GET request to retrieve terminals information.
@@ -53,8 +55,10 @@ class Invoices:
             Invoices based on the specified criteria.
 
         Example:
-            for invoice in client.invoices.get_invoices(status="paid"):
-                print(invoice)
+            .. code-block:: python
+
+                for invoice in client.invoices.get_invoices(status="paid"):
+                    print(invoice)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield invoices until no more results
@@ -95,8 +99,10 @@ class Invoices:
             A dictionary containing the details of the created invoices.
 
         Example:
-            response = client.invoices.create_invoice(invoice=[{"item": "item1", "amount": 100}])
-            print(response)
+            .. code-block:: python
+
+                response = client.invoices.create_invoice(invoice=[{"item": "item1", "amount": 100}])
+                print(response)
 
         Notes:
             - This method sends a POST request to create invoices.
@@ -120,8 +126,10 @@ class Invoices:
             A dictionary containing the details of the created and fiscalized invoices.
 
         Example:
-            response = client.invoices.create_and_fiscalize_invoice(invoice=[{"item": "item1", "amount": 100}])
-            print(response)
+            .. code-block:: python
+
+                response = client.invoices.create_and_fiscalize_invoice(invoice=[{"item": "item1", "amount": 100}])
+                print(response)
 
         Notes:
             - This method sends a POST request to create and fiscalize invoices.
@@ -142,8 +150,10 @@ class Invoices:
             A dictionary containing the details of the invoice.
 
         Example:
-            invoice = client.invoices.get_invoice_by_id(invoice_id="12345")
-            print(invoice)
+            .. code-block:: python
+
+                invoice = client.invoices.get_invoice_by_id(invoice_id="12345")
+                print(invoice)
 
         Notes:
             - This method sends a GET request to retrieve an invoice by its ID.
@@ -164,8 +174,10 @@ class Invoices:
             A dictionary containing the response from the cancellation request.
 
         Example:
-            response = client.invoices.cancel_invoice_by_id(invoice_id="12345")
-            print(response)
+            .. code-block:: python
+
+                response = client.invoices.cancel_invoice_by_id(invoice_id="12345")
+                print(response)
 
         Notes:
             - This method sends a DELETE request to cancel an invoice by its ID.
@@ -186,8 +198,10 @@ class Invoices:
             A dictionary containing the response from the removal request.
 
         Example:
-            response = client.invoices.remove_invoice_by_id(invoice_id="12345")
-            print(response)
+            .. code-block:: python
+
+                response = client.invoices.remove_invoice_by_id(invoice_id="12345")
+                print(response)
 
         Notes:
             - This method sends a DELETE request to remove an invoice by its ID.
@@ -210,8 +224,10 @@ class AsyncInvoices:
             A list of dictionaries containing terminal details.
 
         Example:
-            terminals = await client.invoices.get_terminals()
-            print(terminals)
+            .. code-block:: python
+
+                terminals = await client.invoices.get_terminals()
+                print(terminals)
 
         Notes:
             - This method sends an asynchronous GET request to retrieve terminals information.
@@ -242,8 +258,10 @@ class AsyncInvoices:
             Invoices based on the specified criteria.
 
         Example:
-            async for invoice in client.invoices.get_invoices(status="paid"):
-                print(invoice)
+            .. code-block:: python
+
+                async for invoice in client.invoices.get_invoices(status="paid"):
+                    print(invoice)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield invoices until no more results
@@ -286,8 +304,10 @@ class AsyncInvoices:
             A dictionary containing the details of the created invoices.
 
         Example:
-            response = await client.invoices.create_invoice(invoice=[{"item": "item1", "amount": 100}])
-            print(response)
+            .. code-block:: python
+
+                response = await client.invoices.create_invoice(invoice=[{"item": "item1", "amount": 100}])
+                print(response)
 
         Notes:
             - This method sends a POST request to create invoices.
@@ -311,8 +331,11 @@ class AsyncInvoices:
             A dictionary containing the details of the created and fiscalized invoices.
 
         Example:
-            response = await client.invoices.create_and_fiscalize_invoice(invoice=[{"item": "item1", "amount": 100}])
-            print(response)
+            .. code-block:: python
+
+                response = await client.invoices.create_and_fiscalize_invoice(invoice=[{"item": "item1",
+                                                                                        "amount": 100}])
+                print(response)
 
         Notes:
             - This method sends a POST request to create and fiscalize invoices.
@@ -333,8 +356,10 @@ class AsyncInvoices:
             A dictionary containing the details of the invoice.
 
         Example:
-            invoice = await client.invoices.get_invoice_by_id(invoice_id="12345")
-            print(invoice)
+            .. code-block:: python
+
+                invoice = await client.invoices.get_invoice_by_id(invoice_id="12345")
+                print(invoice)
 
         Notes:
             - This method sends a GET request to retrieve an invoice by its ID.
@@ -355,8 +380,10 @@ class AsyncInvoices:
             A dictionary containing the response from the cancellation request.
 
         Example:
-            response = await client.invoices.cancel_invoice_by_id(invoice_id="12345")
-            print(response)
+            .. code-block:: python
+
+                response = await client.invoices.cancel_invoice_by_id(invoice_id="12345")
+                print(response)
 
         Notes:
             - This method sends a DELETE request to cancel an invoice by its ID.
@@ -377,8 +404,10 @@ class AsyncInvoices:
             A dictionary containing the response from the removal request.
 
         Example:
-            response = await client.invoices.remove_invoice_by_id(invoice_id="12345")
-            print(response)
+            .. code-block:: python
+
+                response = await client.invoices.remove_invoice_by_id(invoice_id="12345")
+                print(response)
 
         Notes:
             - This method sends a DELETE request to remove an invoice by its ID.

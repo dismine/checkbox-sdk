@@ -27,8 +27,10 @@ class ExtendedReports:
             A dictionary containing the details of the generated goods report.
 
         Example:
-            report = client.extended_reports.goods_report(data=[{"item": "example"}])
-            print(report)
+            .. code-block:: python
+
+                report = client.extended_reports.goods_report(data=[{"item": "example"}])
+                print(report)
 
         Notes:
             - This method sends a POST request to generate the goods report.
@@ -56,8 +58,10 @@ class ExtendedReports:
             A dictionary containing the details of the created Z report.
 
         Example:
-            z_report = client.extended_reports.create_z_report(data=[{"item": "example"}])
-            print(z_report)
+            .. code-block:: python
+
+                z_report = client.extended_reports.create_z_report(data=[{"item": "example"}])
+                print(z_report)
 
         Notes:
             - This method sends a POST request to create a Z report.
@@ -87,8 +91,10 @@ class ExtendedReports:
             A dictionary containing the details of the created actual revenue report.
 
         Example:
-            revenue_report = client.extended_reports.actual_revenue_report(data=[{"item": "example"}])
-            print(revenue_report)
+            .. code-block:: python
+
+                revenue_report = client.extended_reports.actual_revenue_report(data=[{"item": "example"}])
+                print(revenue_report)
 
         Notes:
             - This method sends a POST request to create an actual revenue report.
@@ -118,8 +124,10 @@ class ExtendedReports:
             A dictionary containing the details of the created net turnover report.
 
         Example:
-            turnover_report = client.extended_reports.net_turnover_report(data=[{"item": "example"}])
-            print(turnover_report)
+            .. code-block:: python
+
+                turnover_report = client.extended_reports.net_turnover_report(data=[{"item": "example"}])
+                print(turnover_report)
 
         Notes:
             - This method sends a POST request to create a net turnover report.
@@ -149,8 +157,10 @@ class ExtendedReports:
             A dictionary containing the details of the created bookkeeper Z report.
 
         Example:
-            z_report = client.extended_reports.bookkeeper_z_report(data=[{"item": "example"}])
-            print(z_report)
+            .. code-block:: python
+
+                z_report = client.extended_reports.bookkeeper_z_report(data=[{"item": "example"}])
+                print(z_report)
 
         Notes:
             - This method sends a POST request to create a bookkeeper Z report.
@@ -180,8 +190,10 @@ class ExtendedReports:
             A dictionary containing the details of the created daily cash flow report.
 
         Example:
-            cash_flow_report = client.extended_reports.daily_cash_flow_report(data=[{"item": "example"}])
-            print(cash_flow_report)
+            .. code-block:: python
+
+                cash_flow_report = client.extended_reports.daily_cash_flow_report(data=[{"item": "example"}])
+                print(cash_flow_report)
 
         Notes:
             - This method sends a POST request to create a daily cash flow report.
@@ -211,8 +223,10 @@ class ExtendedReports:
             A dictionary containing the details of the created receipt report.
 
         Example:
-            receipt_report = client.extended_reports.create_receipt_report(data=[{"item": "example"}])
-            print(receipt_report)
+            .. code-block:: python
+
+                receipt_report = client.extended_reports.create_receipt_report(data=[{"item": "example"}])
+                print(receipt_report)
 
         Notes:
             - This method sends a POST request to create a receipt report.
@@ -240,9 +254,11 @@ class ExtendedReports:
             A dictionary containing the details of the retrieved report task.
 
         Example:
-            report_task =
-                client.extended_reports.get_report_task_by_id(report_task_id="123e4567-e89b-12d3-a456-426614174000")
-            print(report_task)
+            .. code-block:: python
+
+                report_task =
+                    client.extended_reports.get_report_task_by_id(report_task_id="123e4567-e89b-12d3-a456-426614174000")
+                print(report_task)
 
         Notes:
             - This method sends a GET request to retrieve the report task with the specified ID.
@@ -268,9 +284,11 @@ class ExtendedReports:
             A dictionary containing the details of the report task and possibly the XLSX file.
 
         Example:
-            report_task_details =
-                client.extended_reports.report_xlsx_task_by_id(report_task_id="123e4567-e89b-12d3-a456-426614174000")
-            print(report_task_details)
+            .. code-block:: python
+
+                report_task_details =
+                    client.extended_reports.report_xlsx_task_by_id(report_task_id="123e4567-e89b-12d3-a456-426614174000")
+                print(report_task_details)
 
         Notes:
             - This method sends a GET request to retrieve the details of the report task with the specified ID.
@@ -296,9 +314,12 @@ class ExtendedReports:
             A dictionary containing the details of the report task and possibly the JSON file.
 
         Example:
-            report_task_details =
-                client.extended_reports.report_json_task_by_id(report_task_id="123e4567-e89b-12d3-a456-426614174000")
-            print(report_task_details)
+            .. code-block:: python
+
+                report_task_details =
+                    client.extended_reports.
+                    report_json_task_by_id(report_task_id="123e4567-e89b-12d3-a456-426614174000")
+                print(report_task_details)
 
         Notes:
             - This method sends a GET request to retrieve the details of the report task with the specified ID.
@@ -331,8 +352,10 @@ class AsyncExtendedReports:
             A dictionary containing the details of the generated goods report.
 
         Example:
-            report = await client.extended_reports.goods_report(data=[{"item": "example"}])
-            print(report)
+            .. code-block:: python
+
+                report = await client.extended_reports.goods_report(data=[{"item": "example"}])
+                print(report)
 
         Notes:
             - This method sends a POST request to generate the goods report asynchronously.
@@ -360,8 +383,10 @@ class AsyncExtendedReports:
             A dictionary containing the details of the created Z report.
 
         Example:
-            z_report = await client.create_z_report(data=[{"item": "example"}])
-            print(z_report)
+            .. code-block:: python
+
+                z_report = await client.create_z_report(data=[{"item": "example"}])
+                print(z_report)
 
         Notes:
             - This method sends a POST request to create a Z report asynchronously.
@@ -391,8 +416,10 @@ class AsyncExtendedReports:
             A dictionary containing the details of the created actual revenue report.
 
         Example:
-            revenue_report = await client.extended_reports.actual_revenue_report(data=[{"item": "example"}])
-            print(revenue_report)
+            .. code-block:: python
+
+                revenue_report = await client.extended_reports.actual_revenue_report(data=[{"item": "example"}])
+                print(revenue_report)
 
         Notes:
             - This method sends a POST request to create an actual revenue report asynchronously.
@@ -422,8 +449,10 @@ class AsyncExtendedReports:
             A dictionary containing the details of the created net turnover report.
 
         Example:
-            turnover_report = await client.extended_reports.net_turnover_report(data=[{"item": "example"}])
-            print(turnover_report)
+            .. code-block:: python
+
+                turnover_report = await client.extended_reports.net_turnover_report(data=[{"item": "example"}])
+                print(turnover_report)
 
         Notes:
             - This method sends a POST request to create a net turnover report asynchronously.
@@ -453,8 +482,10 @@ class AsyncExtendedReports:
             A dictionary containing the details of the created bookkeeper Z report.
 
         Example:
-            z_report = await client.extended_reports.bookkeeper_z_report(data=[{"item": "example"}])
-            print(z_report)
+            .. code-block:: python
+
+                z_report = await client.extended_reports.bookkeeper_z_report(data=[{"item": "example"}])
+                print(z_report)
 
         Notes:
             - This method sends a POST request to create a bookkeeper Z report asynchronously.
@@ -484,8 +515,10 @@ class AsyncExtendedReports:
             A dictionary containing the details of the created daily cash flow report.
 
         Example:
-            cash_flow_report = await client.extended_reports.daily_cash_flow_report(data=[{"item": "example"}])
-            print(cash_flow_report)
+            .. code-block:: python
+
+                cash_flow_report = await client.extended_reports.daily_cash_flow_report(data=[{"item": "example"}])
+                print(cash_flow_report)
 
         Notes:
             - This method sends a POST request to create a daily cash flow report asynchronously.
@@ -515,8 +548,10 @@ class AsyncExtendedReports:
             A dictionary containing the details of the created receipt report.
 
         Example:
-            receipt_report = await client.extended_reports.create_receipt_report(data=[{"item": "example"}])
-            print(receipt_report)
+            .. code-block:: python
+
+                receipt_report = await client.extended_reports.create_receipt_report(data=[{"item": "example"}])
+                print(receipt_report)
 
         Notes:
             - This method sends a POST request to create a receipt report asynchronously.
@@ -544,9 +579,11 @@ class AsyncExtendedReports:
             A dictionary containing the details of the retrieved report task.
 
         Example:
-            report_task = await client.extended_reports.get_report_task_by_id(
-                report_task_id="123e4567-e89b-12d3-a456-426614174000")
-            print(report_task)
+            .. code-block:: python
+
+                report_task = await client.extended_reports.get_report_task_by_id(
+                    report_task_id="123e4567-e89b-12d3-a456-426614174000")
+                print(report_task)
 
         Notes:
             - This method sends a GET request to retrieve the report task with the specified ID asynchronously.
@@ -572,9 +609,11 @@ class AsyncExtendedReports:
             A dictionary containing the details of the report task and possibly the XLSX file.
 
         Example:
-            report_task_details = await client.report_xlsx_task_by_id(
-                report_task_id="123e4567-e89b-12d3-a456-426614174000")
-            print(report_task_details)
+            .. code-block:: python
+
+                report_task_details = await client.report_xlsx_task_by_id(
+                    report_task_id="123e4567-e89b-12d3-a456-426614174000")
+                print(report_task_details)
 
         Notes:
             - This method sends a GET request to asynchronously retrieve the details of the report task with the
@@ -601,9 +640,11 @@ class AsyncExtendedReports:
             A dictionary containing the details of the report task and possibly the JSON file.
 
         Example:
-            report_task_details = await client.report_json_task_by_id(
-                report_task_id="123e4567-e89b-12d3-a456-426614174000")
-            print(report_task_details)
+            .. code-block:: python
+
+                report_task_details = await client.report_json_task_by_id(
+                    report_task_id="123e4567-e89b-12d3-a456-426614174000")
+                print(report_task_details)
 
         Notes:
             - This method sends a GET request to asynchronously retrieve the details of the report task with the

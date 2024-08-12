@@ -57,8 +57,10 @@ class Transactions:
             Transactions based on the specified criteria.
 
         Example:
-            for transaction in client.get_transactions(status=["DONE"], type=["Z_REPORT"]):
-                print(transaction)
+            .. code-block:: python
+
+                for transaction in client.get_transactions(status=["DONE"], type=["Z_REPORT"]):
+                    print(transaction)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield transactions until no more
@@ -135,8 +137,10 @@ class AsyncTransactions:
             Transactions based on the specified criteria.
 
         Example:
-            async for transaction in client.get_transactions(status=["DONE"], type=["Z_REPORT"]):
-                print(transaction)
+            .. code-block:: python
+
+                async for transaction in client.get_transactions(status=["DONE"], type=["Z_REPORT"]):
+                    print(transaction)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield transactions until no more

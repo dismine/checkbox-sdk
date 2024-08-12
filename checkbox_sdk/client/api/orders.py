@@ -24,8 +24,10 @@ class Orders:
             A string containing the result of the synchronization process.
 
         Example:
-            result = client.orders.run_orders_synchronization()
-            print(result)
+            .. code-block:: python
+
+                result = client.orders.run_orders_synchronization()
+                print(result)
 
         Notes:
             - This method sends a POST request to run the synchronization of orders.
@@ -67,8 +69,10 @@ class Orders:
             Orders based on the specified criteria.
 
         Example:
-            for order in client.orders.get_orders(status=["shipped"], limit=50):
-                print(order)
+            .. code-block:: python
+
+                for order in client.orders.get_orders(status=["shipped"], limit=50):
+                    print(order)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield orders until no more results
@@ -113,8 +117,10 @@ class Orders:
             A list of dictionaries containing the details of the added orders.
 
         Example:
-            response = client.orders.add_orders(orders_list=[{"item": "item1", "quantity": 10}])
-            print(response)
+            .. code-block:: python
+
+                response = client.orders.add_orders(orders_list=[{"item": "item1", "quantity": 10}])
+                print(response)
 
         Notes:
             - This method sends a POST request to add orders.
@@ -136,8 +142,10 @@ class Orders:
             A dictionary containing the details of the integration.
 
         Example:
-            integration_details = client.orders.get_integration()
-            print(integration_details)
+            .. code-block:: python
+
+                integration_details = client.orders.get_integration()
+                print(integration_details)
 
         Notes:
             - This method sends a GET request to retrieve integration details.
@@ -161,8 +169,10 @@ class Orders:
             A dictionary containing the details of the set integration.
 
         Example:
-            response = client.orders.set_integration(url="https://example.com")
-            print(response)
+            .. code-block:: python
+
+                response = client.orders.set_integration(url="https://example.com")
+                print(response)
 
         Notes:
             - This method sends a POST request to set the integration URL.
@@ -180,8 +190,10 @@ class Orders:
             with a boolean value indicating success.
 
         Example:
-            response = client.orders.delete_integration()
-            print(response)
+            .. code-block:: python
+
+                response = client.orders.delete_integration()
+                print(response)
 
         Notes:
             - This method sends a DELETE request to remove the current integration.
@@ -203,8 +215,10 @@ class Orders:
             A dictionary containing the details of the specified order.
 
         Example:
-            order = client.orders.get_order(order_id="123e4567-e89b-12d3-a456-426614174000", orders_all=True)
-            print(order)
+            .. code-block:: python
+
+                order = client.orders.get_order(order_id="123e4567-e89b-12d3-a456-426614174000", orders_all=True)
+                print(order)
 
         Notes:
             - This method sends a GET request to retrieve the order with the specified ID.
@@ -226,8 +240,10 @@ class Orders:
             A dictionary containing the result of the cancellation.
 
         Example:
-            result = client.orders.cancel_order(order_id="123e4567-e89b-12d3-a456-426614174000")
-            print(result)
+            .. code-block:: python
+
+                result = client.orders.cancel_order(order_id="123e4567-e89b-12d3-a456-426614174000")
+                print(result)
 
         Notes:
             - This method sends a PATCH request to cancel the order with the specified ID.
@@ -251,8 +267,10 @@ class Orders:
             A dictionary containing the result of the operation.
 
         Example:
-            result = client.orders.close_not_fiscalize_order(order_id="123e4567-e89b-12d3-a456-426614174000")
-            print(result)
+            .. code-block:: python
+
+                result = client.orders.close_not_fiscalize_order(order_id="123e4567-e89b-12d3-a456-426614174000")
+                print(result)
 
         Notes:
             - This method sends a PATCH request to close the specified order without fiscalizing it.
@@ -279,8 +297,10 @@ class Orders:
             A dictionary containing the details of the edited order.
 
         Example:
-            response = client.orders.edit_order(order_update={"order_id": "123", "status": "shipped"})
-            print(response)
+            .. code-block:: python
+
+                response = client.orders.edit_order(order_update={"order_id": "123", "status": "shipped"})
+                print(response)
 
         Notes:
             - This method sends a POST request to edit the specified order.
@@ -301,8 +321,10 @@ class Orders:
             A dictionary containing the details of the updated order status.
 
         Example:
-            response = client.orders.update_custom_order_status(order_id="123", new_status="processing")
-            print(response)
+            .. code-block:: python
+
+                response = client.orders.update_custom_order_status(order_id="123", new_status="processing")
+                print(response)
 
         Notes:
             - This method sends a PATCH request to update the custom status of the specified order.
@@ -320,8 +342,10 @@ class Orders:
             A dictionary containing the result of the deletion operation.
 
         Example:
-            response = client.orders.delete_order(order_id="123")
-            print(response)
+            .. code-block:: python
+
+                response = client.orders.delete_order(order_id="123")
+                print(response)
 
         Notes:
             - This method sends a POST request to delete the specified order.
@@ -348,8 +372,10 @@ class AsyncOrders:
             A string containing the result of the synchronization process.
 
         Example:
-            result = await client.orders.run_orders_synchronization()
-            print(result)
+            .. code-block:: python
+
+                result = await client.orders.run_orders_synchronization()
+                print(result)
 
         Notes:
             - This method sends a POST request to asynchronously run the synchronization of orders.
@@ -391,8 +417,10 @@ class AsyncOrders:
             Orders based on the specified criteria.
 
         Example:
-            async for order in client.get_orders(status=["shipped"], limit=50):
-                print(order)
+            .. code-block:: python
+
+                async for order in client.get_orders(status=["shipped"], limit=50):
+                    print(order)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield orders until no more results
@@ -439,8 +467,10 @@ class AsyncOrders:
             A list of dictionaries containing the details of the added orders.
 
         Example:
-            response = await client.orders.add_orders(orders_list=[{"item": "item1", "quantity": 10}])
-            print(response)
+            .. code-block:: python
+
+                response = await client.orders.add_orders(orders_list=[{"item": "item1", "quantity": 10}])
+                print(response)
 
         Notes:
             - This method sends a POST request to add orders asynchronously.
@@ -463,8 +493,10 @@ class AsyncOrders:
             A dictionary containing the details of the integration.
 
         Example:
-            integration_details = await client.orders.get_integration()
-            print(integration_details)
+            .. code-block:: python
+
+                integration_details = await client.orders.get_integration()
+                print(integration_details)
 
         Notes:
             - This method sends a GET request to retrieve integration details asynchronously.
@@ -488,8 +520,10 @@ class AsyncOrders:
             A dictionary containing the details of the set integration.
 
         Example:
-            response = await client.orders.set_integration(url="https://example.com")
-            print(response)
+            .. code-block:: python
+
+                response = await client.orders.set_integration(url="https://example.com")
+                print(response)
 
         Notes:
             - This method sends a POST request to set the integration URL asynchronously.

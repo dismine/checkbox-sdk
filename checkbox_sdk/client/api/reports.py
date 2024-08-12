@@ -81,8 +81,10 @@ class Reports:
             A dictionary containing the details of the created X report.
 
         Example:
-            report = client.reports.create_x_report()
-            print(report)
+            .. code-block:: python
+
+                report = client.reports.create_x_report()
+                print(report)
         """
         return self.client(
             reports.CreateXReport(),
@@ -121,8 +123,10 @@ class Reports:
             Results of search reports based on the specified criteria.
 
         Example:
-            for report in client.reports.get_search_reports(from_date="2024-01-01", to_date="2024-01-31"):
-                print(report)
+            .. code-block:: python
+
+                for report in client.reports.get_search_reports(from_date="2024-01-01", to_date="2024-01-31"):
+                    print(report)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield reports until no more results
@@ -198,8 +202,10 @@ class Reports:
             A dictionary containing the details of the retrieved report.
 
         Example:
-            report = client.reports.get_report(report_id="123e4567-e89b-12d3-a456-426614174000")
-            print(report)
+            .. code-block:: python
+
+                report = client.reports.get_report(report_id="123e4567-e89b-12d3-a456-426614174000")
+                print(report)
 
         Notes:
             - This method sends a GET request to retrieve the report with the specified ID.
@@ -227,8 +233,10 @@ class Reports:
             A string containing the text visualization of the report.
 
         Example:
-            report_text = client.reports.get_report_text(report_id="123e4567-e89b-12d3-a456-426614174000", width=80)
-            print(report_text)
+            .. code-block:: python
+
+                report_text = client.reports.get_report_text(report_id="123e4567-e89b-12d3-a456-426614174000", width=80)
+                print(report_text)
 
         Notes:
             - This method sends a GET request to retrieve the text visualization of the report with the specified ID.
@@ -259,9 +267,11 @@ class Reports:
             The ASCII image visualization of the report as a string.
 
         Example:
-            report_ascii_image = client.reports.get_report_png(report_id="123e4567-e89b-12d3-a456-426614174000",
-                                                               width=50, paper_width=70)
-            print(report_ascii_image)
+            .. code-block:: python
+
+                report_ascii_image = client.reports.get_report_png(report_id="123e4567-e89b-12d3-a456-426614174000",
+                                                                   width=50, paper_width=70)
+                print(report_ascii_image)
 
         Notes:
             - This method sends a GET request to retrieve the ASCII image visualization of the report with the
@@ -321,8 +331,10 @@ class AsyncReports:
             Results of reports based on the specified criteria.
 
         Example:
-        async for report in client.reports.get_reports(from_date="2024-01-01", to_date="2024-01-31"):
-            print(report)
+            .. code-block:: python
+
+                async for report in client.reports.get_reports(from_date="2024-01-01", to_date="2024-01-31"):
+                    print(report)
 
         Notes:
             - This method is designed to be used in an asynchronous context.
@@ -366,8 +378,10 @@ class AsyncReports:
             A dictionary containing the details of the created X report.
 
         Example:
-            report = await client.reports.create_x_report()
-            print(report)
+            .. code-block:: python
+
+                report = await client.reports.create_x_report()
+                print(report)
         """
         return await self.client(
             reports.CreateXReport(),
@@ -406,8 +420,10 @@ class AsyncReports:
             Results of search reports based on the specified criteria.
 
         Example:
-            async for report in client.reports.get_search_reports(from_date="2024-01-01", to_date="2024-01-31"):
-                print(report)
+            .. code-block:: python
+
+                async for report in client.reports.get_search_reports(from_date="2024-01-01", to_date="2024-01-31"):
+                    print(report)
 
         Notes:
             - This method handles pagination automatically, continuing to fetch and yield reports until no more results
@@ -485,8 +501,10 @@ class AsyncReports:
             A dictionary containing the details of the retrieved report.
 
         Example:
-            report = await client.reports.get_report(report_id="123e4567-e89b-12d3-a456-426614174000")
-            print(report)
+            .. code-block:: python
+
+                report = await client.reports.get_report(report_id="123e4567-e89b-12d3-a456-426614174000")
+                print(report)
 
         Notes:
             - This method sends a GET request to retrieve the report with the specified ID asynchronously.
@@ -514,8 +532,11 @@ class AsyncReports:
             A string containing the text visualization of the report.
 
         Example:
-            report_text = await client.reports.get_report_text(report_id="123e4567-e89b-12d3-a456-426614174000", width=80)
-            print(report_text)
+            .. code-block:: python
+
+                report_text = await client.reports.get_report_text(report_id="123e4567-e89b-12d3-a456-426614174000",
+                                                                   width=80)
+                print(report_text)
 
         Notes:
             - This method sends a GET request to retrieve the text visualization of the report with the specified ID asynchronously.
@@ -546,9 +567,11 @@ class AsyncReports:
             The ASCII image visualization of the report as a string.
 
         Example:
-            report_ascii_image = await client.reports.get_report_png(report_id="123e4567-e89b-12d3-a456-426614174000",
-                                                                     width=50, paper_width=70)
-            print(report_ascii_image)
+            .. code-block:: python
+
+                report_ascii_image = await client.reports.get_report_png(report_id="123e4567-e89b-12d3-a456-426614174000",
+                                                                         width=50, paper_width=70)
+                print(report_ascii_image)
 
         Notes:
             - This method sends a GET request to retrieve the ASCII image visualization of the report with the
