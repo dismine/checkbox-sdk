@@ -14,6 +14,8 @@ def test_get_cash_registers(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         for register in client.cash_registers.get_cash_registers():
             try:
@@ -33,6 +35,8 @@ def test_get_cash_register(auth_token, license_key):
     storage2 = SessionStorage()
     with CheckBoxClient(storage=storage2) as client2:
         client2.cashier.authenticate_token(auth_token, storage=storage2)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         with pytest.raises(CheckBoxError):
             client2.cash_registers.get_cash_register()
@@ -64,6 +68,8 @@ def test_ping_tax_service(auth_token, license_key):
     storage = SessionStorage()
     with CheckBoxClient(storage=storage) as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         ping = client.cash_registers.ping_tax_service()
         try:

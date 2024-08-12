@@ -31,6 +31,8 @@ def test_get_reports(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         open_shift(client)
 
         to_date = datetime.now(timezone.utc)
@@ -73,6 +75,8 @@ def test_create_x_report(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         open_shift(client)
 
         report = client.reports.create_x_report()
@@ -91,6 +95,8 @@ def test_get_search_reports(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         for report in client.reports.get_search_reports():
             try:
@@ -105,6 +111,8 @@ def test_add_external_report(auth_token, license_key):
 
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         open_shift(client)
 

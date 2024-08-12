@@ -33,6 +33,8 @@ async def test_get_reports(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         await open_shift(client)
 
         to_date = datetime.now(timezone.utc)
@@ -76,6 +78,8 @@ async def test_create_x_report(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         await open_shift(client)
 
         report = await client.reports.create_x_report()
@@ -95,6 +99,8 @@ async def test_get_search_reports(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         async for report in client.reports.get_search_reports():
             try:
@@ -110,6 +116,8 @@ async def test_add_external_report(auth_token, license_key):
 
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         await open_shift(client)
 

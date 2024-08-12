@@ -37,6 +37,8 @@ def test_close_shift_online(auth_token, license_key):
     with CheckBoxClient(storage=storage) as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         current_date = datetime.now().date()
         auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
 
@@ -61,6 +63,8 @@ def test_close_shift_by_senior_cashier(auth_token, license_key):
     storage = SessionStorage()
     with CheckBoxClient(storage=storage) as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         current_date = datetime.now().date()
         auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())

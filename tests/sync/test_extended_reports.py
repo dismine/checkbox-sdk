@@ -14,6 +14,8 @@ def test_goods_report(auth_token, license_key, client_email):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
 
@@ -36,6 +38,8 @@ def test_create_z_report(auth_token, license_key, client_email):
 
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
@@ -60,6 +64,8 @@ def test_actual_revenue_report(auth_token, license_key, client_email):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
 
@@ -83,6 +89,8 @@ def test_net_turnover_report(auth_token, license_key, client_email):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
 
@@ -105,6 +113,8 @@ def test_bookkeeper_z_report(auth_token, license_key, client_email):
 
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
@@ -130,6 +140,8 @@ def test_daily_cash_flow_report(auth_token, license_key, client_email):
     with CheckBoxClient(storage=storage) as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         from_date = datetime.now(timezone.utc).date() - timedelta(days=30)
 
         data = {"from_date": from_date.isoformat(), "organization_id": [storage.cashier["organization"]["id"]]}
@@ -151,6 +163,8 @@ def test_create_receipt_report(auth_token, license_key, client_email):
 
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)

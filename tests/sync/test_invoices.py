@@ -15,6 +15,8 @@ def test_get_terminals(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         for terminal in client.invoices.get_terminals():
             try:
@@ -29,6 +31,8 @@ def test_create_invoice(auth_token, license_key, client_email):
 
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         terminals = client.invoices.get_terminals()
         # sourcery skip: no-conditionals-in-tests
@@ -71,6 +75,8 @@ def test_create_and_fiscalize_invoice(auth_token, license_key, client_email):
 
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         terminals = client.invoices.get_terminals()
         # sourcery skip: no-conditionals-in-tests

@@ -16,6 +16,8 @@ async def test_get_terminals(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         for terminal in await client.invoices.get_terminals():
             try:
@@ -31,6 +33,8 @@ async def test_create_invoice(auth_token, license_key, client_email):
 
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         terminals = await client.invoices.get_terminals()
         # sourcery skip: no-conditionals-in-tests
@@ -74,6 +78,8 @@ async def test_create_and_fiscalize_invoice(auth_token, license_key, client_emai
 
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         terminals = await client.invoices.get_terminals()
         # sourcery skip: no-conditionals-in-tests

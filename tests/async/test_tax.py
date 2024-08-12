@@ -28,6 +28,8 @@ async def test_cashier_tax(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         taxes = await client.cashier.get_all_taxes_by_cashier()  # Await the coroutine to get the list of taxes
 
         # sourcery skip: no-loop-in-tests

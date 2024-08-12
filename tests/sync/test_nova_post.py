@@ -10,6 +10,8 @@ def test_ettn_order(auth_token, license_key, client_email, client_phone):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         base_path = pathlib.Path(__file__).resolve().parent.parent
         receipt_path = base_path / "test_data/ettn_order.json"
         receipt_data = json.loads(receipt_path.resolve().read_text())
@@ -47,6 +49,8 @@ def test_get_ettn_orders(auth_token, license_key):
 
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         orders = client.nova_post.get_ettn_orders()
         print(orders)

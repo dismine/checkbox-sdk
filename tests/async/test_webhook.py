@@ -10,6 +10,8 @@ async def test_webhook(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         webhook_url = "https://example.com/"
 
         response = await client.webhook.set_webhook(webhook_url)

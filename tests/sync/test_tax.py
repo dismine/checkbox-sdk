@@ -24,6 +24,8 @@ def test_cashier_tax(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         for tax in client.cashier.get_all_taxes_by_cashier():
             try:

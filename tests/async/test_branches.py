@@ -12,6 +12,8 @@ async def test_get_all_branches(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         async for branch in client.branches.get_all_branches():
             try:

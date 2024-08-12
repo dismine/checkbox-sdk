@@ -14,6 +14,8 @@ async def test_get_goods(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         tested = False
 
         # sourcery skip: no-loop-in-tests
@@ -44,6 +46,8 @@ async def test_get_groups(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         async for group in client.goods.get_groups():
             try:
@@ -59,6 +63,8 @@ async def test_export_goods(auth_token, license_key):
 
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         csv = await client.goods.export_goods(
             export_extension="csv",
@@ -85,6 +91,8 @@ async def test_import_goods(auth_token, license_key):
 
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         base_path = pathlib.Path(__file__).resolve().parent.parent
 

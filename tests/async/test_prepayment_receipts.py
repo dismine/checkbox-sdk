@@ -101,6 +101,8 @@ async def test_get_pre_payment_relations_search(auth_token, license_key):
     async with AsyncCheckBoxClient() as client:
         await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         async for receipt in client.prepayment_receipts.get_pre_payment_relations_search():
             try:

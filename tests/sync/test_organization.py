@@ -10,6 +10,8 @@ def test_organization_receipt_config(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         config = client.organization.get_organization_receipt_config()
         try:
             model = ReceiptConfigShema(**config)
@@ -22,6 +24,8 @@ def test_organization_logo(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         with pytest.raises(CheckBoxAPIError):
             client.organization.get_organization_logo()
 
@@ -30,6 +34,8 @@ def test_organization_text_logo(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         with pytest.raises(CheckBoxAPIError):
             client.organization.get_organization_text_logo()
 
@@ -37,6 +43,8 @@ def test_organization_text_logo(auth_token, license_key):
 def test_organization_sms_billing(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         # sourcery skip: no-loop-in-tests
         sms_billing = client.organization.get_organization_sms_billing()

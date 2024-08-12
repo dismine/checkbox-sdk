@@ -15,6 +15,8 @@ def test_orders_synchronization(auth_token, license_key):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         with pytest.raises(CheckBoxAPIError):
             client.orders.run_orders_synchronization()
 
@@ -24,6 +26,8 @@ def test_add_orders(auth_token, license_key, client_email):
 
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         base_path = pathlib.Path(__file__).resolve().parent.parent
         orders_path = base_path / "test_data/order.json"
@@ -84,6 +88,8 @@ def test_get_orders(auth_token, license_key, client_email):
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
 
+        assert client.storage.cash_register["is_test"], "Not test cash register"
+
         # sourcery skip: no-loop-in-tests
         for order in client.orders.get_orders():
             try:
@@ -98,6 +104,8 @@ def test_integration(auth_token, license_key, client_email):
 
     with CheckBoxClient() as client:
         client.cashier.authenticate_token(auth_token, license_key=license_key)
+
+        assert client.storage.cash_register["is_test"], "Not test cash register"
 
         url = "https://example.com/"
 
