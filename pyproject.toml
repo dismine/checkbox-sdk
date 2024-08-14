@@ -10,6 +10,7 @@ documentation = "https://checkbox-sdk.readthedocs.io"
 license = "MIT"
 packages = [{ include = "checkbox_sdk" }]
 keywords = ["python", "sdk"]
+include = ["CHANGELOG.md"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
