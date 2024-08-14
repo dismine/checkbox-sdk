@@ -6,6 +6,7 @@ authors = ["Roman Telezhynskyi <dismine@gmail.com>"]
 maintainers = ["Roman Telezhynskyi <dismine@gmail.com>"]
 repository = "https://github.com/dismine/checkbox-sdk"
 readme = "README.md"
+documentation = "https://checkbox-sdk.readthedocs.io"
 license = "MIT"
 packages = [{ include = "checkbox_sdk" }]
 keywords = ["python", "sdk"]
