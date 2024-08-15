@@ -1,7 +1,8 @@
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE)
-[![Python >=3.8](https://img.shields.io/badge/python-%3E%3D3.8-orange.svg?style=flat-square)](https://github.com/dismine/checkbox-sdk)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/checkbox-sdk)](https://github.com/dismine/checkbox-sdk)
 [![GitHub last commit](https://img.shields.io/github/last-commit/dismine/checkbox-sdk)](https://github.com/dismine/checkbox-sdk)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/checkbox-sdk)](https://github.com/dismine/checkbox-sdk)
+[![PyPI - Version](https://img.shields.io/pypi/v/checkbox-sdk)](https://pypi.org/project/checkbox-sdk/)
 
 # checkbox-sdk
 
