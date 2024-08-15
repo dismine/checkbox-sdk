@@ -13,6 +13,7 @@ Checkbox-sdk
 
    getting-started
    examples
+   contribution
    checkbox_sdk
 
 Індекси та таблиці
