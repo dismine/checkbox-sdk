@@ -18,7 +18,7 @@
 
     # Створюємо клієнта з токеном
     with CheckBoxClient() as client:
-        client = CheckBoxClient(token=token, license_key="ВАШ_КЛЮЧ_ЛІЦЕНЗІЇ")
+        client = client.cashier.authenticate(token=token, license_key="ВАШ_КЛЮЧ_ЛІЦЕНЗІЇ")
 
         # Перевіряємо режим роботи каси
         register = client.cash_registers.get_cash_register()
@@ -27,14 +27,28 @@
             client.cash_registers.get_offline_codes()
         else:
             print("Каса працює в офлайн-режимі.")
-            while True:
+            max_retries = 5
+            delay_between_retries = 60
+
+            retries = 0
+
+            while retries < max_retries:
                 ping = client.cash_registers.ping_tax_service()
                 if ping["error"] is None:
-                    response = client.cash_registers.go_online(storage)
+                    response = client.cash_registers.go_online()
                     if response["status"] == "ok":
-                        time.sleep(60) # Каса виходить у онлайн не відразу
-                        break
-                time.sleep(5)
+                        time.sleep(delay_between_retries) # Каса виходить у онлайн не відразу
+                        register = client.cash_registers.get_cash_register()
+                        if not register["offline_mode"]:
+                            client.cash_registers.get_offline_codes()
+                            break
+                    else:
+                        print(f"Спроба {retries + 1} не привела до переведення касового апарату в режим он-лайн.")
+
+                    retries += 1
+
+            if retries == max_retries:
+                print(f"Не вдалося перевести касу в режим онлайн після {max_retries} спроб.")
 
         # Подальші дії з касою: відкриття зміни, створення чеків і т.д.
 
