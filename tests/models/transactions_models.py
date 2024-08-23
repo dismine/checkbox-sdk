@@ -21,6 +21,7 @@ class TransactionsTypeEnum(str, Enum):
     INFO_RRO = "INFO_RRO"
 
 
+# pylint: disable=duplicate-code
 class TransactionsStatusEnum(str, Enum):
     CREATED = "CREATED"
     PENDING = "PENDING"

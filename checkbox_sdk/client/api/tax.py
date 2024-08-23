@@ -4,7 +4,7 @@ from checkbox_sdk.methods import tax
 from checkbox_sdk.storage.simple import SessionStorage
 
 
-class Tax:
+class Tax:  # pylint: disable=too-few-public-methods
     def __init__(self, client):
         self.client = client
 
@@ -12,7 +12,7 @@ class Tax:
         return self.client(tax.GetTax(), storage=storage)
 
 
-class AsyncTax:
+class AsyncTax:  # pylint: disable=too-few-public-methods
     def __init__(self, client):
         self.client = client
 

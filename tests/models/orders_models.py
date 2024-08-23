@@ -6,7 +6,7 @@ from uuid import UUID
 from pydantic import EmailStr, Field
 
 from .base import CheckboxBaseModel
-from .receipts_models import ReceiptDiscountsSchema
+from .receipts_models import ReceiptDiscountsSchema, ReceiptTypeEnum
 
 
 class OrderStatusEnum(str, Enum):
@@ -33,17 +33,6 @@ class OrderPaymentMethodEnum(str, Enum):
     CARD_AFTER_ASSEMBLING = "CARD_AFTER_ASSEMBLING"
     CASH_ON_DELIVERY = "CASH_ON_DELIVERY"
     CASHLESS_ON_DELIVERY = "CASHLESS_ON_DELIVERY"
-
-
-class OrderReceiptDraftTypeEnum(str, Enum):
-    SELL = "SELL"
-    RETURN = "RETURN"
-    SERVICE_IN = "SERVICE_IN"
-    SERVICE_OUT = "SERVICE_OUT"
-    SERVICE_CURRENCY = "SERVICE_CURRENCY"
-    CURRENCY_EXCHANGE = "CURRENCY_EXCHANGE"
-    PAWNSHOP = "PAWNSHOP"
-    CASH_WITHDRAWAL = "CASH_WITHDRAWAL"
 
 
 class DeliveryAddressTypeEnum(str, Enum):
@@ -112,7 +101,7 @@ class ReceiptDraftSchema(CheckboxBaseModel):
     footer: Optional[str]
     barcode: Optional[str]
     delivery: Optional[DeliverySchema]
-    type: Optional[OrderReceiptDraftTypeEnum] = OrderReceiptDraftTypeEnum.SELL
+    type: Optional[ReceiptTypeEnum] = ReceiptTypeEnum.SELL
 
 
 class OrderSchema(CheckboxBaseModel):

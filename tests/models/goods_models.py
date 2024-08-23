@@ -5,6 +5,7 @@ from uuid import UUID
 from ..models.base import CheckboxBaseModel
 
 
+# pylint: disable=duplicate-code
 class GoodTaxSchema(CheckboxBaseModel):
     id: UUID
     code: int

@@ -5,6 +5,8 @@ from uuid import UUID
 
 from .base import CheckboxBaseModel
 from .cashier_models import CashierSchema
+from .reports_models import ReportFiscalAPITypeEnum, FiscalReportSchema
+from .transactions_models import TransactionsTypeEnum
 
 
 class ShiftStatusEnum(str, Enum):
@@ -13,33 +15,6 @@ class ShiftStatusEnum(str, Enum):
     OPENED = "OPENED"
     CLOSING = "CLOSING"
     CLOSED = "CLOSED"
-
-
-class ProviderTypeEnum(str, Enum):
-    TAPXPHONE = "TAPXPHONE"
-    POSCONTROL = "POSCONTROL"
-    TERMINAL = "TERMINAL"
-
-
-class FiscalApiTypeEnum(str, Enum):
-    FSCO_EC = "FSCO_EC"
-    EVPEZ = "EVPEZ"
-    EVPEZ_EXTERNAL = "EVPEZ_EXTERNAL"
-
-
-class TransactionTypeEnum(str, Enum):
-    SHIFT_OPEN = "SHIFT_OPEN"
-    X_REPORT = "X_REPORT"
-    Z_REPORT = "Z_REPORT"
-    PING = "PING"
-    RECEIPT = "RECEIPT"
-    LAST_RECEIPT = "LAST_RECEIPT"
-    GO_OFFLINE = "GO_OFFLINE"
-    ASK_OFFLINE_CODES = "ASK_OFFLINE_CODES"
-    GO_ONLINE = "GO_ONLINE"
-    DEL_LAST_RECEIPT = "DEL_LAST_RECEIPT"
-    STATUS_RRO = "STATUS_RRO"
-    INFO_RRO = "INFO_RRO"
 
 
 class TransactionStatusEnum(str, Enum):
@@ -52,26 +27,7 @@ class TransactionStatusEnum(str, Enum):
     CANCELLED = "CANCELLED"
 
 
-class PaymentTypeEnum(str, Enum):
-    CASH = "CASH"
-    CARD = "CARD"
-    CASHLESS = "CASHLESS"
-
-
-class PaymentSchema(CheckboxBaseModel):
-    id: UUID
-    code: Optional[int]
-    type: PaymentTypeEnum
-    provider_type: Optional[ProviderTypeEnum]
-    label: str
-    sell_sum: int
-    return_sum: int
-    service_in: int
-    service_out: int
-    cash_withdrawal: int
-    cash_withdrawal_commission: int
-
-
+# pylint: disable=duplicate-code
 class TaxSchema(CheckboxBaseModel):
     id: UUID
     code: int
@@ -116,38 +72,9 @@ class RateSchema(CheckboxBaseModel):
     updated_at: Optional[datetime]
 
 
-class ZReportSchema(CheckboxBaseModel):
-    id: UUID
-    shift_id: UUID
-    last_receipt_id: Optional[UUID]
-    fiscal_code: Optional[str]
-    serial: int
-    is_z_report: bool
-    payments: List[PaymentSchema]
-    taxes: List[TaxSchema]
-    sell_receipts_count: int
-    return_receipts_count: int
-    cash_withdrawal_receipts_count: int
-    transfers_count: int
-    transfers_sum: int
-    balance: int
-    initial: int
-    sales_round_up: int
-    sales_round_down: int
-    returns_round_up: int
-    returns_round_down: int
-    created_at: datetime
-    updated_at: Optional[datetime]
-    discounts_sum: Optional[int]
-    extra_charge_sum: Optional[int]
-    transaction_fail: Optional[bool] = False
-    rates: Optional[List[RateSchema]]
-    fiscal_api_type: Optional[FiscalApiTypeEnum] = None
-
-
 class TransactionSchema(CheckboxBaseModel):
     id: UUID
-    type: TransactionTypeEnum
+    type: TransactionsTypeEnum
     serial: int
     status: TransactionStatusEnum
     request_signed_at: Optional[datetime]
@@ -199,7 +126,7 @@ class ShiftSchema(CheckboxBaseModel):
     id: UUID
     serial: int
     status: ShiftStatusEnum
-    z_report: Optional[ZReportSchema]
+    z_report: Optional[FiscalReportSchema]
     opened_at: Optional[datetime]
     closed_at: Optional[datetime]
     initial_transaction: Optional[TransactionSchema]
@@ -208,7 +135,7 @@ class ShiftSchema(CheckboxBaseModel):
     updated_at: Optional[datetime]
     balance: Optional[BalanceSchema]
     taxes: List[TaxesSchema]
-    fiscal_api_type: Optional[FiscalApiTypeEnum] = None
+    fiscal_api_type: Optional[ReportFiscalAPITypeEnum] = None
     evpez_shift_id: Optional[str] = None
     emergency_close: Optional[bool]
     emergency_close_details: Optional[str]
@@ -228,7 +155,7 @@ class ShiftInfoSchema(CheckboxBaseModel):
     id: UUID
     serial: int
     status: ShiftStatusEnum
-    z_report: Optional[ZReportSchema]
+    z_report: Optional[FiscalReportSchema]
     opened_at: Optional[datetime]
     closed_at: Optional[datetime]
     initial_transaction: Optional[TransactionSchema]
@@ -237,7 +164,7 @@ class ShiftInfoSchema(CheckboxBaseModel):
     updated_at: Optional[datetime]
     balance: Optional[BalanceSchema]
     taxes: List[TaxesSchema]
-    fiscal_api_type: Optional[FiscalApiTypeEnum]
+    fiscal_api_type: Optional[ReportFiscalAPITypeEnum]
     evpez_shift_id: Optional[str]
     emergency_close: Optional[bool]
     emergency_close_details: Optional[str]

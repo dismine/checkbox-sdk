@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import pytest
 from pydantic import ValidationError
 
@@ -15,6 +16,7 @@ async def test_get_cash_registers(auth_token, license_key):
 
         assert client.storage.cash_register["is_test"], "Not test cash register"
 
+        # pylint: disable=duplicate-code
         # sourcery skip: no-loop-in-tests
         async for register in client.cash_registers.get_cash_registers():
             try:
@@ -46,7 +48,7 @@ async def get_cash_register(client, auth_token, license_key, storage):
     await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
     register = await client.cash_registers.get_cash_register(storage.cash_register["id"])
-    assert register["is_test"], "Not test cash register"
+    assert register["is_test"], "Not test cash register"  # pylint: disable=duplicate-code
     try:
         model = CashRegistersSchema(**register)
         assert model is not None
@@ -62,6 +64,7 @@ async def get_cash_register(client, auth_token, license_key, storage):
         pytest.fail(f"Cash register validation schema failed: {e}")
 
 
+# pylint: disable=duplicate-code
 @pytest.mark.asyncio
 async def test_ping_tax_service(auth_token, license_key):
     assert license_key, "License key is empty"

@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import contextlib
 from datetime import datetime
 
@@ -31,6 +32,7 @@ async def test_get_shifts(auth_token, license_key):
                 pytest.fail(f"Shift validation schema failed: {e}")
 
 
+# pylint: disable=duplicate-code
 @pytest.mark.asyncio
 async def test_close_shift_online(auth_token, license_key):
     assert license_key, "License key is empty"

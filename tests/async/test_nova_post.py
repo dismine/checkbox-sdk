@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import json
 import pathlib
 
@@ -57,4 +58,3 @@ async def test_get_ettn_orders(auth_token, license_key):
         assert client.storage.cash_register["is_test"], "Not test cash register"
 
         orders = await client.nova_post.get_ettn_orders()
-        print(orders)

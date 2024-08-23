@@ -4,7 +4,6 @@ from typing import List, Optional
 from uuid import UUID
 
 from ..models.base import CheckboxBaseModel
-from ..models.receipts_models import PrePaymentReceiptSchema
 
 
 class PrePaymentStatusEnum(str, Enum):
@@ -18,11 +17,6 @@ class ReceiptChainSchema(CheckboxBaseModel):
     returned_receipts: List[UUID]
     after_payment_receipt: UUID
     pre_payment_receipts: List[UUID]
-
-
-class ReceiptsChainSchema(CheckboxBaseModel):
-    pre_payment_receipts: Optional[List[PrePaymentReceiptSchema]] = []
-    after_payment_receipt: Optional[PrePaymentReceiptSchema]
 
 
 class PrepaymentRelationSchema(CheckboxBaseModel):
@@ -39,4 +33,3 @@ class PrepaymentRelationSchema(CheckboxBaseModel):
     created_at: datetime
     updated_at: Optional[datetime]
     receipt_chain: ReceiptChainSchema
-    receipts_chain: Optional[ReceiptsChainSchema]

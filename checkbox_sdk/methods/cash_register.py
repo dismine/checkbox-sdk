@@ -1,9 +1,10 @@
 import datetime
-from typing import Optional, Union, List
+from typing import Optional, Union
 
 from httpx import Response
 
 from checkbox_sdk.methods.base import BaseMethod, HTTPMethod, PaginationMixin
+from checkbox_sdk.methods.shifts import GetShifts
 from checkbox_sdk.storage.simple import SessionStorage
 
 URI_PREFIX = "cash-registers/"
@@ -79,9 +80,9 @@ class GetOfflineTime(BaseMethod):
 
     def __init__(
         self,
+        *args,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -89,6 +90,7 @@ class GetOfflineTime(BaseMethod):
         self.to_date = to_date
 
     @property
+    # pylint: disable=duplicate-code
     def query(self):
         query = super().query
 
@@ -110,9 +112,9 @@ class GetCashRegisters(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
+        *args,
         in_use: Optional[bool] = None,
         fiscal_number: Optional[str] = None,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -141,45 +143,8 @@ class GetCashRegisterInfo(BaseMethod):
         return result
 
 
-class GetCashRegisterShifts(PaginationMixin, BaseMethod):
+class GetCashRegisterShifts(GetShifts):
     uri: str = f"{URI_PREFIX}shifts"
-
-    def __init__(
-        self,
-        statuses: Optional[List[str]] = None,
-        desc: Optional[bool] = False,
-        from_date: Optional[Union[datetime.datetime, str]] = None,
-        to_date: Optional[Union[datetime.datetime, str]] = None,
-        *args,
-        **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-        self.statuses = statuses
-        self.desc = desc
-        self.from_date = from_date
-        self.to_date = to_date
-
-    @property
-    def query(self):
-        query = super().query
-
-        if self.statuses is not None:
-            query["statuses"] = self.statuses
-
-        if self.desc is not None:
-            query["desc"] = self.desc
-
-        if isinstance(self.from_date, datetime.datetime):
-            query["from_date"] = self.from_date.isoformat()
-        elif self.from_date:
-            query["from_date"] = self.from_date
-
-        if isinstance(self.to_date, datetime.datetime):
-            query["to_date"] = self.to_date.isoformat()
-        elif self.to_date:
-            query["to_date"] = self.to_date
-
-        return query
 
 
 class GetCashRegister(BaseMethod):

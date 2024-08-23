@@ -2,19 +2,17 @@ import datetime
 import logging
 from typing import Optional, Union, Generator, AsyncGenerator, Dict, Any, List
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
+from checkbox_sdk.client.api.receipts import check_status, check_status_async
 from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
-from checkbox_sdk.exceptions import StatusException
-from checkbox_sdk.methods import prepayment_receipts, receipts
+from checkbox_sdk.methods import prepayment_receipts
 from checkbox_sdk.storage.simple import SessionStorage
 
 logger = logging.getLogger(__name__)
 
 
-class PrepaymentReceipts:
-    def __init__(self, client):
-        self.client = client
-
-    def get_pre_payment_relations_search(
+class PrepaymentReceipts(PaginationMixin):
+    def get_pre_payment_relations_search(  # pylint: disable=too-many-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -54,9 +52,7 @@ class PrepaymentReceipts:
             limit=limit,
             offset=offset,
         )
-        while (receipts_result := self.client(get_receipts, storage=storage))["results"]:
-            get_receipts.resolve_pagination(receipts_result).shift_next_page()
-            yield from receipts_result["results"]
+        yield from self.fetch_paginated_results(get_receipts, storage=storage)
 
     def get_prepayment_relation(
         self,
@@ -113,7 +109,7 @@ class PrepaymentReceipts:
         if not wait:
             return response
 
-        return self._check_status(response, storage, relax, timeout)
+        return check_status(self.client, response, storage, relax, timeout)
 
     def create_prepayment_receipt(
         self,
@@ -147,7 +143,7 @@ class PrepaymentReceipts:
         if not wait:
             return response
 
-        return self._check_status(response, storage, relax, timeout)
+        return check_status(self.client, response, storage, relax, timeout)
 
     def get_prepayment_receipts_chain(
         self,
@@ -174,35 +170,9 @@ class PrepaymentReceipts:
             storage=storage,
         )
 
-    def _check_status(
-        self,
-        receipt: Dict[str, Any],
-        storage: Optional[SessionStorage] = None,
-        relax: float = DEFAULT_REQUESTS_RELAX,
-        timeout: Optional[float] = None,
-    ):
-        shift = self.client.wait_status(
-            receipts.GetReceipt(receipt_id=receipt["id"]),
-            storage=storage,
-            relax=relax,
-            field="status",
-            expected_value={"DONE", "ERROR"},
-            timeout=timeout,
-        )
-        if shift["status"] == "ERROR":
-            initial_transaction = shift["transaction"]
-            raise StatusException(
-                f"Receipt can not be created in due to transaction status moved to {initial_transaction['status']!r}: "
-                f"{initial_transaction['response_status']!r} {initial_transaction['response_error_message']!r}"
-            )
-        return shift
 
-
-class AsyncPrepaymentReceipts:
-    def __init__(self, client):
-        self.client = client
-
-    async def get_pre_payment_relations_search(
+class AsyncPrepaymentReceipts(AsyncPaginationMixin):
+    async def get_pre_payment_relations_search(  # pylint: disable=too-many-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -243,18 +213,8 @@ class AsyncPrepaymentReceipts:
             offset=offset,
         )
 
-        while True:
-            receipts_result = await self.client(get_receipts, storage=storage)
-            results = receipts_result.get("results", [])
-
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_receipts.resolve_pagination(receipts_result)
-            get_receipts.shift_next_page()
+        async for result in self.fetch_paginated_results(get_receipts, storage=storage):
+            yield result
 
     async def get_prepayment_relation(
         self,
@@ -311,7 +271,7 @@ class AsyncPrepaymentReceipts:
         if not wait:
             return response
 
-        return await self._check_status(response, storage, relax, timeout)
+        return await check_status_async(self.client, response, storage, relax, timeout)
 
     async def create_prepayment_receipt(
         self,
@@ -345,7 +305,7 @@ class AsyncPrepaymentReceipts:
         if not wait:
             return response
 
-        return await self._check_status(response, storage, relax, timeout)
+        return await check_status_async(self.client, response, storage, relax, timeout)
 
     async def get_prepayment_receipts_chain(
         self,
@@ -371,26 +331,3 @@ class AsyncPrepaymentReceipts:
             prepayment_receipts.GetPrepaymentReceiptsChain(relation_id=relation_id, data=data, **payload),
             storage=storage,
         )
-
-    async def _check_status(
-        self,
-        receipt: Dict[str, Any],
-        storage: Optional[SessionStorage] = None,
-        relax: float = DEFAULT_REQUESTS_RELAX,
-        timeout: Optional[float] = None,
-    ):
-        shift = await self.client.wait_status(
-            receipts.GetReceipt(receipt_id=receipt["id"]),
-            storage=storage,
-            relax=relax,
-            field="status",
-            expected_value={"DONE", "ERROR"},
-            timeout=timeout,
-        )
-        if shift["status"] == "ERROR":
-            initial_transaction = shift["transaction"]
-            raise StatusException(
-                f"Receipt can not be created in due to transaction status moved to {initial_transaction['status']!r}: "
-                f"{initial_transaction['response_status']!r} {initial_transaction['response_error_message']!r}"
-            )
-        return shift

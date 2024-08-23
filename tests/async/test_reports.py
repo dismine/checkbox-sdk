@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import json
 import pathlib
 from datetime import datetime, timedelta, timezone
@@ -27,7 +28,7 @@ async def test_get_periodical_report(license_key):
 
 
 @pytest.mark.asyncio
-async def test_get_reports(auth_token, license_key):
+async def test_get_reports(auth_token, license_key):  # pylint: disable=duplicate-code
     assert license_key, "License key is empty"
 
     async with AsyncCheckBoxClient() as client:
@@ -68,7 +69,7 @@ async def test_get_reports(auth_token, license_key):
 
                 get_report_tested = True
 
-        await close_shift(client)
+        await close_shift(client)  # pylint: disable=duplicate-code
 
 
 @pytest.mark.asyncio

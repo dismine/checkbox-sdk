@@ -6,7 +6,7 @@ from checkbox_sdk.storage.simple import SessionStorage
 URI_PREFIX = "cashier/"
 
 
-class _SignInMixin:
+class _SignInMixin:  # pylint: disable=too-few-public-methods
     method = HTTPMethod.POST
 
     def parse_response(self, storage: SessionStorage, response: Response):

@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import pytest
 from pydantic import ValidationError
 
@@ -44,8 +45,10 @@ def test_authenticate_pin_code(pincode, license_key):
         assert storage.token, "The token should be a non-empty string"
 
         token_data = storage.token_data
+        assert token_data is not None, "Token data should not be None"
+
         try:
-            model = TokenSchema(**token_data)
+            model = TokenSchema(**token_data)  # pylint: disable=not-a-mapping
             assert model is not None
         except ValidationError as e:  # pragma: no cover
             pytest.fail(f"Token validation schema failed: {e}")
@@ -99,6 +102,7 @@ def authenticate_token(client, token, license_key, storage2):
         except ValidationError as e:  # pragma: no cover
             pytest.fail(f"Cash register validation schema failed: {e}")
 
+    # pylint: disable=duplicate-code
     client.cashier.sign_out(storage2)
     assert storage2.shift is None, "The shift should be None"
     assert storage2.cashier is None, "The cashier should be None"

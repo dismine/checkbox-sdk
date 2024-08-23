@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import json
 import pathlib
 
@@ -66,7 +67,7 @@ def test_create_invoice(auth_token, license_key, client_email):
 
         response = client.invoices.remove_invoice_by_id(invoice_id=invoice["id"])
         assert response["ok"] is True
-
+        # pylint: disable=duplicate-code
         close_shift(client)
 
 

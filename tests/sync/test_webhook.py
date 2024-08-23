@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 from checkbox_sdk.client.synchronous import CheckBoxClient
 
 

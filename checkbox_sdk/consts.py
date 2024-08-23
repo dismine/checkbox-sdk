@@ -1,3 +1,18 @@
+"""
+checkbox_sdk.constants
+======================
+
+This module defines constants used throughout the `checkbox-sdk` package. These constants provide
+default values for API interaction, such as the base URL, API version, and request timing settings.
+
+Constants:
+----------
+- **BASE_API_URL**: The base URL for the Checkbox API.
+- **API_VERSION**: The version of the Checkbox API to use.
+- **DEFAULT_REQUEST_TIMEOUT**: The default timeout for API requests, in seconds.
+- **DEFAULT_REQUESTS_RELAX**: The default delay between API requests, in seconds.
+"""
+
 BASE_API_URL = "https://api.checkbox.in.ua"
 """
 The base URL for the Checkbox API.

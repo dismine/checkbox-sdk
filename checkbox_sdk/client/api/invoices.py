@@ -4,12 +4,10 @@ from uuid import UUID
 
 from checkbox_sdk.methods import invoices
 from checkbox_sdk.storage.simple import SessionStorage
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 
 
-class Invoices:
-    def __init__(self, client):
-        self.client = client
-
+class Invoices(PaginationMixin):
     def get_terminals(self, storage: Optional[SessionStorage] = None) -> List[Dict[str, Any]]:
         """
         Retrieves a list of terminals.
@@ -72,16 +70,7 @@ class Invoices:
             offset=offset,
         )
 
-        while True:
-            invoices_result = self.client(invoices_request, storage=storage)
-            results = invoices_result.get("results", [])
-
-            if not results:
-                break
-
-            yield from results
-            invoices_request.resolve_pagination(invoices_result)
-            invoices_request.shift_next_page()
+        yield from self.fetch_paginated_results(invoices_request, storage=storage)
 
     def create_invoice(
         self,
@@ -209,10 +198,7 @@ class Invoices:
         return self.client(invoices.RemoveInvoiceById(invoice_id=invoice_id), storage=storage)
 
 
-class AsyncInvoices:
-    def __init__(self, client):
-        self.client = client
-
+class AsyncInvoices(AsyncPaginationMixin):
     async def get_terminals(self, storage: Optional[SessionStorage] = None) -> List[Dict[str, Any]]:
         """
         Asynchronously retrieves a list of terminals.
@@ -275,18 +261,8 @@ class AsyncInvoices:
             offset=offset,
         )
 
-        while True:
-            shifts_result = await self.client(get_invoices, storage=storage)
-            results = shifts_result.get("results", [])
-
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_invoices.resolve_pagination(shifts_result)
-            get_invoices.shift_next_page()
+        async for result in self.fetch_paginated_results(get_invoices, storage=storage):
+            yield result
 
     async def create_invoice(
         self,

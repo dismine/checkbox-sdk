@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import pytest
 from pydantic import ValidationError
 

@@ -27,6 +27,7 @@ class GetPeriodicalReport(BaseMethod):
         self.is_short = is_short
 
     @property
+    # pylint: disable=duplicate-code
     def query(self):
         query = super().query
 
@@ -57,13 +58,13 @@ class GetReports(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
+        *args,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
         shift_id: Optional[List[str]] = None,
         serial: Optional[int] = None,
         is_z_report: Optional[bool] = None,
         desc: Optional[bool] = False,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -114,6 +115,7 @@ class SearchReports(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
+        *args,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
         shift_id: Optional[List[str]] = None,
@@ -121,7 +123,6 @@ class SearchReports(PaginationMixin, BaseMethod):
         is_z_report: Optional[bool] = None,
         desc: Optional[bool] = False,
         cash_register_id: Optional[List[str]] = None,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)

@@ -14,6 +14,7 @@ class GetGoods(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
+        *args,
         group_id: Optional[Union[str, UUID]] = None,
         without_group_only: Optional[bool] = False,
         query: Optional[str] = None,
@@ -21,7 +22,6 @@ class GetGoods(PaginationMixin, BaseMethod):
         order_by_code: Optional[str] = None,
         order_by_position: Optional[str] = None,
         load_children: Optional[bool] = False,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -66,13 +66,13 @@ class GetGroups(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
+        *args,
         search: Optional[str] = None,
         parent_groups_only: Optional[bool] = False,
         parent_id: Optional[str] = None,
         order_by_name: Optional[str] = None,
         order_by_created_at: Optional[str] = None,
         order_by_updated_at: Optional[str] = None,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -155,10 +155,11 @@ class ExportGoodsFile(BaseMethod):
     def parse_response(self, storage: SessionStorage, response: Response):
         if self.export_extension == "json":
             return response.json()
-        elif self.export_extension == "csv":
+
+        if self.export_extension == "csv":
             return response.content.decode()
-        else:
-            return response.content
+
+        return response.content
 
 
 class ImportGoodsFromFile(BaseMethod):
@@ -167,10 +168,10 @@ class ImportGoodsFromFile(BaseMethod):
 
     def __init__(
         self,
+        *args,
         file: str,
         ignore_barcode_duplicates: Optional[bool] = False,
         auto_supply: Optional[bool] = False,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)

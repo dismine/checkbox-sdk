@@ -10,10 +10,10 @@ class GetTransactions(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
-        status: Optional[List[str]] = None,
-        type: Optional[List[str]] = None,
-        desc: Optional[bool] = False,
         *args,
+        status: Optional[List[str]] = None,
+        type: Optional[List[str]] = None,  # pylint: disable=redefined-builtin
+        desc: Optional[bool] = False,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)

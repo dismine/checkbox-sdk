@@ -59,7 +59,6 @@ class AbstractMethod(ABC):
         Returns:
             A string representing the URI of the API endpoint.
         """
-        pass  # pragma: no cover
 
     @property
     @abstractmethod
@@ -70,7 +69,6 @@ class AbstractMethod(ABC):
         Returns:
             A dictionary or other structure representing the query parameters for the request.
         """
-        pass  # pragma: no cover
 
     @property
     @abstractmethod
@@ -81,7 +79,6 @@ class AbstractMethod(ABC):
         Returns:
             A dictionary or other structure representing the JSON payload for the request.
         """
-        pass  # pragma: no cover
 
     @property
     @abstractmethod
@@ -92,7 +89,6 @@ class AbstractMethod(ABC):
         Returns:
             A dictionary representing the headers for the request.
         """
-        pass  # pragma: no cover
 
     @property
     @abstractmethod
@@ -103,7 +99,6 @@ class AbstractMethod(ABC):
         Returns:
             A dictionary or other structure representing the files to be uploaded with the request.
         """
-        pass  # pragma: no cover
 
     @abstractmethod
     def parse_response(self, storage: SessionStorage, response: Response):
@@ -120,7 +115,6 @@ class AbstractMethod(ABC):
         Returns:
             The parsed response data, in a format specific to the API method.
         """
-        pass  # pragma: no cover
 
 
 class BaseMethod(AbstractMethod, ABC):

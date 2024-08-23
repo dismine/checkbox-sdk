@@ -15,10 +15,10 @@ class GetReceipts(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
+        *args,
         fiscal_code: Optional[str] = None,
         serial: Optional[int] = None,
         desc: Optional[bool] = False,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -49,8 +49,9 @@ class GetReceipts(PaginationMixin, BaseMethod):
 class GetReceiptsSearch(PaginationMixin, BaseMethod):
     uri = f"{URI_PREFIX}search"
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
+        *args,
         fiscal_code: Optional[str] = None,
         barcode: Optional[str] = None,
         shift_id: Optional[List[str]] = None,
@@ -61,7 +62,6 @@ class GetReceiptsSearch(PaginationMixin, BaseMethod):
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
         self_receipts: Optional[bool] = True,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -99,6 +99,7 @@ class GetReceiptsSearch(PaginationMixin, BaseMethod):
         if self.stock_code is not None:
             query["stock_code"] = self.stock_code
 
+        # pylint: disable=duplicate-code
         if isinstance(self.from_date, datetime.datetime):
             query["from_date"] = self.from_date.isoformat()
         elif self.from_date:
@@ -163,12 +164,13 @@ class CreateReceipt(BaseMethod):
 
     @property
     def headers(self):
-        headers = super(CreateReceipt, self).headers
+        headers = super().headers
         if "id" in self.receipt:
             headers.update({"x-request-id": self.receipt["id"]})
         return headers
 
     @property
+    # pylint: disable=duplicate-code
     def payload(self):
         payload = super().payload
         payload.update(self.receipt)
@@ -245,7 +247,7 @@ class GetReceiptVisualizationHtml(GetReceiptVisualization):
 
     @property
     def headers(self):
-        headers = super(GetReceiptVisualizationHtml, self).headers
+        headers = super().headers
         if self.x_show_buttons is not None:
             headers.update({"X-Show-Buttons": self.x_show_buttons})
         return headers

@@ -2,6 +2,7 @@ import datetime
 import logging
 from typing import Any, Dict, Optional, Generator, Union, List, AsyncGenerator
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 from checkbox_sdk.exceptions import CheckBoxError
 from checkbox_sdk.methods import cash_register
 from checkbox_sdk.storage.simple import SessionStorage
@@ -9,10 +10,7 @@ from checkbox_sdk.storage.simple import SessionStorage
 logger = logging.getLogger(__name__)
 
 
-class CashRegisters:
-    def __init__(self, client):
-        self.client = client
-
+class CashRegisters(PaginationMixin):
     def get_cash_registers(
         self,
         storage: Optional[SessionStorage] = None,
@@ -39,9 +37,7 @@ class CashRegisters:
         get_cash_registers = cash_register.GetCashRegisters(
             in_use=in_use, fiscal_number=fiscal_number, limit=limit, offset=offset
         )
-        while (shifts_result := self.client(get_cash_registers, storage=storage))["results"]:
-            get_cash_registers.resolve_pagination(shifts_result).shift_next_page()
-            yield from shifts_result["results"]
+        yield from self.fetch_paginated_results(get_cash_registers, storage=storage)
 
     def get_cash_register(
         self,
@@ -222,15 +218,10 @@ class CashRegisters:
             limit=limit,
             offset=offset,
         )
-        while (shifts_result := self.client(get_cash_register_shifts, storage=storage))["results"]:
-            get_cash_register_shifts.resolve_pagination(shifts_result).shift_next_page()
-            yield from shifts_result["results"]
+        yield from self.fetch_paginated_results(get_cash_register_shifts, storage=storage)
 
 
-class AsyncCashRegisters:
-    def __init__(self, client):
-        self.client = client
-
+class AsyncCashRegisters(AsyncPaginationMixin):
     async def get_cash_registers(
         self,
         storage: Optional[SessionStorage] = None,
@@ -257,18 +248,9 @@ class AsyncCashRegisters:
         get_cash_registers = cash_register.GetCashRegisters(
             in_use=in_use, fiscal_number=fiscal_number, limit=limit, offset=offset
         )
-        while True:
-            shifts_result = await self.client(get_cash_registers, storage=storage)
-            results = shifts_result.get("results", [])
 
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_cash_registers.resolve_pagination(shifts_result)
-            get_cash_registers.shift_next_page()
+        async for result in self.fetch_paginated_results(get_cash_registers, storage=storage):
+            yield result
 
     async def get_cash_register(
         self,
@@ -449,15 +431,6 @@ class AsyncCashRegisters:
             limit=limit,
             offset=offset,
         )
-        while True:
-            shifts_result = await self.client(get_cash_register_shifts, storage=storage)
-            results = shifts_result.get("results", [])
 
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_cash_register_shifts.resolve_pagination(shifts_result)
-            get_cash_register_shifts.shift_next_page()
+        async for result in self.fetch_paginated_results(get_cash_register_shifts, storage=storage):
+            yield result

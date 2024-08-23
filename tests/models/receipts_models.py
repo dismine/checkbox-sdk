@@ -6,6 +6,7 @@ from uuid import UUID
 from pydantic import conint, constr
 
 from .base import CheckboxBaseModel
+from .reports_models import RateSchema
 from .shift_models import ShiftSchema, TransactionSchema
 
 
@@ -71,6 +72,7 @@ class ServiceCurrencyExchangeTypeEnum(str, Enum):
     COLLECTION = "COLLECTION"
 
 
+# pylint: disable=duplicate-code
 class GoodsTaxSchema(CheckboxBaseModel):
     id: UUID
     code: int
@@ -176,37 +178,10 @@ class ServiceReceiptCustomSchema(CheckboxBaseModel):
     text_global_footer: Optional[str]
 
 
-class ServiceReceiptCurrencyOperationRateSchema(CheckboxBaseModel):
-    code: str
-    symbol_codes: str
-    name: str
-    sell: float
-    buy: float
-    regulator: float
-    created_at: datetime
-    active: bool
-    initial: Optional[float] = 0
-    balance: Optional[float] = 0
-    sell_sum: Optional[float] = 0
-    reversal_sell_sum: Optional[float] = 0
-    convert_sell_sum: Optional[float] = 0
-    reversal_convert_sell_sum: Optional[float] = 0
-    buy_sum: Optional[float] = 0
-    reversal_buy_sum: Optional[float] = 0
-    convert_buy_sum: Optional[float] = 0
-    reversal_convert_buy_sum: Optional[float] = 0
-    commission_sum: Optional[float] = 0
-    reversal_commission_sum: Optional[float] = 0
-    advance: Optional[float] = 0
-    reinforcement: Optional[float] = 0
-    collection: Optional[float] = 0
-    updated_at: Optional[datetime]
-
-
 class ServiceReceiptCurrencyOperationSchema(CheckboxBaseModel):
     currency: str
     value: Optional[float]
-    rate: ServiceReceiptCurrencyOperationRateSchema
+    rate: RateSchema
 
 
 class ServiceReceiptCurrencyExchangeSchema(CheckboxBaseModel):

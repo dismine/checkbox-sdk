@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import pytest
 from pydantic import ValidationError
 
@@ -7,7 +8,7 @@ from ..models.shift_models import RateSchema
 
 
 @pytest.mark.asyncio
-async def test_currency_rates(auth_token, license_key):
+async def test_currency_rates(auth_token, license_key):  # pylint: disable=duplicate-code
     assert license_key, "License key is empty"
 
     async with AsyncCheckBoxClient() as client:
@@ -25,7 +26,7 @@ async def test_currency_rates(auth_token, license_key):
         }
 
         # sourcery skip: no-loop-in-tests
-        for rate in await client.currency.setup_currency_rates(rates=[rate_data]):
+        for rate in await client.currency.setup_currency_rates(rates=[rate_data]):  # pylint: disable=duplicate-code
             try:
                 model = RateSchema(**rate)
                 assert model is not None

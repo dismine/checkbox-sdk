@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import pytest
 from pydantic import ValidationError
 
@@ -24,7 +25,7 @@ def test_currency_rates(auth_token, license_key):
         }
 
         # sourcery skip: no-loop-in-tests
-        for rate in client.currency.setup_currency_rates(rates=[rate_data]):
+        for rate in client.currency.setup_currency_rates(rates=[rate_data]):  # pylint: disable=duplicate-code
             try:
                 model = RateSchema(**rate)
                 assert model is not None

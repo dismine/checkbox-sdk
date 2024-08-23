@@ -1,49 +1,17 @@
-import datetime
 from typing import Optional, Union, Dict
 from uuid import UUID
 
 from httpx import Response
 
-from checkbox_sdk.methods.base import BaseMethod, HTTPMethod, PaginationMixin
+from checkbox_sdk.methods.base import BaseMethod, HTTPMethod
+from checkbox_sdk.methods.invoices import GetInvoices
 from checkbox_sdk.storage.simple import SessionStorage
 
 URI_PREFIX = "np/"
 
 
-class GetEttnOrders(PaginationMixin, BaseMethod):
+class GetEttnOrders(GetInvoices):
     uri = f"{URI_PREFIX}ettn"
-
-    def __init__(
-        self,
-        status: Optional[str] = None,
-        from_date: Optional[Union[datetime.datetime, str]] = None,
-        to_date: Optional[Union[datetime.datetime, str]] = None,
-        *args,
-        **kwargs,
-    ):
-        super().__init__(*args, **kwargs)
-        self.status = status
-        self.from_date = from_date
-        self.to_date = to_date
-
-    @property
-    def query(self):
-        query = super().query
-
-        if self.status is not None:
-            query["status"] = self.status
-
-        if isinstance(self.from_date, datetime.datetime):
-            query["from_date"] = self.from_date.isoformat()
-        elif self.from_date:
-            query["from_date"] = self.from_date
-
-        if isinstance(self.to_date, datetime.datetime):
-            query["to_date"] = self.to_date.isoformat()
-        elif self.to_date:
-            query["to_date"] = self.to_date
-
-        return query
 
 
 class PostEttnOrder(BaseMethod):
@@ -54,7 +22,7 @@ class PostEttnOrder(BaseMethod):
         self,
         order: Optional[Dict] = None,
         **payload,
-    ):
+    ):  # pylint: disable=duplicate-code
         if order is not None and payload:
             raise ValueError("'order' and '**payload' can not be passed together")
         self.order = order or payload

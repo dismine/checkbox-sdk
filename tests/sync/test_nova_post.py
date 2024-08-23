@@ -1,9 +1,11 @@
+# pylint: disable=duplicate-code
 import json
 import pathlib
 
 from checkbox_sdk.client.synchronous import CheckBoxClient
 
 
+# pylint: disable=duplicate-code
 def test_ettn_order(auth_token, license_key, client_email, client_phone):
     assert license_key, "License key is empty"
 
@@ -53,4 +55,3 @@ def test_get_ettn_orders(auth_token, license_key):
         assert client.storage.cash_register["is_test"], "Not test cash register"
 
         orders = client.nova_post.get_ettn_orders()
-        print(orders)

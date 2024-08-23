@@ -4,12 +4,10 @@ from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import StatusException
 from checkbox_sdk.methods import transactions
 from checkbox_sdk.storage.simple import SessionStorage
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 
 
-class Transactions:
-    def __init__(self, client):
-        self.client = client
-
+class Transactions(PaginationMixin):
     def wait_transaction(
         self,
         transaction_id: str,
@@ -36,7 +34,7 @@ class Transactions:
     def get_transactions(
         self,
         status: Optional[List[str]] = None,
-        type: Optional[List[str]] = None,
+        type: Optional[List[str]] = None,  # pylint: disable=redefined-builtin
         desc: Optional[bool] = False,
         storage: Optional[SessionStorage] = None,
         limit: Optional[int] = 25,
@@ -74,22 +72,10 @@ class Transactions:
             offset=offset,
         )
 
-        while True:
-            transactions_result = self.client(get_transactions, storage=storage)
-            results = transactions_result.get("results", [])
-
-            if not results:
-                break
-
-            yield from results
-            get_transactions.resolve_pagination(transactions_result)
-            get_transactions.shift_next_page()
+        yield from self.fetch_paginated_results(get_transactions, storage=storage)
 
 
-class AsyncTransactions:
-    def __init__(self, client):
-        self.client = client
-
+class AsyncTransactions(AsyncPaginationMixin):
     async def wait_transaction(
         self,
         transaction_id: str,
@@ -116,7 +102,7 @@ class AsyncTransactions:
     async def get_transactions(
         self,
         status: Optional[List[str]] = None,
-        type: Optional[List[str]] = None,
+        type: Optional[List[str]] = None,  # pylint: disable=redefined-builtin
         desc: Optional[bool] = False,
         storage: Optional[SessionStorage] = None,
         limit: Optional[int] = 25,
@@ -154,15 +140,5 @@ class AsyncTransactions:
             offset=offset,
         )
 
-        while True:
-            transactions_result = await self.client(get_transactions, storage=storage)
-            results = transactions_result.get("results", [])
-
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_transactions.resolve_pagination(transactions_result)
-            get_transactions.shift_next_page()
+        async for result in self.fetch_paginated_results(get_transactions, storage=storage):
+            yield result

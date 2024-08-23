@@ -7,14 +7,12 @@ from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import StatusException
 from checkbox_sdk.methods import shifts
 from checkbox_sdk.storage.simple import SessionStorage
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 
 logger = logging.getLogger(__name__)
 
 
-class Shifts:
-    def __init__(self, client):
-        self.client = client
-
+class Shifts(PaginationMixin):
     def get_shifts(
         self,
         statuses: Optional[List[str]] = None,
@@ -47,9 +45,7 @@ class Shifts:
         get_shift = shifts.GetShifts(
             statuses=statuses, desc=desc, from_date=from_date, to_date=to_date, limit=limit, offset=offset
         )
-        while (shifts_result := self.client(get_shift, storage=storage))["results"]:
-            get_shift.resolve_pagination(shifts_result).shift_next_page()
-            yield from shifts_result["results"]
+        yield from self.fetch_paginated_results(get_shift, storage=storage)
 
     def create_shift(
         self,
@@ -271,10 +267,7 @@ class Shifts:
         )
 
 
-class AsyncShifts:
-    def __init__(self, client):
-        self.client = client
-
+class AsyncShifts(AsyncPaginationMixin):
     async def get_shifts(
         self,
         statuses: Optional[List[str]] = None,
@@ -308,18 +301,8 @@ class AsyncShifts:
             statuses=statuses, desc=desc, from_date=from_date, to_date=to_date, limit=limit, offset=offset
         )
 
-        while True:
-            shifts_result = await self.client(get_shift, storage=storage)
-            results = shifts_result.get("results", [])
-
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_shift.resolve_pagination(shifts_result)
-            get_shift.shift_next_page()
+        async for result in self.fetch_paginated_results(get_shift, storage=storage):
+            yield result
 
     async def create_shift(
         self,

@@ -2,14 +2,12 @@ import datetime
 from typing import Union, Optional, List, Generator, AsyncGenerator, Dict, Any
 from uuid import UUID
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 from checkbox_sdk.methods import reports
 from checkbox_sdk.storage.simple import SessionStorage
 
 
-class Reports:
-    def __init__(self, client):
-        self.client = client
-
+class Reports(PaginationMixin):
     def get_periodical_report(
         self,
         from_date: Union[datetime.datetime, str],
@@ -23,7 +21,7 @@ class Reports:
             storage=storage,
         )
 
-    def get_reports(
+    def get_reports(  # pylint: disable=too-many-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -63,9 +61,7 @@ class Reports:
             limit=limit,
             offset=offset,
         )
-        while (receipts_result := self.client(get_report, storage=storage))["results"]:
-            get_report.resolve_pagination(receipts_result).shift_next_page()
-            yield from receipts_result["results"]
+        yield from self.fetch_paginated_results(get_report, storage=storage)
 
     def create_x_report(
         self,
@@ -91,7 +87,7 @@ class Reports:
             storage=storage,
         )
 
-    def get_search_reports(
+    def get_search_reports(  # pylint: disable=too-many-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -144,16 +140,7 @@ class Reports:
             offset=offset,
         )
 
-        while True:
-            reports_result = self.client(search_reports, storage=storage)
-            results = reports_result.get("results", [])
-
-            if not results:
-                break
-
-            yield from results
-            search_reports.resolve_pagination(reports_result)
-            search_reports.shift_next_page()
+        yield from self.fetch_paginated_results(search_reports, storage=storage)
 
     def add_external_report(
         self,
@@ -285,10 +272,7 @@ class Reports:
         )
 
 
-class AsyncReports:
-    def __init__(self, client):
-        self.client = client
-
+class AsyncReports(AsyncPaginationMixin):
     async def get_periodical_report(
         self,
         from_date: Union[datetime.datetime, str],
@@ -302,7 +286,7 @@ class AsyncReports:
             storage=storage,
         )
 
-    async def get_reports(
+    async def get_reports(  # pylint: disable=too-many-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -353,18 +337,9 @@ class AsyncReports:
             limit=limit,
             offset=offset,
         )
-        while True:
-            receipts_result = await self.client(get_report, storage=storage)
-            results = receipts_result.get("results", [])
 
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_report.resolve_pagination(receipts_result)
-            get_report.shift_next_page()
+        async for result in self.fetch_paginated_results(get_report, storage=storage):
+            yield result
 
     async def create_x_report(
         self,
@@ -390,7 +365,7 @@ class AsyncReports:
             storage=storage,
         )
 
-    async def get_search_reports(
+    async def get_search_reports(  # pylint: disable=too-many-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -443,18 +418,8 @@ class AsyncReports:
             offset=offset,
         )
 
-        while True:
-            reports_result = await self.client(search_reports, storage=storage)
-            results = reports_result.get("results", [])
-
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            search_reports.resolve_pagination(reports_result)
-            search_reports.shift_next_page()
+        async for result in self.fetch_paginated_results(search_reports, storage=storage):
+            yield result
 
     async def add_external_report(
         self,

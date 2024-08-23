@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import json
 import pathlib
 import time
@@ -339,7 +340,7 @@ def create_external_receipt(client, auth_token, license_key, storage, client_ema
     close_shift(client)
 
 
-def create_service_receipt(client, payment, type):
+def create_service_receipt(client, payment, type):  # pylint: disable=redefined-builtin
     result = client.receipts.create_service_receipt(payment=payment, timeout=5)
     try:
         model = ReceiptSchema(**result)

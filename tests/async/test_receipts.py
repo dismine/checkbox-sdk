@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import json
 import pathlib
 import time
@@ -16,7 +17,7 @@ from ..models.receipts_models import ReceiptSchema, BulkReceiptSchema
 
 
 @pytest.mark.asyncio
-async def test_get_receipts(auth_token, license_key, client_email, client_phone):
+async def test_get_receipts(auth_token, license_key, client_email, client_phone):  # pylint: disable=duplicate-code
     assert license_key, "License key is empty"
 
     storage = SessionStorage()
@@ -329,7 +330,7 @@ async def test_external_receipt(auth_token, license_key, check_receipt_creation,
         await close_shift(client)
 
 
-async def create_service_receipt(client, payment, type):
+async def create_service_receipt(client, payment, type):  # pylint: disable=redefined-builtin
     result = await client.receipts.create_service_receipt(payment=payment, timeout=5)
     try:
         model = ReceiptSchema(**result)

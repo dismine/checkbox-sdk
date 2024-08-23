@@ -257,7 +257,8 @@ class ExtendedReports:
             .. code-block:: python
 
                 report_task =
-                    client.extended_reports.get_report_task_by_id(report_task_id="123e4567-e89b-12d3-a456-426614174000")
+                    client.extended_reports.get_report_task_by_id(
+                      report_task_id="123e4567-e89b-12d3-a456-426614174000")
                 print(report_task)
 
         Notes:
@@ -287,7 +288,8 @@ class ExtendedReports:
             .. code-block:: python
 
                 report_task_details =
-                    client.extended_reports.report_xlsx_task_by_id(report_task_id="123e4567-e89b-12d3-a456-426614174000")
+                    client.extended_reports.report_xlsx_task_by_id(
+                      report_task_id="123e4567-e89b-12d3-a456-426614174000")
                 print(report_task_details)
 
         Notes:

@@ -1,6 +1,7 @@
 import logging
+import time
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Union, Optional
+from typing import Any, Dict, Union, Optional, Set
 
 from httpx import Response
 
@@ -46,7 +47,7 @@ class BaseCheckBoxClient(ABC):
         trust_env: Whether to trust environment variables for proxy configuration.
     """
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-arguments
         self,
         base_url: str = BASE_API_URL,
         requests_timeout: int = DEFAULT_REQUEST_TIMEOUT,
@@ -86,33 +87,6 @@ class BaseCheckBoxClient(ABC):
             headers["X-Access-Key"] = self.integration_key
         return headers
 
-    @abstractmethod
-    def emit(
-        self,
-        call: AbstractMethod,
-        storage: Optional[SessionStorage] = None,
-        request_timeout: Optional[float] = None,
-    ):
-        """
-        Abstract method to be implemented by subclasses to send a request to the Checkbox API.
-
-        Args:
-            call: The method encapsulating the API request details.
-            storage: Optional session storage to use for the request. If not provided, the default storage will be
-                     used.
-            request_timeout: Optional timeout for the request. If not provided, the client's default timeout will be
-                             used.
-
-        Returns:
-            The response from the API.
-
-        This method must be implemented by any subclass.
-        """
-        pass  # pragma: no cover
-
-    def __call__(self, *args, **kwargs):
-        return self.emit(*args, **kwargs)
-
     @classmethod
     def _check_response(cls, response: Response):
         """
@@ -145,3 +119,74 @@ class BaseCheckBoxClient(ABC):
             return
         storage = storage or self.storage
         storage.license_key = license_key
+
+    @staticmethod
+    def handle_wait_status(result: Dict[str, Any], field: str, expected_value: Set[Any], initial: float):
+        if result[field] not in expected_value:
+            raise ValueError(
+                f"Object did not change field {field!r} "
+                f"to one of expected values {expected_value} (actually {result[field]!r}) "
+                f"in {time.monotonic() - initial:.3f} seconds"
+            )
+
+        logger.info(
+            "Status changed in %.3f seconds to %r",
+            time.monotonic() - initial,
+            result[field],
+        )
+
+
+class BaseSyncCheckBoxClient(BaseCheckBoxClient, ABC):
+    @abstractmethod
+    def emit(
+        self,
+        call: AbstractMethod,
+        storage: Optional[SessionStorage] = None,
+        request_timeout: Optional[float] = None,
+    ):
+        """
+        Abstract method to be implemented by subclasses to send a request to the Checkbox API.
+
+        Args:
+            call: The method encapsulating the API request details.
+            storage: Optional session storage to use for the request. If not provided, the default storage will be
+                     used.
+            request_timeout: Optional timeout for the request. If not provided, the client's default timeout will be
+                             used.
+
+        Returns:
+            The response from the API.
+
+        This method must be implemented by any subclass.
+        """
+
+    def __call__(self, *args, **kwargs):
+        return self.emit(*args, **kwargs)
+
+
+class BaseAsyncCheckBoxClient(BaseCheckBoxClient, ABC):
+    @abstractmethod
+    async def emit(
+        self,
+        call: AbstractMethod,
+        storage: Optional[SessionStorage] = None,
+        request_timeout: Optional[float] = None,
+    ):
+        """
+        Abstract method to be implemented by subclasses to send an asynchronous request to the Checkbox API.
+
+        Args:
+            call: The method encapsulating the API request details.
+            storage: Optional session storage to use for the request. If not provided, the default storage will be
+                     used.
+            request_timeout: Optional timeout for the request. If not provided, the client's default timeout will be
+                             used.
+
+        Returns:
+            The response from the API.
+
+        This method must be implemented by any subclass.
+        """
+
+    async def __call__(self, *args, **kwargs):
+        return await self.emit(*args, **kwargs)

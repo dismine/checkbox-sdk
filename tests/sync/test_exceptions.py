@@ -1,4 +1,6 @@
+# pylint: disable=duplicate-code
 import pytest
+
 from checkbox_sdk.exceptions import CheckBoxAPIError
 
 

@@ -4,6 +4,7 @@ from uuid import UUID
 from .base import CheckboxBaseModel
 
 
+# pylint: disable=duplicate-code
 class OrganizationSchema(CheckboxBaseModel):
     id: UUID
     title: str

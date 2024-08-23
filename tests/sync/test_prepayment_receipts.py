@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import json
 import pathlib
 
@@ -11,6 +12,7 @@ from ..models.prepayment_receipts_models import PrepaymentRelationSchema
 from ..models.receipts_models import ReceiptSchema
 
 
+# pylint: disable=too-many-locals
 def test_create_prepayment_receipt(auth_token, license_key, check_receipt_creation, client_email):
     # sourcery skip: no-conditionals-in-tests
     if not check_receipt_creation:
@@ -92,7 +94,7 @@ def test_create_prepayment_receipt(auth_token, license_key, check_receipt_creati
                 assert model is not None
             except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Receipt validation schema failed: {e}")
-
+        # pylint: disable=duplicate-code
         close_shift(client)
 
 

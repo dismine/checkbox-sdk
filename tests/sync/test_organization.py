@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import pytest
 from pydantic import ValidationError
 
@@ -12,6 +13,7 @@ def test_organization_receipt_config(auth_token, license_key):
 
         assert client.storage.cash_register["is_test"], "Not test cash register"
 
+        # pylint: disable=duplicate-code
         config = client.organization.get_organization_receipt_config()
         try:
             model = ReceiptConfigShema(**config)

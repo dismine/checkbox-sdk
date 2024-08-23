@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 from datetime import datetime, timezone, timedelta
 
 import pytest
@@ -26,6 +27,7 @@ async def test_goods_report(auth_token, license_key, client_email):
         if client_email:
             data["emails"] = [client_email]
 
+        # pylint: disable=duplicate-code
         report = await client.extended_reports.goods_report(data=data)
         try:
             model = PublicReportTaskSchema(**report)
@@ -182,7 +184,7 @@ async def test_create_receipt_report(auth_token, license_key, client_email):
         if client_email:
             data["emails"] = [client_email]
 
-        report = await client.extended_reports.create_receipt_report(data=data)
+        report = await client.extended_reports.create_receipt_report(data=data)  # pylint: disable=duplicate-code
         try:
             model = PublicReportTaskSchema(**report)
             assert model is not None

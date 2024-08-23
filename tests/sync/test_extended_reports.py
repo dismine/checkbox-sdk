@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 from datetime import datetime, timezone, timedelta
 
 import pytest
@@ -25,7 +26,7 @@ def test_goods_report(auth_token, license_key, client_email):
         if client_email:
             data["emails"] = [client_email]
 
-        report = client.extended_reports.goods_report(data=data)
+        report = client.extended_reports.goods_report(data=data)  # pylint: disable=duplicate-code
         try:
             model = PublicReportTaskSchema(**report)
             assert model is not None
@@ -50,7 +51,7 @@ def test_create_z_report(auth_token, license_key, client_email):
         if client_email:
             data["emails"] = [client_email]
 
-        report = client.extended_reports.create_z_report(data=data)
+        report = client.extended_reports.create_z_report(data=data)  # pylint: disable=duplicate-code
         try:
             model = PublicReportTaskSchema(**report)
             assert model is not None
@@ -125,6 +126,7 @@ def test_bookkeeper_z_report(auth_token, license_key, client_email):
         if client_email:
             data["emails"] = [client_email]
 
+        # pylint: disable=duplicate-code
         report = client.extended_reports.bookkeeper_z_report(data=data)
         try:
             model = PublicReportTaskSchema(**report)
@@ -133,6 +135,7 @@ def test_bookkeeper_z_report(auth_token, license_key, client_email):
             pytest.fail(f"Report validation schema failed: {e}")
 
 
+# pylint: disable=duplicate-code
 def test_daily_cash_flow_report(auth_token, license_key, client_email):
     assert license_key, "License key is empty"
 

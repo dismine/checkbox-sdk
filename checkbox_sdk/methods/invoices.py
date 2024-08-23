@@ -16,10 +16,10 @@ class GetInvoices(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
+        *args,
         status: Optional[str] = None,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -34,6 +34,7 @@ class GetInvoices(PaginationMixin, BaseMethod):
         if self.status is not None:
             query["status"] = self.status
 
+        # pylint: disable=duplicate-code
         if isinstance(self.from_date, datetime.datetime):
             query["from_date"] = self.from_date.isoformat()
         elif self.from_date:

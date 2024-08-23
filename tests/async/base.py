@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import contextlib
 from datetime import datetime
 
@@ -6,7 +7,8 @@ from pydantic import ValidationError
 
 from checkbox_sdk.client.asynchronous import AsyncCheckBoxClient
 from checkbox_sdk.exceptions import CheckBoxAPIError
-from ..models.shift_models import ShiftSchema, ZReportSchema
+from ..models.reports_models import FiscalReportSchema
+from ..models.shift_models import ShiftSchema
 
 
 async def open_shift(client: AsyncCheckBoxClient):
@@ -30,7 +32,7 @@ async def close_shift(client: AsyncCheckBoxClient):
         try:
             # sourcery skip: no-conditionals-in-tests
             if z_report:
-                model = ZReportSchema(**z_report)
+                model = FiscalReportSchema(**z_report)
                 assert model is not None
         except ValidationError as e:  # pragma: no cover
             pytest.fail(f"Z report validation schema failed: {e}")

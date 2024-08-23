@@ -3,6 +3,7 @@ import logging
 from typing import Any, Dict, List, Optional, Generator, Union, AsyncGenerator
 from uuid import UUID
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import StatusException
 from checkbox_sdk.methods import receipts
@@ -11,10 +12,55 @@ from checkbox_sdk.storage.simple import SessionStorage
 logger = logging.getLogger(__name__)
 
 
-class Receipts:
-    def __init__(self, client):
-        self.client = client
+def check_status(
+    client,
+    receipt: Dict[str, Any],
+    storage: Optional[SessionStorage] = None,
+    relax: float = DEFAULT_REQUESTS_RELAX,
+    timeout: Optional[float] = None,
+):
+    shift = client.wait_status(
+        receipts.GetReceipt(receipt_id=receipt["id"]),
+        storage=storage,
+        relax=relax,
+        field="status",
+        expected_value={"DONE", "ERROR"},
+        timeout=timeout,
+    )
+    if shift["status"] == "ERROR":
+        initial_transaction = shift["transaction"]
+        raise StatusException(
+            f"Receipt can not be created in due to transaction status moved to {initial_transaction['status']!r}: "
+            f"{initial_transaction['response_status']!r} {initial_transaction['response_error_message']!r}"
+        )
+    return shift
 
+
+async def check_status_async(
+    client,
+    receipt: Dict[str, Any],
+    storage: Optional[SessionStorage] = None,
+    relax: float = DEFAULT_REQUESTS_RELAX,
+    timeout: Optional[float] = None,
+):
+    shift = await client.wait_status(
+        receipts.GetReceipt(receipt_id=receipt["id"]),
+        storage=storage,
+        relax=relax,
+        field="status",
+        expected_value={"DONE", "ERROR"},
+        timeout=timeout,
+    )
+    if shift["status"] == "ERROR":
+        initial_transaction = shift["transaction"]
+        raise StatusException(
+            f"Receipt can not be created in due to transaction status moved to {initial_transaction['status']!r}: "
+            f"{initial_transaction['response_status']!r} {initial_transaction['response_error_message']!r}"
+        )
+    return shift
+
+
+class Receipts(PaginationMixin):
     def create_receipt(
         self,
         receipt: Optional[Dict[str, Any]] = None,
@@ -50,7 +96,7 @@ class Receipts:
         if not wait:
             return response
 
-        return self._check_status(response, storage, relax, timeout)  # type: ignore[index,arg-type]
+        return check_status(self.client, response, storage, relax, timeout)  # type: ignore[index,arg-type]
 
     def create_bulk_receipts(
         self,
@@ -110,7 +156,7 @@ class Receipts:
         if not wait:
             return response
 
-        return self._check_status(response, storage, relax, timeout)
+        return check_status(self.client, response, storage, relax, timeout)
 
     def create_external_receipt(
         self,
@@ -145,7 +191,7 @@ class Receipts:
         if not wait:
             return response
 
-        return self._check_status(response, storage, relax, timeout)
+        return check_status(self.client, response, storage, relax, timeout)
 
     def create_service_currency_receipt(
         self,
@@ -179,7 +225,7 @@ class Receipts:
         if not wait:
             return response
 
-        return self._check_status(response, storage, relax, timeout)
+        return check_status(self.client, response, storage, relax, timeout)
 
     def create_currency_exchange_receipt(
         self,
@@ -212,7 +258,7 @@ class Receipts:
         if not wait:
             return response
 
-        return self._check_status(response, storage, relax, timeout)
+        return check_status(self.client, response, storage, relax, timeout)
 
     def create_cash_withdrawal_receipt(
         self,
@@ -243,7 +289,7 @@ class Receipts:
         if not wait:
             return response
 
-        return self._check_status(response, storage, relax, timeout)
+        return check_status(self.client, response, storage, relax, timeout)
 
     def get_receipts(
         self,
@@ -273,11 +319,9 @@ class Receipts:
         get_receipts = receipts.GetReceipts(
             fiscal_code=fiscal_code, serial=serial, desc=desc, limit=limit, offset=offset
         )
-        while (receipts_result := self.client(get_receipts, storage=storage))["results"]:
-            get_receipts.resolve_pagination(receipts_result).shift_next_page()
-            yield from receipts_result["results"]
+        yield from self.fetch_paginated_results(get_receipts, storage=storage)
 
-    def get_receipts_search(
+    def get_receipts_search(  # pylint: disable=too-many-arguments, too-many-locals
         self,
         fiscal_code: Optional[str] = None,
         barcode: Optional[str] = None,
@@ -330,9 +374,7 @@ class Receipts:
             limit=limit,
             offset=offset,
         )
-        while (receipts_result := self.client(get_receipts, storage=storage))["results"]:
-            get_receipts.resolve_pagination(receipts_result).shift_next_page()
-            yield from receipts_result["results"]
+        yield from self.fetch_paginated_results(get_receipts, storage=storage)
 
     def create_service_receipt(
         self,
@@ -367,30 +409,7 @@ class Receipts:
         if not wait:
             return response
 
-        return self._check_status(response, storage, relax, timeout)
-
-    def _check_status(
-        self,
-        receipt: Dict[str, Any],
-        storage: Optional[SessionStorage] = None,
-        relax: float = DEFAULT_REQUESTS_RELAX,
-        timeout: Optional[float] = None,
-    ):
-        shift = self.client.wait_status(
-            receipts.GetReceipt(receipt_id=receipt["id"]),
-            storage=storage,
-            relax=relax,
-            field="status",
-            expected_value={"DONE", "ERROR"},
-            timeout=timeout,
-        )
-        if shift["status"] == "ERROR":
-            initial_transaction = shift["transaction"]
-            raise StatusException(
-                f"Receipt can not be created in due to transaction status moved to {initial_transaction['status']!r}: "
-                f"{initial_transaction['response_status']!r} {initial_transaction['response_error_message']!r}"
-            )
-        return shift
+        return check_status(self.client, response, storage, relax, timeout)
 
     def get_receipt_visualization_html(
         self,
@@ -618,10 +637,7 @@ class Receipts:
         )
 
 
-class AsyncReceipts:
-    def __init__(self, client):
-        self.client = client
-
+class AsyncReceipts(AsyncPaginationMixin):
     async def create_receipt(
         self,
         receipt: Optional[Dict[str, Any]] = None,
@@ -657,7 +673,7 @@ class AsyncReceipts:
         if not wait:
             return response
 
-        return await self._check_status(response, storage, relax, timeout)  # type: ignore[index,arg-type]
+        return await check_status_async(self.client, response, storage, relax, timeout)  # type: ignore[index,arg-type]
 
     async def create_bulk_receipts(
         self,
@@ -717,7 +733,7 @@ class AsyncReceipts:
         if not wait:
             return response
 
-        return await self._check_status(response, storage, relax, timeout)
+        return await check_status_async(self.client, response, storage, relax, timeout)
 
     async def create_external_receipt(
         self,
@@ -752,7 +768,7 @@ class AsyncReceipts:
         if not wait:
             return response
 
-        return await self._check_status(response, storage, relax, timeout)
+        return await check_status_async(self.client, response, storage, relax, timeout)
 
     async def create_service_currency_receipt(
         self,
@@ -786,7 +802,7 @@ class AsyncReceipts:
         if not wait:
             return response
 
-        return await self._check_status(response, storage, relax, timeout)
+        return await check_status_async(self.client, response, storage, relax, timeout)
 
     async def create_currency_exchange_receipt(
         self,
@@ -819,7 +835,7 @@ class AsyncReceipts:
         if not wait:
             return response
 
-        return await self._check_status(response, storage, relax, timeout)
+        return await check_status_async(self.client, response, storage, relax, timeout)
 
     async def create_cash_withdrawal_receipt(
         self,
@@ -850,7 +866,7 @@ class AsyncReceipts:
         if not wait:
             return response
 
-        return await self._check_status(response, storage, relax, timeout)
+        return await check_status_async(self.client, response, storage, relax, timeout)
 
     async def get_receipts(
         self,
@@ -880,20 +896,11 @@ class AsyncReceipts:
         get_receipts = receipts.GetReceipts(
             fiscal_code=fiscal_code, serial=serial, desc=desc, limit=limit, offset=offset
         )
-        while True:
-            receipts_result = await self.client(get_receipts, storage=storage)
-            results = receipts_result.get("results", [])
 
-            if not results:
-                break
+        async for result in self.fetch_paginated_results(get_receipts, storage=storage):
+            yield result
 
-            for result in results:
-                yield result
-
-            get_receipts.resolve_pagination(receipts_result)
-            get_receipts.shift_next_page()
-
-    async def get_receipts_search(
+    async def get_receipts_search(  # pylint: disable=too-many-arguments, too-many-locals
         self,
         fiscal_code: Optional[str] = None,
         barcode: Optional[str] = None,
@@ -947,18 +954,8 @@ class AsyncReceipts:
             offset=offset,
         )
 
-        while True:
-            receipts_result = await self.client(get_receipts, storage=storage)
-            results = receipts_result.get("results", [])
-
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_receipts.resolve_pagination(receipts_result)
-            get_receipts.shift_next_page()
+        async for result in self.fetch_paginated_results(get_receipts, storage=storage):
+            yield result
 
     async def create_service_receipt(
         self,
@@ -993,30 +990,7 @@ class AsyncReceipts:
         if not wait:
             return response
 
-        return await self._check_status(response, storage, relax, timeout)
-
-    async def _check_status(
-        self,
-        receipt: Dict[str, Any],
-        storage: Optional[SessionStorage] = None,
-        relax: float = DEFAULT_REQUESTS_RELAX,
-        timeout: Optional[float] = None,
-    ):
-        shift = await self.client.wait_status(
-            receipts.GetReceipt(receipt_id=receipt["id"]),
-            storage=storage,
-            relax=relax,
-            field="status",
-            expected_value={"DONE", "ERROR"},
-            timeout=timeout,
-        )
-        if shift["status"] == "ERROR":
-            initial_transaction = shift["transaction"]
-            raise StatusException(
-                f"Receipt can not be created in due to transaction status moved to {initial_transaction['status']!r}: "
-                f"{initial_transaction['response_status']!r} {initial_transaction['response_error_message']!r}"
-            )
-        return shift
+        return await check_status_async(self.client, response, storage, relax, timeout)
 
     async def get_receipt_visualization_html(
         self,

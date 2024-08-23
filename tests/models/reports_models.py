@@ -110,4 +110,4 @@ class FiscalReportSchema(CheckboxBaseModel):
     extra_charge_sum: Optional[int]
     transaction_fail: Optional[bool]
     rates: Optional[List[RateSchema]]
-    fiscal_api_type: Optional[ReportFiscalAPITypeEnum]
+    fiscal_api_type: Optional[ReportFiscalAPITypeEnum] = None

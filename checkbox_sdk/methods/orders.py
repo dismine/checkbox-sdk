@@ -23,6 +23,7 @@ class GetOrders(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
+        *args,
         desc: Optional[bool] = True,
         delivery_desc: Optional[bool] = None,
         orders_all: Optional[bool] = False,
@@ -30,7 +31,6 @@ class GetOrders(PaginationMixin, BaseMethod):
         delivered_to_date: Optional[Union[datetime.datetime, str]] = None,
         status: Optional[List[str]] = None,
         stock_code: Optional[str] = None,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -175,7 +175,7 @@ class EditOrder(BaseMethod):
         self,
         order: Optional[Dict] = None,
         **payload,
-    ):
+    ):  # pylint: disable=duplicate-code
         if order is not None and payload:
             raise ValueError("'order' and '**payload' can not be passed together")
         self.order = order or payload

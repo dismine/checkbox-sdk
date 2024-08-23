@@ -42,7 +42,7 @@ def license_key(request):
 
 
 @pytest.fixture(scope="session")
-def auth_token(pincode, license_key):
+def auth_token(pincode, license_key):  # pylint: disable=redefined-outer-name
     # Will be executed before the first test
     storage = SessionStorage()
     client = CheckBoxClient(storage=storage)

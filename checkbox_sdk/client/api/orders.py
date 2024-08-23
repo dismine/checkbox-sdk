@@ -4,12 +4,10 @@ from uuid import UUID
 
 from checkbox_sdk.methods import orders
 from checkbox_sdk.storage.simple import SessionStorage
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 
 
-class Orders:
-    def __init__(self, client):
-        self.client = client
-
+class Orders(PaginationMixin):
     def run_orders_synchronization(
         self,
         storage: Optional[SessionStorage] = None,
@@ -37,7 +35,7 @@ class Orders:
             storage=storage,
         )
 
-    def get_orders(
+    def get_orders(  # pylint: disable=too-many-arguments
         self,
         desc: Optional[bool] = True,
         delivery_desc: Optional[bool] = None,
@@ -90,16 +88,7 @@ class Orders:
             offset=offset,
         )
 
-        while True:
-            orders_result = self.client(orders_request, storage=storage)
-            results = orders_result.get("results", [])
-
-            if not results:
-                break
-
-            yield from results
-            orders_request.resolve_pagination(orders_result)
-            orders_request.shift_next_page()
+        yield from self.fetch_paginated_results(orders_request, storage=storage)
 
     def add_orders(
         self,
@@ -356,10 +345,7 @@ class Orders:
         return self.client(orders.DeleteOrder(order_id=order_id))
 
 
-class AsyncOrders:
-    def __init__(self, client):
-        self.client = client
-
+class AsyncOrders(AsyncPaginationMixin):
     async def run_orders_synchronization(
         self,
         storage: Optional[SessionStorage] = None,
@@ -387,7 +373,7 @@ class AsyncOrders:
             storage=storage,
         )
 
-    async def get_orders(
+    async def get_orders(  # pylint: disable=too-many-arguments
         self,
         desc: Optional[bool] = True,
         delivery_desc: Optional[bool] = None,
@@ -440,18 +426,8 @@ class AsyncOrders:
             offset=offset,
         )
 
-        while True:
-            shifts_result = await self.client(get_orders, storage=storage)
-            results = shifts_result.get("results", [])
-
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_orders.resolve_pagination(shifts_result)
-            get_orders.shift_next_page()
+        async for result in self.fetch_paginated_results(get_orders, storage=storage):
+            yield result
 
     async def add_orders(
         self,

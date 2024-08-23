@@ -15,13 +15,13 @@ class GetPrepaymentReceipts(PaginationMixin, BaseMethod):
 
     def __init__(
         self,
+        *args,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
         desc: Optional[bool] = False,
         search: Optional[str] = None,
         cash_register_id: Optional[Union[datetime.datetime, str]] = None,
         status: Optional[str] = None,
-        *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
@@ -36,7 +36,7 @@ class GetPrepaymentReceipts(PaginationMixin, BaseMethod):
     @property
     def query(self):
         query = super().query
-
+        # pylint: disable=duplicate-code
         if isinstance(self.from_date, datetime.datetime):
             query["from_date"] = self.from_date.isoformat()
         elif self.from_date:
@@ -92,6 +92,7 @@ class CreateAfterPaymentReceipt(BaseMethod):
         return f"{URI_PREFIX}{self.relation_id}"
 
     @property
+    # pylint: disable=duplicate-code
     def payload(self):
         payload = super().payload
         payload.update(self.receipt)

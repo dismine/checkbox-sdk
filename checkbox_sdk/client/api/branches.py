@@ -1,13 +1,11 @@
 from typing import Optional, Generator, AsyncGenerator
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 from checkbox_sdk.methods import branches
 from checkbox_sdk.storage.simple import SessionStorage
 
 
-class Branches:
-    def __init__(self, client):
-        self.client = client
-
+class Branches(PaginationMixin):
     def get_all_branches(
         self, limit: int = 25, offset: int = 0, storage: Optional[SessionStorage] = None
     ) -> Generator:
@@ -33,15 +31,10 @@ class Branches:
             - It yields branches one by one.
         """
         get_branches = branches.GetAllBranches(limit=limit, offset=offset)
-        while (shifts_result := self.client(get_branches, storage=storage))["results"]:
-            get_branches.resolve_pagination(shifts_result).shift_next_page()
-            yield from shifts_result["results"]
+        yield from self.fetch_paginated_results(get_branches, storage=storage)
 
 
-class AsyncBranches:
-    def __init__(self, client):
-        self.client = client
-
+class AsyncBranches(AsyncPaginationMixin):
     async def get_all_branches(
         self, limit: int = 25, offset: int = 0, storage: Optional[SessionStorage] = None
     ) -> AsyncGenerator:
@@ -67,15 +60,6 @@ class AsyncBranches:
             - It yields branches one by one.
         """
         get_branches = branches.GetAllBranches(limit=limit, offset=offset)
-        while True:
-            shifts_result = await self.client(get_branches, storage=storage)
-            results = shifts_result.get("results", [])
 
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            get_branches.resolve_pagination(shifts_result)
-            get_branches.shift_next_page()
+        async for result in self.fetch_paginated_results(get_branches, storage=storage):
+            yield result

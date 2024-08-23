@@ -5,7 +5,7 @@ from typing import Any, Optional, Set
 from httpcore import NetworkError
 from httpx import Client, HTTPError, Timeout
 
-from checkbox_sdk.client.base import BaseCheckBoxClient
+from checkbox_sdk.client.base import BaseSyncCheckBoxClient
 from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import CheckBoxNetworkError, CheckBoxError
 from checkbox_sdk.methods import cash_register, cashier
@@ -34,7 +34,7 @@ from .api import (
 logger = logging.getLogger(__name__)
 
 
-class CheckBoxClient(BaseCheckBoxClient):
+class CheckBoxClient(BaseSyncCheckBoxClient):  # pylint: disable=too-many-instance-attributes
     """
     A client for interacting with the Checkbox API, inheriting from
     :class:`checkbox_sdk.client.base.BaseCheckBoxClient`.
@@ -90,6 +90,7 @@ class CheckBoxClient(BaseCheckBoxClient):
             - It is a good practice to call this method when you are finished using the client to ensure
               that resources are properly released.
         """
+        # pylint: disable=duplicate-code
         if self._session:
             self._session.close()
             self._session = None
@@ -122,6 +123,7 @@ class CheckBoxClient(BaseCheckBoxClient):
             - The `url` for the request is constructed based on whether the call is internal or external.
             - The response is checked and parsed according to the method call's specifications.
         """
+        # pylint: disable=duplicate-code
         storage = storage or self.storage
 
         if not call.internal:
@@ -208,22 +210,12 @@ class CheckBoxClient(BaseCheckBoxClient):
         """
         logger.info("Wait until %r will be changed to one of %s", field, expected_value)
         initial = time.monotonic()
+        # pylint: disable=duplicate-code
         while (result := self(method, storage=storage))[field] not in expected_value:
             if timeout is not None and time.monotonic() > initial + timeout:
                 logger.error("Status did not changed in required time")
                 break
             time.sleep(relax)
 
-        if result[field] not in expected_value:
-            raise ValueError(
-                f"Object did not change field {field!r} "
-                f"to one of expected values {expected_value} (actually {result[field]!r}) "
-                f"in {time.monotonic() - initial:.3f} seconds"
-            )
-
-        logger.info(
-            "Status changed in %.3f seconds to %r",
-            time.monotonic() - initial,
-            result[field],
-        )
+        self.handle_wait_status(result, field, expected_value, initial)
         return result

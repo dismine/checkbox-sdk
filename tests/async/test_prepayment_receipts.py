@@ -1,3 +1,4 @@
+# pylint: disable=duplicate-code
 import json
 import pathlib
 
@@ -15,7 +16,7 @@ from ..models.receipts_models import ReceiptSchema
 async def test_create_prepayment_receipt(auth_token, license_key, check_receipt_creation, client_email):
     if not check_receipt_creation:
         pytest.skip("Skip testing receipt creation")
-
+    # pylint: disable=duplicate-code
     assert license_key, "License key is empty"
 
     storage = SessionStorage()
@@ -91,7 +92,7 @@ async def test_create_prepayment_receipt(auth_token, license_key, check_receipt_
             except ValidationError as e:  # pragma: no cover
                 pytest.fail(f"Receipt validation schema failed: {e}")
 
-        await close_shift(client)
+        await close_shift(client)  # pylint: disable=duplicate-code
 
 
 @pytest.mark.asyncio

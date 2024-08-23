@@ -2,6 +2,7 @@ import logging
 from typing import Optional, Union, Generator, AsyncGenerator, Dict, Any
 from uuid import UUID
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import StatusException
 from checkbox_sdk.methods import goods
@@ -10,11 +11,8 @@ from checkbox_sdk.storage.simple import SessionStorage
 logger = logging.getLogger(__name__)
 
 
-class Goods:
-    def __init__(self, client):
-        self.client = client
-
-    def get_goods(
+class Goods(PaginationMixin):
+    def get_goods(  # pylint: disable=too-many-arguments
         self,
         group_id: Optional[Union[str, UUID]] = None,
         without_group_only: Optional[bool] = False,
@@ -67,18 +65,9 @@ class Goods:
             offset=offset,
         )
 
-        while True:
-            goods_result = self.client(goods_request, storage=storage)
-            results = goods_result.get("results", [])
+        yield from self.fetch_paginated_results(goods_request, storage=storage)
 
-            if not results:
-                break
-
-            yield from results
-            goods_request.resolve_pagination(goods_result)
-            goods_request.shift_next_page()
-
-    def get_groups(
+    def get_groups(  # pylint: disable=too-many-arguments
         self,
         search: Optional[str] = None,
         parent_groups_only: Optional[bool] = False,
@@ -128,16 +117,7 @@ class Goods:
             offset=offset,
         )
 
-        while True:
-            groups_result = self.client(groups_request, storage=storage)
-            results = groups_result.get("results", [])
-
-            if not results:
-                break
-
-            yield from results
-            groups_request.resolve_pagination(groups_result)
-            groups_request.shift_next_page()
+        yield from self.fetch_paginated_results(groups_request, storage=storage)
 
     def get_good(
         self,
@@ -327,11 +307,8 @@ class Goods:
         raise StatusException(f"Import task failed with status 'error'. Details: {error_details}")
 
 
-class AsyncGoods:
-    def __init__(self, client):
-        self.client = client
-
-    async def get_goods(
+class AsyncGoods(AsyncPaginationMixin):
+    async def get_goods(  # pylint: disable=too-many-arguments
         self,
         group_id: Optional[Union[str, UUID]] = None,
         without_group_only: Optional[bool] = False,
@@ -384,20 +361,10 @@ class AsyncGoods:
             offset=offset,
         )
 
-        while True:
-            goods_result = await self.client(goods_request, storage=storage)
-            results = goods_result.get("results", [])
+        async for result in self.fetch_paginated_results(goods_request, storage=storage):
+            yield result
 
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            goods_request.resolve_pagination(goods_result)
-            goods_request.shift_next_page()
-
-    async def get_groups(
+    async def get_groups(  # pylint: disable=too-many-arguments
         self,
         search: Optional[str] = None,
         parent_groups_only: Optional[bool] = False,
@@ -447,18 +414,8 @@ class AsyncGoods:
             offset=offset,
         )
 
-        while True:
-            groups_result = await self.client(groups_request, storage=storage)
-            results = groups_result.get("results", [])
-
-            if not results:
-                break
-
-            for result in results:
-                yield result
-
-            groups_request.resolve_pagination(groups_result)
-            groups_request.shift_next_page()
+        async for result in self.fetch_paginated_results(groups_request, storage=storage):
+            yield result
 
     async def get_good(
         self,

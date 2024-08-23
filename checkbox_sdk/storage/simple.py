@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Union
 
 import jwt
 
@@ -17,23 +17,17 @@ class SessionStorage:
         token (Optional[str]): The authentication token used for API requests.
         license_key (Optional[str]): The license key associated with the session.
         machine_id (Optional[str]): The machine/device ID used in requests.
-        cashier (Optional[Any]): The cashier information for the session.
-        cash_register (Optional[Any]): The cash register information for the session.
-        shift (Optional[Any]): The active shift information for the session.
+        cashier (Optional[Dict]): The cashier information for the session.
+        cash_register (Optional[Dict]): The cash register information for the session.
+        shift (Optional[Dict]): The active shift information for the session.
     """
 
-    def __init__(
-        self,
-        token: Optional[str] = None,
-        license_key: Optional[str] = None,
-        machine_id: Optional[str] = None,
-    ):
-        self.token = token
-        self.license_key = license_key
-        self.machine_id = machine_id
-        self.cashier = None
-        self.cash_register = None
-        self.shift = None
+    token: Optional[str] = None
+    license_key: Optional[str] = None
+    machine_id: Optional[str] = None
+    cashier: Optional[Dict[str, Any]] = None
+    cash_register: Optional[Dict[str, Any]] = None
+    shift: Optional[Dict[str, Any]] = None
 
     @property
     def headers(self):
@@ -47,5 +41,5 @@ class SessionStorage:
         return headers
 
     @property
-    def token_data(self) -> Optional[Dict[str, Any]]:
-        return jwt.decode(self.token, verify=False) if self.token else None
+    def token_data(self) -> Union[Dict[str, Any], None]:
+        return jwt.decode(self.token, options={"verify_signature": False}) if self.token else None
