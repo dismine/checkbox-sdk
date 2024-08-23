@@ -1,0 +1,46 @@
+version: '3.0'
+
+scanning-settings:
+  max-depth: 6
+  exclude:
+    - ".tox"
+    - ".venv"
+  include-files: [ ]
+  system:
+    targets: [ ]
+
+
+report:
+  dependency-vulnerabilities:
+    enabled: true
+    auto-ignore-in-report:
+      python:
+        environment-results: true
+        unpinned-requirements: true
+      cvss-severity: [ ]
+      vulnerabilities:
+        59901:
+          reason: |
+            The maintainer and multiple third parties believe that this vulnerability isn't valid because users
+            shouldn't use untrusted templates without sandboxing.
+          expires: '2025-03-15'
+
+
+fail-scan-with-exit-code:
+  dependency-vulnerabilities:
+    enabled: true
+    fail-on-any-of:
+      cvss-severity:
+        - medium
+        - high
+        - critical
+      exploitability:
+        - medium
+        - high
+        - critical
+
+security-updates:
+  dependency-vulnerabilities:
+    auto-security-updates-limit:
+      - patch
+

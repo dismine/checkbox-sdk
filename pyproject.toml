@@ -14,20 +14,20 @@ include = ["CHANGELOG.md"]
 
 [tool.poetry.dependencies]
 python = "^3.8"
-PyJWT = "^1.7.1"
+PyJWT = "^2.4.0"
 httpx = "0.27.0"
 
 # poetry add --group dev <package name>
 [tool.poetry.group.dev.dependencies]
-black = "^22.3.0"
+black = "^24.0.0"
 isort = "^5.10.1"
 flake8 = "^4.0.1"
 autoflake = "^1.4"
-ipython = "^7.17.0"
+ipython = "^8.10.0"
 pytz = "^2023.3"
 sourcery = "^1.21.0"
 pytest = "^8.3.1"
-tox = "^4.16.0"
+tox = "<4.12.0"
 mypy = "^1.11.0"
 coverage = "^7.6.0"
 types-pyjwt = "^1.7.1"
@@ -35,6 +35,7 @@ pydantic = { extras = ["email"], version = "^2.8.2" }
 pytest-asyncio = "^0.23.8"
 python-magic = "^0.4.27"
 ruff = "^0.5.7"
+safety = "^3.2.6"
 
 # poetry add --group docs <package name>
 [tool.poetry.group.docs.dependencies]
