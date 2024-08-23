@@ -61,8 +61,8 @@ class Invoices:
                     print(invoice)
 
         Notes:
-            - This method handles pagination automatically, continuing to fetch and yield invoices until no more results
-              are available.
+            - This method handles pagination automatically, continuing to fetch and yield invoices until no more
+              results are available.
         """
         invoices_request = invoices.GetInvoices(
             status=status,
@@ -264,8 +264,8 @@ class AsyncInvoices:
                     print(invoice)
 
         Notes:
-            - This method handles pagination automatically, continuing to fetch and yield invoices until no more results
-              are available.
+            - This method handles pagination automatically, continuing to fetch and yield invoices until no more
+              results are available.
         """
         get_invoices = invoices.GetInvoices(
             status=status,

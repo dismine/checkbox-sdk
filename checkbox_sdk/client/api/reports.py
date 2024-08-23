@@ -235,7 +235,8 @@ class Reports:
         Example:
             .. code-block:: python
 
-                report_text = client.reports.get_report_text(report_id="123e4567-e89b-12d3-a456-426614174000", width=80)
+                report_text = client.reports.get_report_text(report_id="123e4567-e89b-12d3-a456-426614174000",
+                                                             width=80)
                 print(report_text)
 
         Notes:
@@ -338,7 +339,8 @@ class AsyncReports:
 
         Notes:
             - This method is designed to be used in an asynchronous context.
-            - It handles pagination automatically, continuing to fetch and yield reports until no more results are available.
+            - It handles pagination automatically, continuing to fetch and yield reports until no more results are
+              available.
 
         """
         get_report = reports.GetReports(
@@ -539,7 +541,8 @@ class AsyncReports:
                 print(report_text)
 
         Notes:
-            - This method sends a GET request to retrieve the text visualization of the report with the specified ID asynchronously.
+            - This method sends a GET request to retrieve the text visualization of the report with the specified ID
+              asynchronously.
             - The response is decoded from bytes to a string.
         """
         return await self.client(
@@ -569,8 +572,9 @@ class AsyncReports:
         Example:
             .. code-block:: python
 
-                report_ascii_image = await client.reports.get_report_png(report_id="123e4567-e89b-12d3-a456-426614174000",
-                                                                         width=50, paper_width=70)
+                report_ascii_image =
+                   await client.reports.get_report_png(report_id="123e4567-e89b-12d3-a456-426614174000",
+                                                       width=50, paper_width=70)
                 print(report_ascii_image)
 
         Notes:

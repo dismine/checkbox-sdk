@@ -111,7 +111,8 @@ class Orders:
 
         Args:
             orders_list: A list or dictionary of orders to add. If provided, this will be used as the request payload.
-            **payload: Additional payload for the request. If `orders_list` is provided, `**payload` should not be used.
+            **payload: Additional payload for the request. If `orders_list` is provided, `**payload` should not be
+                       used.
 
         Returns:
             A list of dictionaries containing the details of the added orders.
@@ -291,7 +292,8 @@ class Orders:
         Args:
             order_update: A dictionary representing the order details to edit. If provided, this will be used as the
             request payload.
-            **payload: Additional payload for the request. If `order_update` is provided, `**payload` should not be used.
+            **payload: Additional payload for the request. If `order_update` is provided, `**payload` should not be
+                       used.
 
         Returns:
             A dictionary containing the details of the edited order.
@@ -461,7 +463,8 @@ class AsyncOrders:
 
         Args:
             orders_list: A list or dictionary of orders to add. If provided, this will be used as the request payload.
-            **payload: Additional payload for the request. If `orders_list` is provided, `**payload` should not be used.
+            **payload: Additional payload for the request. If `orders_list` is provided, `**payload` should not be
+                       used.
 
         Returns:
             A list of dictionaries containing the details of the added orders.
@@ -636,7 +639,8 @@ class AsyncOrders:
         Args:
             order_update: A dictionary representing the order details to edit. If provided, this will be used as the
             request payload.
-            **payload: Additional payload for the request. If `order_update` is provided, `**payload` should not be used.
+            **payload: Additional payload for the request. If `order_update` is provided, `**payload` should not be
+                       used.
 
         Returns:
             A dictionary containing the details of the edited order.

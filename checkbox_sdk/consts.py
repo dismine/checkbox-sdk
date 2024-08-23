@@ -25,6 +25,6 @@ DEFAULT_REQUESTS_RELAX = 0.75  # seconds
 """
 The default delay between API requests.
 
-This value sets the default amount of time (in seconds) to wait between consecutive API requests to avoid 
-overloading the server or hitting rate limits.
+This value sets the default amount of time (in seconds) to wait between consecutive API requests to avoid
+ overloading the server or hitting rate limits.
 """

@@ -98,8 +98,10 @@ class AsyncCheckBoxClient(BaseCheckBoxClient):
 
         Args:
             call: The method to be called, encapsulating the request details.
-            storage: Optional session storage to use for the request. If not provided, the default storage will be used.
-            request_timeout: Optional timeout for the request. If not provided, the client's default timeout will be used.
+            storage: Optional session storage to use for the request. If not provided, the default storage will be
+                     used.
+            request_timeout: Optional timeout for the request. If not provided, the client's default timeout will be
+                             used.
 
         Returns:
             The parsed response from the API call, as determined by the `call.parse_response` method.

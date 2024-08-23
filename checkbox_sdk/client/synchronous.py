@@ -105,8 +105,10 @@ class CheckBoxClient(BaseCheckBoxClient):
 
         Args:
             call: An instance of :class:`checkbox_sdk.methods.base.AbstractMethod` representing the API method to be
-                  called. This includes details such as HTTP method, URI, query parameters, files, headers, and payload.
-            storage: Optional session storage to use for the request. If not provided, the default storage will be used.
+                  called. This includes details such as HTTP method, URI, query parameters, files, headers, and
+                  payload.
+            storage: Optional session storage to use for the request. If not provided, the default storage will be
+                     used.
             request_timeout: Optional timeout value for the request. If not provided, the default timeout will be used.
 
         Returns:

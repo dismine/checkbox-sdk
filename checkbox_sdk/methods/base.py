@@ -138,7 +138,8 @@ class BaseMethod(AbstractMethod, ABC):
         headers: Returns the default headers for the API request as an empty dictionary.
         files: Returns the default files for the API request as an empty dictionary.
         parse_response: Parses the JSON response from the API and attaches the server date to the result if applicable.
-        _parse_server_date: Extracts and parses the "Date" header from the response to return it as a `datetime` object.
+        _parse_server_date: Extracts and parses the "Date" header from the response to return it as a `datetime`
+                            object.
     """
 
     @property
@@ -280,7 +281,8 @@ class PaginationMixin:
         """
         Moves the pagination to the previous page.
 
-        This method decrements the `offset` by the value of `limit`, effectively moving to the previous page of results.
+        This method decrements the `offset` by the value of `limit`, effectively moving to the previous page of
+        results.
 
         Returns:
             self: The instance itself with the updated `offset`.

@@ -38,8 +38,8 @@ class Receipts:
             **payload: Additional keyword arguments for creating the receipt. Cannot be used together with @receipt.
 
         Returns:
-            Dict[str, Any]: The result of checking the status of the created receipt if wait is True, otherwise the created
-            receipt itself.
+            Dict[str, Any]: The result of checking the status of the created receipt if wait is True, otherwise the
+                            created receipt itself.
         """
         response = self.client(
             receipts.CreateReceipt(receipt=receipt, **payload),
@@ -159,7 +159,8 @@ class Receipts:
         """
         Creates a service currency receipt using the provided data and options.
 
-        Create a service receipt for depositing or withdrawing funds. It is intended for currency exchange offices only.
+        Create a service receipt for depositing or withdrawing funds. It is intended for currency exchange offices
+        only.
 
         Args:
             receipt: Optional dictionary containing the receipt data.
@@ -343,7 +344,8 @@ class Receipts:
         **payload,
     ) -> Dict[str, Any]:
         """
-        Creates a service receipt about depositing change to the cash register or cash collection and checks its status.
+        Creates a service receipt about depositing change to the cash register or cash collection and checks its
+        status.
 
         Args:
             receipt (Optional[Dict[str, Any]): A dictionary containing receipt information.
@@ -643,8 +645,8 @@ class AsyncReceipts:
             **payload: Additional keyword arguments for creating the receipt. Cannot be used together with @receipt.
 
         Returns:
-            Dict[str, Any]: The result of checking the status of the created receipt if wait is True, otherwise the created
-            receipt itself.
+            Dict[str, Any]: The result of checking the status of the created receipt if wait is True, otherwise the
+                            created receipt itself.
         """
         response = await self.client(
             receipts.CreateReceipt(receipt=receipt, **payload),
@@ -764,7 +766,8 @@ class AsyncReceipts:
         """
         Asynchronously creates a service currency receipt using the provided data and options.
 
-        Create a service receipt for depositing or withdrawing funds. It is intended for currency exchange offices only.
+        Create a service receipt for depositing or withdrawing funds. It is intended for currency exchange offices
+        only.
 
         Args:
             receipt: Optional dictionary containing the receipt data.
@@ -967,7 +970,8 @@ class AsyncReceipts:
         **payload,
     ) -> Dict[str, Any]:
         """
-        Creates a service receipt about depositing change to the cash register or cash collection and checks its status.
+        Creates a service receipt about depositing change to the cash register or cash collection and checks its
+        status.
 
         Args:
             receipt (Optional[Dict[str, Any]): A dictionary containing receipt information.
