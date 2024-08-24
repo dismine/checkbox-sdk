@@ -137,31 +137,65 @@ class CashRegisters(PaginationMixin):
             cash_register.GoOffline(go_offline_date=go_offline_date, fiscal_code=fiscal_code), storage=storage
         )
 
-    def get_offline_codes(self, ask_count: int = 2000, threshold: int = 500) -> List[str]:
+    def ask_offline_codes(
+        self,
+        ask_count: int = 2000,
+        sync: bool = False,
+        storage: Optional[SessionStorage] = None,
+    ) -> None:
         """
-        Retrieves offline codes for fiscal transactions using the Checkbox SDK.
+        Requests offline codes from the tax service to fill Checkbox's cache.
 
-        This function requests and loads offline codes for fiscal transactions, returning a list of fiscal codes.
+        This method directly asks for a specified number of offline codes from the tax service and fills Checkbox's
+        cache. It should only be used in scenarios where you need to pre-fill the cache with offline codes but do not
+        intend to use them immediately.
+
+        Note:
+            If you plan to use the offline codes, it is recommended to call
+            :meth:`get_offline_codes <checkbox_sdk.client.api.cash_registers.CashRegisters.get_offline_codes>`
+            instead, as it includes logic to request and retrieve codes efficiently.
+
+        Args:
+            ask_count (int): The number of offline codes to request from the tax service (default is 2000).
+            sync (bool): Whether to perform the request synchronously (default is False).
+            storage (Optional[SessionStorage]): An optional session storage object for managing the state of requests.
+        """
+        self.client(cash_register.AskOfflineCodes(count=ask_count, sync=sync), storage=storage)
+
+    def get_offline_codes(
+        self,
+        ask_count: int = 2000,
+        threshold: int = 500,
+        storage: Optional[SessionStorage] = None,
+    ) -> List[str]:
+        """
+        Retrieves offline fiscal codes from Checkbox's cache and refills it when necessary.
+
+        This method is designed to obtain offline codes for fiscal transactions using the Checkbox SDK. It first
+        checks the available number of offline codes in the cache. If the number of available codes falls below the
+        specified threshold, it requests additional codes from the tax server. The method then returns a list of
+        fiscal codes for offline transactions.
 
         Args:
             ask_count (int): The number of offline codes to retrieve (default is 2000).
             threshold (int): The number of minimal number of offline codes after which new set will be asked from the
-            tax server
+                             tax server
+            storage (Optional[SessionStorage]): An optional session storage object for managing the state of requests.
 
         Returns:
             List[str]: A list of fiscal codes for offline transactions.
         """
         logger.info("Checking available number of offline codes...")
-        response = self.client(cash_register.GetOfflineCodesCount())
+        response = self.client(cash_register.GetOfflineCodesCount(), storage=storage)
         if not response.get("enough_offline_codes", False):
             return []
 
         if response.get("available", 0) <= threshold:
             logger.info("Ask for more offline codes (count=%d)", ask_count)
-            self.client(cash_register.AskOfflineCodes(count=ask_count, sync=True))
+            self.client(cash_register.AskOfflineCodes(count=ask_count, sync=True), storage=storage)
 
         logger.info("Load offline codes...")
-        codes = self.client(cash_register.GetOfflineCodes(count=ask_count))
+        codes = self.client(cash_register.GetOfflineCodes(count=ask_count), storage=storage)
         return [item["fiscal_code"] for item in codes]
 
     def get_offline_time(
@@ -350,31 +384,65 @@ class AsyncCashRegisters(AsyncPaginationMixin):
             cash_register.GoOffline(go_offline_date=go_offline_date, fiscal_code=fiscal_code), storage=storage
         )
 
-    async def get_offline_codes(self, ask_count: int = 2000, threshold: int = 500) -> List[str]:
+    async def ask_offline_codes(
+        self,
+        ask_count: int = 2000,
+        sync: bool = False,
+        storage: Optional[SessionStorage] = None,
+    ) -> None:
         """
-        Retrieves offline codes for fiscal transactions using the Checkbox SDK.
+        Asynchronously requests offline codes from the tax service to fill Checkbox's cache.
 
-        This function requests and loads offline codes for fiscal transactions, returning a list of fiscal codes.
+        This method directly asks for a specified number of offline codes from the tax service and fills Checkbox's
+        cache. It should only be used in scenarios where you need to pre-fill the cache with offline codes but do not
+        intend to use them immediately.
+
+        Note:
+            If you plan to use the offline codes, it is recommended to call
+            :meth:`get_offline_codes <checkbox_sdk.client.api.cash_registers.AsyncCashRegisters.get_offline_codes>`
+            instead, as it includes logic to request and retrieve codes efficiently.
+
+        Args:
+            ask_count (int): The number of offline codes to request from the tax service (default is 2000).
+            sync (bool): Whether to perform the request synchronously (default is False).
+            storage (Optional[SessionStorage]): An optional session storage object for managing the state of requests.
+        """
+        await self.client(cash_register.AskOfflineCodes(count=ask_count, sync=sync), storage=storage)
+
+    async def get_offline_codes(
+        self,
+        ask_count: int = 2000,
+        threshold: int = 500,
+        storage: Optional[SessionStorage] = None,
+    ) -> List[str]:
+        """
+        Asynchronously retrieves offline fiscal codes from Checkbox's cache and refills it when necessary.
+
+        This method is designed to asynchronously obtain offline codes for fiscal transactions using the Checkbox SDK.
+        It checks the available number of offline codes in the cache. If the available count falls below the specified
+        threshold, it requests additional codes from the tax server. The method then returns a list of fiscal codes
+        for offline transactions.
 
         Args:
             ask_count (int): The number of offline codes to retrieve (default is 2000).
             threshold (int): The number of minimal number of offline codes after which new set will be asked from the
-            tax server
+                             tax server
+            storage (Optional[SessionStorage]): An optional session storage object for managing the state of requests.
 
         Returns:
             List[str]: A list of fiscal codes for offline transactions.
         """
         logger.info("Checking available number of offline codes...")
-        response = await self.client(cash_register.GetOfflineCodesCount())
+        response = await self.client(cash_register.GetOfflineCodesCount(), storage=storage)
         if not response.get("enough_offline_codes", False):
             return []
 
         if response.get("available", 0) <= threshold:
             logger.info("Ask for more offline codes (count=%d)", ask_count)
-            await self.client(cash_register.AskOfflineCodes(count=ask_count, sync=True))
+            await self.client(cash_register.AskOfflineCodes(count=ask_count, sync=True), storage=storage)
 
         logger.info("Load offline codes...")
-        codes = await self.client(cash_register.GetOfflineCodes(count=ask_count))
+        codes = await self.client(cash_register.GetOfflineCodes(count=ask_count), storage=storage)
         return [item["fiscal_code"] for item in codes]
 
     async def get_offline_time(
