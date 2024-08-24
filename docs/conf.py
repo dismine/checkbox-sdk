@@ -12,9 +12,14 @@ import sys
 sys.path.insert(0, os.path.abspath("../checkbox_sdk/"))
 
 project = "checkbox-sdk"
-copyright = "2024, Roman Telezhynskyi"
 author = "Roman Telezhynskyi"
-release = "1.0.0"
+copyright = f"2024, {author}"
+
+import checkbox_sdk
+
+version = ".".join(checkbox_sdk.__version__.split(".")[:2])
+release = checkbox_sdk.__version__
+
 needs_sphinx = "7.1"
 
 # -- General configuration ---------------------------------------------------
