@@ -22,7 +22,7 @@ def test_orders_synchronization(auth_token, license_key):
             client.orders.run_orders_synchronization()
 
 
-# pylint: disable=duplicate-code
+# pylint: disable=duplicate-code,too-many-statements
 def test_add_orders(auth_token, license_key, client_email):
     assert license_key, "License key is empty"
 

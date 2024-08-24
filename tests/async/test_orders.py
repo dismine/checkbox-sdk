@@ -24,6 +24,7 @@ async def test_orders_synchronization(auth_token, license_key):
 
 
 @pytest.mark.asyncio
+# pylint: disable=too-many-statements
 async def test_add_orders(auth_token, license_key, client_email):
     assert license_key, "License key is empty"
 
