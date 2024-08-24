@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "checkbox-sdk"
-version = "1.0.0"
+version = "1.1.0"
 description = "Ukraine checkbox api python sdk"
 authors = ["Roman Telezhynskyi <dismine@gmail.com>"]
 maintainers = ["Roman Telezhynskyi <dismine@gmail.com>"]
