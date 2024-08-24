@@ -187,10 +187,8 @@ class CashRegisters(PaginationMixin):
         """
         logger.info("Checking available number of offline codes...")
         response = self.client(cash_register.GetOfflineCodesCount(), storage=storage)
-        if not response.get("enough_offline_codes", False):
-            return []
 
-        if response.get("available", 0) <= threshold:
+        if not response.get("enough_offline_codes", False) or response.get("available", 0) <= threshold:
             logger.info("Ask for more offline codes (count=%d)", ask_count)
             self.client(cash_register.AskOfflineCodes(count=ask_count, sync=True), storage=storage)
 
@@ -434,10 +432,8 @@ class AsyncCashRegisters(AsyncPaginationMixin):
         """
         logger.info("Checking available number of offline codes...")
         response = await self.client(cash_register.GetOfflineCodesCount(), storage=storage)
-        if not response.get("enough_offline_codes", False):
-            return []
 
-        if response.get("available", 0) <= threshold:
+        if not response.get("enough_offline_codes", False) or response.get("available", 0) <= threshold:
             logger.info("Ask for more offline codes (count=%d)", ask_count)
             await self.client(cash_register.AskOfflineCodes(count=ask_count, sync=True), storage=storage)
 
