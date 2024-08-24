@@ -38,7 +38,7 @@ class CheckBoxAPIValidationError(CheckBoxAPIError):
             location = " -> ".join(map(str, item["loc"]))
             error_type = item["type"]
             description = item["msg"]
-            validations.append(f"{location}:\n    {description} (type={error_type})")
+            validations.append(f"{location}:\n    {description} (type={error_type})")  # noqa: E231
         validations_str = "\n".join(validations)
         message = super().__str__()
         return f"{message}\n{validations_str}"

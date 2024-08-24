@@ -126,7 +126,7 @@ class BaseCheckBoxClient(ABC):
             raise ValueError(
                 f"Object did not change field {field!r} "
                 f"to one of expected values {expected_value} (actually {result[field]!r}) "
-                f"in {time.monotonic() - initial:.3f} seconds"
+                f"in {time.monotonic() - initial:.3f} seconds"  # noqa: E231
             )
 
         logger.info(
