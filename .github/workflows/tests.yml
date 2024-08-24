@@ -35,6 +35,10 @@ jobs:
         if: steps.cached-poetry-dependencies.outputs.cache-hit != 'true'
         run: poetry install --no-interaction --no-root --without docs
 
+      - uses: pyupio/safety-action@v1
+        with:
+          api-key: ${{ secrets.SAFETY_API_KEY }}
+
       - name: Run lint and type checks
         run: |
-          poetry run tox -e lint,type # Just static analysis.
+          poetry run tox -e lint,type # Just static analysis. Safety called as a separate stage.
