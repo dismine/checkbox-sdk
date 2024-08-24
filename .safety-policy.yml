@@ -24,6 +24,10 @@ report:
             The maintainer and multiple third parties believe that this vulnerability isn't valid because users
             shouldn't use untrusted templates without sandboxing.
           expires: '2025-03-15'
+        70612:
+          reason: |
+            No known fix.
+          expires: '2025-08-24'
 
 
 fail-scan-with-exit-code:
