@@ -3,20 +3,26 @@ import contextlib
 from datetime import datetime
 
 import pytest
+import pytz
 from pydantic import ValidationError
 
 from checkbox_sdk.client.synchronous import CheckBoxClient
 from checkbox_sdk.exceptions import CheckBoxAPIError
+from methods.base import BaseMethod
 from ..models.reports_models import FiscalReportSchema
 from ..models.shift_models import ShiftSchema
 
 
 def open_shift(client: CheckBoxClient):
-    current_date = datetime.now().date()
-    auto_close_at = datetime.combine(current_date, datetime.strptime("23:55", "%H:%M").time())
+    tz = pytz.timezone("Europe/Kyiv")
+    current_date = datetime.now(tz).date()
+    closing_time = datetime.strptime("23:55", "%H:%M").time()
+    auto_close_at = tz.localize(datetime.combine(current_date, closing_time))
 
     with contextlib.suppress(CheckBoxAPIError):
-        shift = client.shifts.create_shift(timeout=5, auto_close_at=auto_close_at.isoformat())
+        shift = client.shifts.create_shift(
+            timeout=5, auto_close_at=BaseMethod.format_datetime_to_iso_with_ms(auto_close_at)
+        )
         try:
             model = ShiftSchema(**shift)
             assert model is not None

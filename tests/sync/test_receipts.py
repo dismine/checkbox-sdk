@@ -7,11 +7,13 @@ from datetime import datetime
 
 import magic
 import pytest
+import pytz
 from pydantic import ValidationError
 
 from checkbox_sdk.client.synchronous import CheckBoxClient
 from checkbox_sdk.exceptions import CheckBoxAPIError
 from checkbox_sdk.storage.simple import SessionStorage
+from methods.base import BaseMethod
 from .base import open_shift, close_shift
 from ..models.receipts_models import ReceiptSchema, BulkReceiptSchema
 
@@ -246,8 +248,11 @@ def create_receipt_offline(client, auth_token, license_key, storage, client_emai
     response = client.cash_registers.go_offline(storage=storage)
     assert response["status"] == "ok"
 
+    tz = pytz.timezone("Europe/Kyiv")
+    fiscal_date = BaseMethod.format_datetime_to_iso_with_ms(datetime.now(tz))
+
     receipt_data["fiscal_code"] = fiscal_codes[0]
-    receipt_data["fiscal_date"] = datetime.now().isoformat()
+    receipt_data["fiscal_date"] = fiscal_date
 
     if client_email:
         receipt_data["delivery"] = {"email": client_email}
@@ -312,8 +317,11 @@ def create_external_receipt(client, auth_token, license_key, storage, client_ema
     response = client.cash_registers.go_offline(storage=storage)
     assert response["status"] == "ok"
 
+    tz = pytz.timezone("Europe/Kyiv")
+    fiscal_date = BaseMethod.format_datetime_to_iso_with_ms(datetime.now(tz))
+
     receipt_data["fiscal_code"] = fiscal_codes[0]
-    receipt_data["fiscal_date"] = datetime.now().isoformat()
+    receipt_data["fiscal_date"] = fiscal_date
 
     if client_email:
         receipt_data["delivery"] = {"email": client_email}

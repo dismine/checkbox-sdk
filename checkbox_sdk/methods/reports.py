@@ -32,12 +32,12 @@ class GetPeriodicalReport(BaseMethod):
         query = super().query
 
         if isinstance(self.from_date, datetime.datetime):
-            query["from_date"] = self.from_date.isoformat()
+            query["from_date"] = BaseMethod.format_datetime_to_iso_with_ms(self.from_date)
         elif self.from_date:
             query["from_date"] = self.from_date
 
         if isinstance(self.to_date, datetime.datetime):
-            query["to_date"] = self.to_date.isoformat()
+            query["to_date"] = BaseMethod.format_datetime_to_iso_with_ms(self.to_date)
         elif self.to_date:
             query["to_date"] = self.to_date
 
@@ -81,12 +81,12 @@ class GetReports(PaginationMixin, BaseMethod):
         query = super().query
 
         if isinstance(self.from_date, datetime.datetime):
-            query["from_date"] = self.from_date.isoformat()
+            query["from_date"] = BaseMethod.format_datetime_to_iso_with_ms(self.from_date)
         elif self.from_date:
             query["from_date"] = self.from_date
 
         if isinstance(self.to_date, datetime.datetime):
-            query["to_date"] = self.to_date.isoformat()
+            query["to_date"] = BaseMethod.format_datetime_to_iso_with_ms(self.to_date)
         elif self.to_date:
             query["to_date"] = self.to_date
 
@@ -140,12 +140,12 @@ class SearchReports(PaginationMixin, BaseMethod):
         query = super().query
 
         if isinstance(self.from_date, datetime.datetime):
-            query["from_date"] = self.from_date.isoformat()
+            query["from_date"] = BaseMethod.format_datetime_to_iso_with_ms(self.from_date)
         elif self.from_date:
             query["from_date"] = self.from_date
 
         if isinstance(self.to_date, datetime.datetime):
-            query["to_date"] = self.to_date.isoformat()
+            query["to_date"] = BaseMethod.format_datetime_to_iso_with_ms(self.to_date)
         elif self.to_date:
             query["to_date"] = self.to_date
 

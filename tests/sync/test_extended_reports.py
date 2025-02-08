@@ -6,6 +6,7 @@ from pydantic import ValidationError
 
 from checkbox_sdk.client.synchronous import CheckBoxClient
 from checkbox_sdk.storage.simple import SessionStorage
+from methods.base import BaseMethod
 from ..models.extended_reports_models import PublicReportTaskSchema
 
 
@@ -20,7 +21,10 @@ def test_goods_report(auth_token, license_key, client_email):
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
 
-        data = {"from_date": from_date.isoformat(), "to_date": to_date.isoformat()}
+        data = {
+            "from_date": BaseMethod.format_datetime_to_iso_with_ms(from_date),
+            "to_date": BaseMethod.format_datetime_to_iso_with_ms(to_date),
+        }
 
         # sourcery skip: no-conditionals-in-tests
         if client_email:
@@ -45,7 +49,10 @@ def test_create_z_report(auth_token, license_key, client_email):
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
 
-        data = {"from_date": from_date.isoformat(), "to_date": to_date.isoformat()}
+        data = {
+            "from_date": BaseMethod.format_datetime_to_iso_with_ms(from_date),
+            "to_date": BaseMethod.format_datetime_to_iso_with_ms(to_date),
+        }
 
         # sourcery skip: no-conditionals-in-tests
         if client_email:
@@ -70,7 +77,10 @@ def test_actual_revenue_report(auth_token, license_key, client_email):
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
 
-        data = {"from_date": from_date.isoformat(), "to_date": to_date.isoformat()}
+        data = {
+            "from_date": BaseMethod.format_datetime_to_iso_with_ms(from_date),
+            "to_date": BaseMethod.format_datetime_to_iso_with_ms(to_date),
+        }
 
         # sourcery skip: no-conditionals-in-tests
         if client_email:
@@ -95,7 +105,10 @@ def test_net_turnover_report(auth_token, license_key, client_email):
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
 
-        data = {"from_date": from_date.isoformat(), "to_date": to_date.isoformat()}
+        data = {
+            "from_date": BaseMethod.format_datetime_to_iso_with_ms(from_date),
+            "to_date": BaseMethod.format_datetime_to_iso_with_ms(to_date),
+        }
 
         # sourcery skip: no-conditionals-in-tests
         if client_email:
@@ -120,7 +133,10 @@ def test_bookkeeper_z_report(auth_token, license_key, client_email):
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
 
-        data = {"from_date": from_date.isoformat(), "to_date": to_date.isoformat()}
+        data = {
+            "from_date": BaseMethod.format_datetime_to_iso_with_ms(from_date),
+            "to_date": BaseMethod.format_datetime_to_iso_with_ms(to_date),
+        }
 
         # sourcery skip: no-conditionals-in-tests
         if client_email:
@@ -172,7 +188,10 @@ def test_create_receipt_report(auth_token, license_key, client_email):
         to_date = datetime.now(timezone.utc)
         from_date = to_date - timedelta(days=30)
 
-        data = {"from_date": from_date.isoformat(), "to_date": to_date.isoformat()}
+        data = {
+            "from_date": BaseMethod.format_datetime_to_iso_with_ms(from_date),
+            "to_date": BaseMethod.format_datetime_to_iso_with_ms(to_date),
+        }
 
         # sourcery skip: no-conditionals-in-tests
         if client_email:

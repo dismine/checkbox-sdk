@@ -57,12 +57,12 @@ class GetOrders(PaginationMixin, BaseMethod):
             query["orders_all"] = self.orders_all
 
         if isinstance(self.delivered_from_date, datetime.datetime):
-            query["delivered_from_date"] = self.delivered_from_date.isoformat()
+            query["delivered_from_date"] = BaseMethod.format_datetime_to_iso_with_ms(self.delivered_from_date)
         elif self.delivered_from_date:
             query["delivered_from_date"] = self.delivered_from_date
 
         if isinstance(self.delivered_to_date, datetime.datetime):
-            query["delivered_to_date"] = self.delivered_to_date.isoformat()
+            query["delivered_to_date"] = BaseMethod.format_datetime_to_iso_with_ms(self.delivered_to_date)
         elif self.delivered_to_date:
             query["delivered_to_date"] = self.delivered_to_date
 

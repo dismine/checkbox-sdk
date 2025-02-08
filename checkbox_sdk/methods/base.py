@@ -216,6 +216,20 @@ class BaseMethod(AbstractMethod, ABC):
             logger.info("Unable to parse server date")
             return None
 
+    @staticmethod
+    def format_datetime_to_iso_with_ms(dt: datetime) -> str:
+        """
+        Convert a timezone-aware datetime to an ISO 8601 formatted string with milliseconds and UTC 'Z'.
+
+        :param dt: A timezone-aware datetime object.
+        :return: ISO 8601 formatted string with milliseconds in UTC.
+        """
+        if dt.tzinfo is None or dt.tzinfo.utcoffset(dt) is None:
+            raise ValueError("The provided datetime must be timezone-aware.")
+
+        dt_utc = dt.astimezone(timezone.utc)  # Convert to UTC
+        return dt_utc.strftime("%Y-%m-%dT%H:%M:%S.") + f"{dt_utc.microsecond // 1000:03d}Z"
+
 
 class PaginationMixin:
     """

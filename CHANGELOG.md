@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## 1.2.0 (2025-02-08)
+
+* Fixed conversion datetime objects to an ISO 8601 formatted string.
+
 ## 1.1.0 (2024-08-24)
 
 * Improved documentation.
