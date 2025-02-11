@@ -4,6 +4,9 @@
 
 * Fixed conversion datetime objects to an ISO 8601 formatted string.
 * Explicitly define `httpx` package as dependency.
+* Updated project dependencies versions.
+* Replaced the deprecated `proxies` argument in HTTPS transport with `proxy` and `proxy_mounts` for improved proxy
+  configuration.
 
 ## 1.1.0 (2024-08-24)
 

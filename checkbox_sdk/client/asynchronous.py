@@ -46,7 +46,9 @@ class AsyncCheckBoxClient(BaseAsyncCheckBoxClient):  # pylint: disable=too-many-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self._session = AsyncClient(proxies=self.proxy, timeout=Timeout(timeout=self.timeout), verify=self.verify_ssl)
+        self._session = AsyncClient(
+            proxy=self.proxy, mounts=self.proxy_mounts, timeout=Timeout(timeout=self.timeout), verify=self.verify_ssl
+        )
         self.cashier = AsyncCashier(self)
         self.cash_registers = AsyncCashRegisters(self)
         self.shifts = AsyncShifts(self)

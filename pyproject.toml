@@ -20,7 +20,7 @@ classifiers = [
 ]
 dependencies = [
     "pyjwt (>=2.4.0,<3.0.0)",
-    "httpx (>=0.27.0,<0.28.0)",
+    "httpx (>=0.28.1,<0.29.0)",
     "httpcore (>=1.0.7,<2.0.0)"
 ]
 

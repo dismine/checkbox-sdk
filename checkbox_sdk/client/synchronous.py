@@ -48,7 +48,9 @@ class CheckBoxClient(BaseSyncCheckBoxClient):  # pylint: disable=too-many-instan
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        self._session = Client(proxies=self.proxy, timeout=Timeout(timeout=self.timeout), verify=self.verify_ssl)
+        self._session = Client(
+            proxy=self.proxy, mounts=self.proxy_mounts, timeout=Timeout(timeout=self.timeout), verify=self.verify_ssl
+        )
         self.cashier = Cashier(self)
         self.cash_registers = CashRegisters(self)
         self.shifts = Shifts(self)

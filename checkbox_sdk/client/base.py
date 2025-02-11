@@ -1,9 +1,9 @@
 import logging
 import time
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Union, Optional, Set
+from typing import Any, Dict, Union, Optional, Set, Mapping
 
-from httpx import Response
+from httpx import Response, BaseTransport, URL, Proxy
 
 from checkbox_sdk import __version__
 from checkbox_sdk.consts import API_VERSION, BASE_API_URL, DEFAULT_REQUEST_TIMEOUT
@@ -19,13 +19,15 @@ class BaseCheckBoxClient(ABC):
     Abstract base class for interacting with the Checkbox API.
 
     This class provides foundational methods and properties for making API requests,
-    managing session storage, and handling common configurations like proxies, SSL verification,
+    managing session storage, and handling common configurations like proxy, SSL verification,
     and request timeouts.
 
     Args:
         base_url: The base URL for the Checkbox API. Defaults to `BASE_API_URL`.
         requests_timeout: The timeout for API requests, in seconds. Defaults to `DEFAULT_REQUEST_TIMEOUT`.
-        proxy: Optional proxy configuration. Can be a string URL or a dictionary of proxies.
+        proxy: Optional proxy configuration. A proxy URL where all the traffic should be routed.
+        proxy_mounts: Optional mapping of proxy configurations for specific transports or hosts.
+                      This allows finer control over proxy behavior for different requests.
         verify_ssl: Whether to verify SSL certificates. Defaults to `True`.
         trust_env: Whether to trust environment variables for proxy configuration. Defaults to `True`.
         api_version: The version of the API to use. Defaults to `API_VERSION`.
@@ -39,6 +41,7 @@ class BaseCheckBoxClient(ABC):
         api_version: The version of the API to use.
         timeout: The timeout for API requests, in seconds.
         proxy: The proxy configuration for the client.
+        proxy_mounts: The mapping of proxy configurations for specific transports or hosts.
         verify_ssl: Whether SSL certificates are verified.
         storage: The session storage instance used for requests.
         client_name: The name of the client.
@@ -51,7 +54,8 @@ class BaseCheckBoxClient(ABC):
         self,
         base_url: str = BASE_API_URL,
         requests_timeout: int = DEFAULT_REQUEST_TIMEOUT,
-        proxy: Optional[Union[str, Dict[str, str]]] = None,
+        proxy: Optional[Union[URL, str, Proxy]] = None,
+        proxy_mounts: Optional[(Mapping[str, BaseTransport | None])] = None,
         verify_ssl: bool = True,
         trust_env: bool = True,
         api_version: str = API_VERSION,
@@ -64,6 +68,7 @@ class BaseCheckBoxClient(ABC):
         self.api_version = api_version
         self.timeout = requests_timeout
         self.proxy = proxy
+        self.proxy_mounts = proxy_mounts
         self.verify_ssl = verify_ssl
         self.storage = storage or SessionStorage()
         self.client_name = client_name
