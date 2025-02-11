@@ -1,24 +1,39 @@
-[tool.poetry]
+[project]
 name = "checkbox-sdk"
-version = "1.1.0"
+version = "1.2.0"
 description = "Ukraine checkbox api python sdk"
-authors = ["Roman Telezhynskyi <dismine@gmail.com>"]
-maintainers = ["Roman Telezhynskyi <dismine@gmail.com>"]
-repository = "https://github.com/dismine/checkbox-sdk"
-readme = "README.md"
-documentation = "https://checkbox-sdk.readthedocs.io"
-license = "MIT"
-packages = [{ include = "checkbox_sdk" }]
+authors = [
+    { name = "Roman Telezhynskyi", email = "dismine@gmail.com" }
+]
+maintainers = [
+    { name = "Roman Telezhynskyi", email = "dismine@gmail.com" }
+]
+requires-python = ">=3.9,<4.0"
 keywords = ["python", "sdk"]
-include = ["CHANGELOG.md"]
+readme = "README.md"
+license = "MIT"
+license-files = ["LICEN[CS]E.*"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Programming Language :: Python",
+    "License :: OSI Approved :: MIT License"
+]
+dependencies = [
+    "pyjwt (>=2.4.0,<3.0.0)",
+    "httpx (>=0.27.0,<0.28.0)",
+    "httpcore (>=1.0.7,<2.0.0)"
+]
 
-[tool.poetry.dependencies]
-python = "^3.9"
-PyJWT = "^2.4.0"
-httpx = "^0.27.0"
+[project.urls]
+Repository = "https://github.com/dismine/checkbox-sdk.git"
+Documentation = "https://checkbox-sdk.readthedocs.io"
+Changelog = "https://github.com/dismine/checkbox-sdk/blob/main/CHANGELOG.md"
+
+[tool.poetry]
+include = ["CHANGELOG.md"]
+packages = [{ include = "checkbox_sdk" }]
 
 # poetry add --group dev <package name>
-httpcore = "^1.0.7"
 [tool.poetry.group.dev.dependencies]
 black = "^24.0.0"
 isort = "^5.10.1"
@@ -37,10 +52,10 @@ pytest-asyncio = "^0.23.8"
 python-magic = "^0.4.27"
 ruff = "^0.6"
 safety = "^3.2.6"
-
-# poetry add --group docs <package name>
 pylint = "^3.2.6"
 deptry = "^0.23.0"
+
+# poetry add --group docs <package name>
 [tool.poetry.group.docs.dependencies]
 sphinx = "^7.1"
 sphinx-prompt = "^1.5.0"
@@ -66,7 +81,7 @@ line_length = 119
 known_third_party = ["httpx", "jwt", "httpcore"]
 
 [build-system]
-requires = ["poetry>=0.12"]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.masonry.api"
 
 [tool.pytest.ini_options]
