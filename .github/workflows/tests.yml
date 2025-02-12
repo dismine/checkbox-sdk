@@ -41,4 +41,4 @@ jobs:
 
       - name: Run lint and type checks
         run: |
-          poetry run tox -e lint,type # Just static analysis. Safety called as a separate stage.
+          poetry run tox -e lint,type,deptry # Just static analysis. Safety called as a separate stage.

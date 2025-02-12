@@ -13,11 +13,12 @@ keywords = ["python", "sdk"]
 include = ["CHANGELOG.md"]
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 PyJWT = "^2.4.0"
 httpx = "^0.27.0"
 
 # poetry add --group dev <package name>
+httpcore = "^1.0.7"
 [tool.poetry.group.dev.dependencies]
 black = "^24.0.0"
 isort = "^5.10.1"
@@ -39,6 +40,7 @@ safety = "^3.2.6"
 
 # poetry add --group docs <package name>
 pylint = "^3.2.6"
+deptry = "^0.23.0"
 [tool.poetry.group.docs.dependencies]
 sphinx = "^7.1"
 sphinx-prompt = "^1.5.0"

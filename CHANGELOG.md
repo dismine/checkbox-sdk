@@ -3,6 +3,7 @@
 ## 1.2.0 (2025-02-08)
 
 * Fixed conversion datetime objects to an ISO 8601 formatted string.
+* Explicitly define `httpx` package as dependency.
 
 ## 1.1.0 (2024-08-24)
 
