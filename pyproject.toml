@@ -35,27 +35,25 @@ packages = [{ include = "checkbox_sdk" }]
 
 # poetry add --group dev <package name>
 [tool.poetry.group.dev.dependencies]
-black = "^24.0.0"
-isort = "^5.10.1"
-flake8 = "^5"
-autoflake = "^1.4"
-ipython = "^8.10.0"
-pytz = "^2023.3"
-sourcery = "^1.21.0"
-pytest = "^8.3.1"
-tox = "<4.12.0"
-mypy = "^1.11.0"
-coverage = "^7.6.0"
+black = "^25.1.0"
+flake8 = "^7.1.1"
+pytz = "^2025.1"
+sourcery = "^1.34.0"
+pytest = "^8.3.4"
+tox = "^4.24.1"
+coverage = "^7.6.12"
 types-pyjwt = "^1.7.1"
 pydantic = { extras = ["email"], version = "^2.8.2" }
-pytest-asyncio = "^0.23.8"
+pytest-asyncio = "^0.25.3"
 python-magic = "^0.4.27"
-ruff = "^0.6"
-safety = "^3.2.6"
-pylint = "^3.2.6"
+ruff = "^0.9.6"
+safety = "^3.2.14"
+pylint = "^3.3.4"
 deptry = "^0.23.0"
 
 # poetry add --group docs <package name>
+mypy = "^1.15.0"
+types-pytz = "^2025.1.0.20250204"
 [tool.poetry.group.docs.dependencies]
 sphinx = "^7.1"
 sphinx-prompt = "^1.5.0"
