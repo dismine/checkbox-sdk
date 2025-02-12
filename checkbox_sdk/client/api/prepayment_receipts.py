@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class PrepaymentReceipts(PaginationMixin):
-    def get_pre_payment_relations_search(  # pylint: disable=too-many-arguments
+    def get_pre_payment_relations_search(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -75,7 +75,7 @@ class PrepaymentReceipts(PaginationMixin):
             storage=storage,
         )
 
-    def create_after_payment_receipt(
+    def create_after_payment_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         relation_id: str,
         receipt: Optional[Dict[str, Any]] = None,
@@ -111,7 +111,7 @@ class PrepaymentReceipts(PaginationMixin):
 
         return check_status(self.client, response, storage, relax, timeout)
 
-    def create_prepayment_receipt(
+    def create_prepayment_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -172,7 +172,7 @@ class PrepaymentReceipts(PaginationMixin):
 
 
 class AsyncPrepaymentReceipts(AsyncPaginationMixin):
-    async def get_pre_payment_relations_search(  # pylint: disable=too-many-arguments
+    async def get_pre_payment_relations_search(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -237,7 +237,7 @@ class AsyncPrepaymentReceipts(AsyncPaginationMixin):
             storage=storage,
         )
 
-    async def create_after_payment_receipt(
+    async def create_after_payment_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         relation_id: str,
         receipt: Optional[Dict[str, Any]] = None,
@@ -273,7 +273,7 @@ class AsyncPrepaymentReceipts(AsyncPaginationMixin):
 
         return await check_status_async(self.client, response, storage, relax, timeout)
 
-    async def create_prepayment_receipt(
+    async def create_prepayment_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,

@@ -10,7 +10,7 @@ class NovaPost:
     def __init__(self, client):
         self.client = client
 
-    def get_ettn_orders(
+    def get_ettn_orders(  # pylint: disable=too-many-positional-arguments
         self,
         status: Optional[str] = None,
         from_date: Optional[Union[datetime.datetime, str]] = None,
@@ -169,7 +169,7 @@ class AsyncNovaPost:
     def __init__(self, client):
         self.client = client
 
-    async def get_ettn_orders(
+    async def get_ettn_orders(  # pylint: disable=too-many-positional-arguments
         self,
         status: Optional[str] = None,
         from_date: Optional[Union[datetime.datetime, str]] = None,

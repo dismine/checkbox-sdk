@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 
 class Goods(PaginationMixin):
-    def get_goods(  # pylint: disable=too-many-arguments
+    def get_goods(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         group_id: Optional[Union[str, UUID]] = None,
         without_group_only: Optional[bool] = False,
@@ -67,7 +67,7 @@ class Goods(PaginationMixin):
 
         yield from self.fetch_paginated_results(goods_request, storage=storage)
 
-    def get_groups(  # pylint: disable=too-many-arguments
+    def get_groups(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         search: Optional[str] = None,
         parent_groups_only: Optional[bool] = False,
@@ -186,7 +186,7 @@ class Goods(PaginationMixin):
         logger.info("Trying to export goods with task %s", response["task_id"])
         return self._wait_export_task(response, export_extension, storage, relax, timeout)
 
-    def _wait_export_task(
+    def _wait_export_task(  # pylint: disable=too-many-positional-arguments
         self,
         task: Dict[str, Any],
         export_extension: str,
@@ -214,7 +214,7 @@ class Goods(PaginationMixin):
             storage=storage,
         )
 
-    def import_goods(
+    def import_goods(  # pylint: disable=too-many-positional-arguments
         self,
         file: str,
         ignore_barcode_duplicates: Optional[bool] = False,
@@ -308,7 +308,7 @@ class Goods(PaginationMixin):
 
 
 class AsyncGoods(AsyncPaginationMixin):
-    async def get_goods(  # pylint: disable=too-many-arguments
+    async def get_goods(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         group_id: Optional[Union[str, UUID]] = None,
         without_group_only: Optional[bool] = False,
@@ -364,7 +364,7 @@ class AsyncGoods(AsyncPaginationMixin):
         async for result in self.fetch_paginated_results(goods_request, storage=storage):
             yield result
 
-    async def get_groups(  # pylint: disable=too-many-arguments
+    async def get_groups(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         search: Optional[str] = None,
         parent_groups_only: Optional[bool] = False,
@@ -484,7 +484,7 @@ class AsyncGoods(AsyncPaginationMixin):
         logger.info("Trying to export goods with task %s", response["task_id"])
         return await self._wait_export_task(response, export_extension, storage, relax, timeout)
 
-    async def _wait_export_task(
+    async def _wait_export_task(  # pylint: disable=too-many-positional-arguments
         self,
         task: Dict[str, Any],
         export_extension: str,
@@ -512,7 +512,7 @@ class AsyncGoods(AsyncPaginationMixin):
             storage=storage,
         )
 
-    async def import_goods(
+    async def import_goods(  # pylint: disable=too-many-positional-arguments
         self,
         file: str,
         ignore_barcode_duplicates: Optional[bool] = False,

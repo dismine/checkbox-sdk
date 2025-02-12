@@ -2,9 +2,9 @@ import datetime
 from typing import Optional, List, Dict, Any, Union, Generator, AsyncGenerator
 from uuid import UUID
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 from checkbox_sdk.methods import invoices
 from checkbox_sdk.storage.simple import SessionStorage
-from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 
 
 class Invoices(PaginationMixin):
@@ -29,7 +29,7 @@ class Invoices(PaginationMixin):
         """
         return self.client(invoices.GetTerminals(), storage=storage)
 
-    def get_invoices(
+    def get_invoices(  # pylint: disable=too-many-positional-arguments
         self,
         status: Optional[str] = None,
         from_date: Optional[Union[datetime.datetime, str]] = None,
@@ -220,7 +220,7 @@ class AsyncInvoices(AsyncPaginationMixin):
         """
         return await self.client(invoices.GetTerminals(), storage=storage)
 
-    async def get_invoices(
+    async def get_invoices(  # pylint: disable=too-many-positional-arguments
         self,
         status: Optional[str] = None,
         from_date: Optional[Union[datetime.datetime, str]] = None,

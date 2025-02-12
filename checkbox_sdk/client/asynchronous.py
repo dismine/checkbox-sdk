@@ -168,7 +168,7 @@ class AsyncCheckBoxClient(BaseAsyncCheckBoxClient):  # pylint: disable=too-many-
         if storage.license_key:
             await self(cash_register.GetCashRegisterInfo(), storage=storage)
 
-    async def wait_status(
+    async def wait_status(  # pylint: disable=too-many-positional-arguments
         self,
         method: BaseMethod,
         expected_value: Set[Any],

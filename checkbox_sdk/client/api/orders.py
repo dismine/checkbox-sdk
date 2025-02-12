@@ -2,9 +2,9 @@ import datetime
 from typing import Optional, Union, List, Generator, AsyncGenerator, Dict, Any
 from uuid import UUID
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 from checkbox_sdk.methods import orders
 from checkbox_sdk.storage.simple import SessionStorage
-from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 
 
 class Orders(PaginationMixin):
@@ -35,7 +35,7 @@ class Orders(PaginationMixin):
             storage=storage,
         )
 
-    def get_orders(  # pylint: disable=too-many-arguments
+    def get_orders(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         desc: Optional[bool] = True,
         delivery_desc: Optional[bool] = None,
@@ -373,7 +373,7 @@ class AsyncOrders(AsyncPaginationMixin):
             storage=storage,
         )
 
-    async def get_orders(  # pylint: disable=too-many-arguments
+    async def get_orders(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         desc: Optional[bool] = True,
         delivery_desc: Optional[bool] = None,

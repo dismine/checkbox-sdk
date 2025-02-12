@@ -61,7 +61,7 @@ async def check_status_async(
 
 
 class Receipts(PaginationMixin):
-    def create_receipt(
+    def create_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -123,7 +123,7 @@ class Receipts(PaginationMixin):
 
         return response["results"]
 
-    def create_receipt_offline(
+    def create_receipt_offline(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -158,7 +158,7 @@ class Receipts(PaginationMixin):
 
         return check_status(self.client, response, storage, relax, timeout)
 
-    def create_external_receipt(
+    def create_external_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -193,7 +193,7 @@ class Receipts(PaginationMixin):
 
         return check_status(self.client, response, storage, relax, timeout)
 
-    def create_service_currency_receipt(
+    def create_service_currency_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -227,7 +227,7 @@ class Receipts(PaginationMixin):
 
         return check_status(self.client, response, storage, relax, timeout)
 
-    def create_currency_exchange_receipt(
+    def create_currency_exchange_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -260,7 +260,7 @@ class Receipts(PaginationMixin):
 
         return check_status(self.client, response, storage, relax, timeout)
 
-    def create_cash_withdrawal_receipt(
+    def create_cash_withdrawal_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -291,7 +291,7 @@ class Receipts(PaginationMixin):
 
         return check_status(self.client, response, storage, relax, timeout)
 
-    def get_receipts(
+    def get_receipts(  # pylint: disable=too-many-positional-arguments
         self,
         fiscal_code: Optional[str] = None,
         serial: Optional[int] = None,
@@ -321,7 +321,7 @@ class Receipts(PaginationMixin):
         )
         yield from self.fetch_paginated_results(get_receipts, storage=storage)
 
-    def get_receipts_search(  # pylint: disable=too-many-arguments, too-many-locals
+    def get_receipts_search(  # pylint: disable=too-many-arguments,too-many-locals,too-many-positional-arguments
         self,
         fiscal_code: Optional[str] = None,
         barcode: Optional[str] = None,
@@ -376,7 +376,7 @@ class Receipts(PaginationMixin):
         )
         yield from self.fetch_paginated_results(get_receipts, storage=storage)
 
-    def create_service_receipt(
+    def create_service_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -411,7 +411,7 @@ class Receipts(PaginationMixin):
 
         return check_status(self.client, response, storage, relax, timeout)
 
-    def get_receipt_visualization_html(
+    def get_receipt_visualization_html(  # pylint: disable=too-many-positional-arguments
         self,
         receipt_id: Union[str, UUID],
         is_second_copy: Optional[bool] = False,
@@ -503,7 +503,7 @@ class Receipts(PaginationMixin):
             storage=storage,
         )
 
-    def get_receipt_visualization_png(
+    def get_receipt_visualization_png(  # pylint: disable=too-many-positional-arguments
         self,
         receipt_id: Union[str, UUID],
         is_second_copy: Optional[bool] = False,
@@ -638,7 +638,7 @@ class Receipts(PaginationMixin):
 
 
 class AsyncReceipts(AsyncPaginationMixin):
-    async def create_receipt(
+    async def create_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -700,7 +700,7 @@ class AsyncReceipts(AsyncPaginationMixin):
 
         return response["results"]
 
-    async def create_receipt_offline(
+    async def create_receipt_offline(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -735,7 +735,7 @@ class AsyncReceipts(AsyncPaginationMixin):
 
         return await check_status_async(self.client, response, storage, relax, timeout)
 
-    async def create_external_receipt(
+    async def create_external_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -770,7 +770,7 @@ class AsyncReceipts(AsyncPaginationMixin):
 
         return await check_status_async(self.client, response, storage, relax, timeout)
 
-    async def create_service_currency_receipt(
+    async def create_service_currency_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -804,7 +804,7 @@ class AsyncReceipts(AsyncPaginationMixin):
 
         return await check_status_async(self.client, response, storage, relax, timeout)
 
-    async def create_currency_exchange_receipt(
+    async def create_currency_exchange_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -837,7 +837,7 @@ class AsyncReceipts(AsyncPaginationMixin):
 
         return await check_status_async(self.client, response, storage, relax, timeout)
 
-    async def create_cash_withdrawal_receipt(
+    async def create_cash_withdrawal_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -868,7 +868,7 @@ class AsyncReceipts(AsyncPaginationMixin):
 
         return await check_status_async(self.client, response, storage, relax, timeout)
 
-    async def get_receipts(
+    async def get_receipts(  # pylint: disable=too-many-positional-arguments
         self,
         fiscal_code: Optional[str] = None,
         serial: Optional[int] = None,
@@ -900,7 +900,7 @@ class AsyncReceipts(AsyncPaginationMixin):
         async for result in self.fetch_paginated_results(get_receipts, storage=storage):
             yield result
 
-    async def get_receipts_search(  # pylint: disable=too-many-arguments, too-many-locals
+    async def get_receipts_search(  # pylint: disable=too-many-arguments,too-many-locals,too-many-positional-arguments
         self,
         fiscal_code: Optional[str] = None,
         barcode: Optional[str] = None,
@@ -957,7 +957,7 @@ class AsyncReceipts(AsyncPaginationMixin):
         async for result in self.fetch_paginated_results(get_receipts, storage=storage):
             yield result
 
-    async def create_service_receipt(
+    async def create_service_receipt(  # pylint: disable=too-many-positional-arguments
         self,
         receipt: Optional[Dict[str, Any]] = None,
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -992,7 +992,7 @@ class AsyncReceipts(AsyncPaginationMixin):
 
         return await check_status_async(self.client, response, storage, relax, timeout)
 
-    async def get_receipt_visualization_html(
+    async def get_receipt_visualization_html(  # pylint: disable=too-many-positional-arguments
         self,
         receipt_id: Union[str, UUID],
         is_second_copy: Optional[bool] = False,
@@ -1085,7 +1085,7 @@ class AsyncReceipts(AsyncPaginationMixin):
             storage=storage,
         )
 
-    async def get_receipt_visualization_png(
+    async def get_receipt_visualization_png(  # pylint: disable=too-many-positional-arguments
         self,
         receipt_id: Union[str, UUID],
         is_second_copy: Optional[bool] = False,

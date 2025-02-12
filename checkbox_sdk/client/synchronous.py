@@ -175,7 +175,7 @@ class CheckBoxClient(BaseSyncCheckBoxClient):  # pylint: disable=too-many-instan
         if storage.license_key:
             self(cash_register.GetCashRegisterInfo(), storage=storage)
 
-    def wait_status(
+    def wait_status(  # pylint: disable=too-many-positional-arguments
         self,
         method: BaseMethod,
         expected_value: Set[Any],

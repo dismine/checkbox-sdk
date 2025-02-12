@@ -12,8 +12,8 @@ from pydantic import ValidationError
 
 from checkbox_sdk.client.synchronous import CheckBoxClient
 from checkbox_sdk.exceptions import CheckBoxAPIError
+from checkbox_sdk.methods.base import BaseMethod
 from checkbox_sdk.storage.simple import SessionStorage
-from methods.base import BaseMethod
 from .base import open_shift, close_shift
 from ..models.receipts_models import ReceiptSchema, BulkReceiptSchema
 

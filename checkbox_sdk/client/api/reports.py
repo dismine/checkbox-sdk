@@ -8,7 +8,7 @@ from checkbox_sdk.storage.simple import SessionStorage
 
 
 class Reports(PaginationMixin):
-    def get_periodical_report(
+    def get_periodical_report(  # pylint: disable=too-many-positional-arguments
         self,
         from_date: Union[datetime.datetime, str],
         to_date: Union[datetime.datetime, str],
@@ -21,7 +21,7 @@ class Reports(PaginationMixin):
             storage=storage,
         )
 
-    def get_reports(  # pylint: disable=too-many-arguments
+    def get_reports(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -87,7 +87,7 @@ class Reports(PaginationMixin):
             storage=storage,
         )
 
-    def get_search_reports(  # pylint: disable=too-many-arguments
+    def get_search_reports(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -273,7 +273,7 @@ class Reports(PaginationMixin):
 
 
 class AsyncReports(AsyncPaginationMixin):
-    async def get_periodical_report(
+    async def get_periodical_report(  # pylint: disable=too-many-positional-arguments
         self,
         from_date: Union[datetime.datetime, str],
         to_date: Union[datetime.datetime, str],
@@ -286,7 +286,7 @@ class AsyncReports(AsyncPaginationMixin):
             storage=storage,
         )
 
-    async def get_reports(  # pylint: disable=too-many-arguments
+    async def get_reports(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,
@@ -365,7 +365,7 @@ class AsyncReports(AsyncPaginationMixin):
             storage=storage,
         )
 
-    async def get_search_reports(  # pylint: disable=too-many-arguments
+    async def get_search_reports(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         from_date: Optional[Union[datetime.datetime, str]] = None,
         to_date: Optional[Union[datetime.datetime, str]] = None,

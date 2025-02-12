@@ -232,7 +232,7 @@ class GetReceiptVisualization(GetReceipt):
 
 
 class GetReceiptVisualizationHtml(GetReceiptVisualization):
-    def __init__(
+    def __init__(  # pylint: disable=too-many-positional-arguments
         self,
         receipt_id: Union[str, UUID],
         is_second_copy: Optional[bool] = False,
@@ -279,7 +279,7 @@ class GetReceiptVisualizationText(GetReceiptVisualization):
 
 
 class GetReceiptVisualizationPng(GetReceiptVisualization):
-    def __init__(
+    def __init__(  # pylint: disable=too-many-positional-arguments
         self,
         receipt_id: Union[str, UUID],
         is_second_copy: Optional[bool] = False,

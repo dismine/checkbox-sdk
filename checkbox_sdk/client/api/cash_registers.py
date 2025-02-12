@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 
 
 class CashRegisters(PaginationMixin):
-    def get_cash_registers(
+    def get_cash_registers(  # pylint: disable=too-many-positional-arguments
         self,
         storage: Optional[SessionStorage] = None,
         in_use: Optional[bool] = None,
@@ -216,7 +216,7 @@ class CashRegisters(PaginationMixin):
         """
         return self.client(cash_register.GetOfflineTime(from_date=from_date, to_date=to_date), storage=storage)
 
-    def get_cash_register_shifts(
+    def get_cash_register_shifts(  # pylint: disable=too-many-positional-arguments
         self,
         storage: Optional[SessionStorage] = None,
         statuses: Optional[List[str]] = None,
@@ -254,7 +254,7 @@ class CashRegisters(PaginationMixin):
 
 
 class AsyncCashRegisters(AsyncPaginationMixin):
-    async def get_cash_registers(
+    async def get_cash_registers(  # pylint: disable=too-many-positional-arguments
         self,
         storage: Optional[SessionStorage] = None,
         in_use: Optional[bool] = None,
@@ -461,7 +461,7 @@ class AsyncCashRegisters(AsyncPaginationMixin):
         """
         return await self.client(cash_register.GetOfflineTime(from_date=from_date, to_date=to_date), storage=storage)
 
-    async def get_cash_register_shifts(
+    async def get_cash_register_shifts(  # pylint: disable=too-many-positional-arguments
         self,
         storage: Optional[SessionStorage] = None,
         statuses: Optional[List[str]] = None,

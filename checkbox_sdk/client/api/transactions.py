@@ -1,10 +1,10 @@
 from typing import Optional, Generator, List, AsyncGenerator
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import StatusException
 from checkbox_sdk.methods import transactions
 from checkbox_sdk.storage.simple import SessionStorage
-from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 
 
 class Transactions(PaginationMixin):
@@ -31,7 +31,7 @@ class Transactions(PaginationMixin):
             )
         return transaction
 
-    def get_transactions(
+    def get_transactions(  # pylint: disable=too-many-positional-arguments
         self,
         status: Optional[List[str]] = None,
         type: Optional[List[str]] = None,  # pylint: disable=redefined-builtin
@@ -99,7 +99,7 @@ class AsyncTransactions(AsyncPaginationMixin):
             )
         return transaction
 
-    async def get_transactions(
+    async def get_transactions(  # pylint: disable=too-many-positional-arguments
         self,
         status: Optional[List[str]] = None,
         type: Optional[List[str]] = None,  # pylint: disable=redefined-builtin

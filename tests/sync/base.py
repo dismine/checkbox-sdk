@@ -8,7 +8,7 @@ from pydantic import ValidationError
 
 from checkbox_sdk.client.synchronous import CheckBoxClient
 from checkbox_sdk.exceptions import CheckBoxAPIError
-from methods.base import BaseMethod
+from checkbox_sdk.methods.base import BaseMethod
 from ..models.reports_models import FiscalReportSchema
 from ..models.shift_models import ShiftSchema
 

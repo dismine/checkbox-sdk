@@ -14,7 +14,7 @@ from checkbox_sdk.storage.simple import SessionStorage
 logger = logging.getLogger(__name__)
 
 
-class BaseCheckBoxClient(ABC):
+class BaseCheckBoxClient(ABC):  # pylint: disable=too-many-instance-attributes
     """
     Abstract base class for interacting with the Checkbox API.
 
@@ -50,7 +50,7 @@ class BaseCheckBoxClient(ABC):
         trust_env: Whether to trust environment variables for proxy configuration.
     """
 
-    def __init__(  # pylint: disable=too-many-arguments
+    def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments
         self,
         base_url: str = BASE_API_URL,
         requests_timeout: int = DEFAULT_REQUEST_TIMEOUT,

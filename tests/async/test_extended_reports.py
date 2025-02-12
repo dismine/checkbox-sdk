@@ -5,8 +5,8 @@ import pytest
 from pydantic import ValidationError
 
 from checkbox_sdk.client.asynchronous import AsyncCheckBoxClient
+from checkbox_sdk.methods.base import BaseMethod
 from checkbox_sdk.storage.simple import SessionStorage
-from methods.base import BaseMethod
 from ..models.extended_reports_models import PublicReportTaskSchema
 
 

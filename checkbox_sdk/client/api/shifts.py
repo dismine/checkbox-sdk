@@ -3,17 +3,17 @@ import logging
 from typing import Any, Dict, List, Optional, Generator, Union, AsyncGenerator
 from uuid import UUID
 
+from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import StatusException
 from checkbox_sdk.methods import shifts
 from checkbox_sdk.storage.simple import SessionStorage
-from checkbox_sdk.client.api.base import AsyncPaginationMixin, PaginationMixin
 
 logger = logging.getLogger(__name__)
 
 
 class Shifts(PaginationMixin):
-    def get_shifts(
+    def get_shifts(  # pylint: disable=too-many-positional-arguments
         self,
         statuses: Optional[List[str]] = None,
         desc: Optional[bool] = False,
@@ -208,7 +208,7 @@ class Shifts(PaginationMixin):
             timeout=transaction_timeout,
         )
 
-    def close_shift_by_senior_cashier(
+    def close_shift_by_senior_cashier(  # pylint: disable=too-many-positional-arguments
         self,
         shift_id: Union[str, UUID],
         relax: float = DEFAULT_REQUESTS_RELAX,
@@ -268,7 +268,7 @@ class Shifts(PaginationMixin):
 
 
 class AsyncShifts(AsyncPaginationMixin):
-    async def get_shifts(
+    async def get_shifts(  # pylint: disable=too-many-positional-arguments
         self,
         statuses: Optional[List[str]] = None,
         desc: Optional[bool] = False,
@@ -465,7 +465,7 @@ class AsyncShifts(AsyncPaginationMixin):
             timeout=transaction_timeout,
         )
 
-    async def close_shift_by_senior_cashier(
+    async def close_shift_by_senior_cashier(  # pylint: disable=too-many-positional-arguments
         self,
         shift_id: Union[str, UUID],
         relax: float = DEFAULT_REQUESTS_RELAX,
