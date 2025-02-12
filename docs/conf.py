@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.abspath("../checkbox_sdk/"))
 
 project = "checkbox-sdk"
 author = "Roman Telezhynskyi"
-copyright = f"2024, {author}"
+copyright = f"2025, {author}"
 
 import checkbox_sdk
 

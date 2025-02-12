@@ -30,14 +30,6 @@ checkbox\_sdk.exceptions module
    :undoc-members:
    :show-inheritance:
 
-checkbox\_sdk.session module
-----------------------------
-
-.. automodule:: checkbox_sdk.session
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 Module contents
 ---------------
 

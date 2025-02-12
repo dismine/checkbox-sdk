@@ -16,6 +16,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 - Replaced the deprecated `proxies` argument in HTTP proxies with `proxy` and `proxy_mounts` for improved proxy
   configuration.
 - Rewritten the changelog to the [Keep a Changelog](https://keepachangelog.com/en/1.1.0/) format and improve clarity.
+- Increased the minimum required Python version to 3.9.
+- Minor fixes in documentation.
 
 ### Fixed
 

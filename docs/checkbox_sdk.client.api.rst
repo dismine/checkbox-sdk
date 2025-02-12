@@ -4,6 +4,14 @@ checkbox\_sdk.client.api package
 Submodules
 ----------
 
+checkbox\_sdk.client.api.base module
+------------------------------------
+
+.. automodule:: checkbox_sdk.client.api.base
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 checkbox\_sdk.client.api.branches module
 ----------------------------------------
 

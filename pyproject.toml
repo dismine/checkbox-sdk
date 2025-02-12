@@ -15,7 +15,10 @@ license = "MIT"
 license-files = ["LICEN[CS]E.*"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
     "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3 :: Only",
     "License :: OSI Approved :: MIT License"
 ]
 dependencies = [
@@ -50,12 +53,12 @@ ruff = "^0.9.6"
 safety = "^3.2.14"
 pylint = "^3.3.4"
 deptry = "^0.23.0"
-
-# poetry add --group docs <package name>
 mypy = "^1.15.0"
 types-pytz = "^2025.1.0.20250204"
+
+# poetry add --group docs <package name>
 [tool.poetry.group.docs.dependencies]
-sphinx = "^7.1"
+sphinx = "^7.4"
 sphinx-prompt = "^1.5.0"
 
 [tool.black]
