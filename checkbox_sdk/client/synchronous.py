@@ -3,9 +3,10 @@ import time
 from typing import Any, Optional, Set
 
 from httpcore import NetworkError
-from httpx import Client, HTTPError, Timeout
+from httpx import Client, HTTPError, Timeout, HTTPTransport
 
 from checkbox_sdk.client.base import BaseSyncCheckBoxClient
+from checkbox_sdk.client.rate_limit import RateLimitTransport
 from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import CheckBoxNetworkError, CheckBoxError
 from checkbox_sdk.methods import cash_register, cashier
@@ -49,7 +50,11 @@ class CheckBoxClient(BaseSyncCheckBoxClient):  # pylint: disable=too-many-instan
         super().__init__(**kwargs)
 
         self._session = Client(
-            proxy=self.proxy, mounts=self.proxy_mounts, timeout=Timeout(timeout=self.timeout), verify=self.verify_ssl
+            proxy=self.proxy,
+            mounts=self.proxy_mounts,
+            timeout=Timeout(timeout=self.timeout),
+            verify=self.verify_ssl,
+            transport=RateLimitTransport(HTTPTransport(), requests_per_10s=self.rate_limit),
         )
         self.cashier = Cashier(self)
         self.cash_registers = CashRegisters(self)

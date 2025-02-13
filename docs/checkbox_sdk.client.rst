@@ -28,6 +28,14 @@ checkbox\_sdk.client.base module
    :undoc-members:
    :show-inheritance:
 
+checkbox\_sdk.client.rate\_limit module
+---------------------------------------
+
+.. automodule:: checkbox_sdk.client.rate_limit
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 checkbox\_sdk.client.synchronous module
 ---------------------------------------
 

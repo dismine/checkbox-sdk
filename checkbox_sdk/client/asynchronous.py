@@ -3,9 +3,10 @@ import time
 from typing import Any, Optional, Set
 
 from httpcore import NetworkError
-from httpx import AsyncClient, HTTPError, Timeout
+from httpx import AsyncClient, HTTPError, Timeout, AsyncHTTPTransport
 
 from checkbox_sdk.client.base import BaseAsyncCheckBoxClient
+from checkbox_sdk.client.rate_limit import AsyncRateLimitTransport
 from checkbox_sdk.consts import DEFAULT_REQUESTS_RELAX
 from checkbox_sdk.exceptions import CheckBoxNetworkError, CheckBoxError
 from checkbox_sdk.methods import cash_register, cashier
@@ -47,7 +48,11 @@ class AsyncCheckBoxClient(BaseAsyncCheckBoxClient):  # pylint: disable=too-many-
         super().__init__(**kwargs)
 
         self._session = AsyncClient(
-            proxy=self.proxy, mounts=self.proxy_mounts, timeout=Timeout(timeout=self.timeout), verify=self.verify_ssl
+            proxy=self.proxy,
+            mounts=self.proxy_mounts,
+            timeout=Timeout(timeout=self.timeout),
+            verify=self.verify_ssl,
+            transport=AsyncRateLimitTransport(AsyncHTTPTransport(), requests_per_10s=self.rate_limit),
         )
         self.cashier = AsyncCashier(self)
         self.cash_registers = AsyncCashRegisters(self)

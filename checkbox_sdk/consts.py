@@ -11,6 +11,7 @@ Constants:
 - **API_VERSION**: The version of the Checkbox API to use.
 - **DEFAULT_REQUEST_TIMEOUT**: The default timeout for API requests, in seconds.
 - **DEFAULT_REQUESTS_RELAX**: The default delay between API requests, in seconds.
+- **DEFAULT_RATE_LIMIT**: The default rate limit in requests per 10 seconds.
 """
 
 BASE_API_URL = "https://api.checkbox.in.ua"
@@ -42,4 +43,12 @@ The default delay between API requests.
 
 This value sets the default amount of time (in seconds) to wait between consecutive API requests to avoid
  overloading the server or hitting rate limits.
+"""
+
+DEFAULT_RATE_LIMIT = 15  # requests per 10 seconds
+"""
+The default rate limit for API requests.
+
+This constant sets the default number of allowed requests in a 10-second period. It helps to manage API
+rate-limiting behavior and prevent overloading the server.
 """

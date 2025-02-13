@@ -6,7 +6,7 @@ from typing import Any, Dict, Union, Optional, Set, Mapping
 from httpx import Response, BaseTransport, URL, Proxy
 
 from checkbox_sdk import __version__
-from checkbox_sdk.consts import API_VERSION, BASE_API_URL, DEFAULT_REQUEST_TIMEOUT
+from checkbox_sdk.consts import API_VERSION, BASE_API_URL, DEFAULT_REQUEST_TIMEOUT, DEFAULT_RATE_LIMIT
 from checkbox_sdk.exceptions import CheckBoxAPIError, CheckBoxAPIValidationError, CheckBoxError
 from checkbox_sdk.methods.base import AbstractMethod
 from checkbox_sdk.storage.simple import SessionStorage
@@ -35,6 +35,8 @@ class BaseCheckBoxClient(ABC):  # pylint: disable=too-many-instance-attributes
         client_name: The name of the client, used for identifying requests. Defaults to `"checkbox-sdk"`.
         client_version: The version of the client. Defaults to the package version `__version__`.
         integration_key: Optional integration key for accessing the API. Defaults to `None`.
+        requests_per_10s: Maximum number of requests per 10 seconds to avoid rate limits. Defaults to
+                          `DEFAULT_RATE_LIMIT`.
 
     Attributes:
         base_url: The base URL for the Checkbox API.
@@ -48,6 +50,7 @@ class BaseCheckBoxClient(ABC):  # pylint: disable=too-many-instance-attributes
         client_version: The version of the client.
         integration_key: The integration key for accessing the API.
         trust_env: Whether to trust environment variables for proxy configuration.
+        rate_limit: The number of requests allowed per 10 seconds (rate limit).
     """
 
     def __init__(  # pylint: disable=too-many-arguments,too-many-positional-arguments
@@ -63,6 +66,7 @@ class BaseCheckBoxClient(ABC):  # pylint: disable=too-many-instance-attributes
         client_name: str = "checkbox-sdk",
         client_version: str = __version__,
         integration_key: Optional[str] = None,
+        requests_per_10s: Optional[int] = None,
     ) -> None:
         self.base_url = base_url
         self.api_version = api_version
@@ -75,6 +79,7 @@ class BaseCheckBoxClient(ABC):  # pylint: disable=too-many-instance-attributes
         self.client_version = client_version
         self.integration_key = integration_key
         self.trust_env = trust_env
+        self.rate_limit = requests_per_10s or DEFAULT_RATE_LIMIT
 
     @property
     def client_headers(self) -> Dict[str, Any]:

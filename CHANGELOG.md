@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 ### Added
 
 - Explicitly defined `httpx` package as a dependency.
+- Added rate-limiting support through HTTPX's transport.
 
 ### Changed
 
