@@ -56,8 +56,7 @@ def test_close_shift_online(auth_token, license_key):
         with contextlib.suppress(ValueError):
             z_report = client.shifts.close_shift_online(timeout=5, storage=storage)
             try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
+                if z_report:  # sourcery skip: no-conditionals-in-tests
                     model = TransactionsSchema(**z_report)
                     assert model is not None
             except ValidationError as e:  # pragma: no cover
@@ -87,8 +86,7 @@ def test_close_shift_by_senior_cashier(auth_token, license_key):
         with contextlib.suppress(ValueError):
             z_report = client.shifts.close_shift_by_senior_cashier(shift["id"], timeout=5, storage=storage)
             try:
-                # sourcery skip: no-conditionals-in-tests
-                if z_report:
+                if z_report:  # sourcery skip: no-conditionals-in-tests
                     model = TransactionsSchema(**z_report)
                     assert model is not None
             except ValidationError as e:  # pragma: no cover

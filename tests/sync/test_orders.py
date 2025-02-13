@@ -40,8 +40,7 @@ def test_add_orders(auth_token, license_key, client_email):
             orders_data["receipt_draft"]["delivery"] = {"email": client_email}
 
         try:
-            # sourcery skip: no-loop-in-tests
-            for order in client.orders.add_orders(orders_list=orders_data):
+            for order in client.orders.add_orders(orders_list=orders_data):  # sourcery skip: no-loop-in-tests
                 try:
                     model = OrderSchema(**order)
                     assert model is not None
