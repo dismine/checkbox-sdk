@@ -40,6 +40,8 @@ jobs:
           api-key: ${{ secrets.SAFETY_API_KEY }}
 
       - uses: sourcery-ai/action@v1
+        with:
+          token: ${{ secrets.SOURCERY_TOKEN }}
 
       - name: Run lint and type checks
         run: |
