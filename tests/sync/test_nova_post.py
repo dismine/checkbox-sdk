@@ -2,7 +2,10 @@
 import json
 import pathlib
 
+import pytest
+
 from checkbox_sdk.client.synchronous import CheckBoxClient
+from checkbox_sdk.exceptions import CheckBoxAPIError
 
 
 # pylint: disable=duplicate-code
@@ -27,9 +30,15 @@ def test_ettn_order(auth_token, license_key, client_email, client_phone):
 
         # Cannot make API section /api/v1/np/* to work.
 
-        response = client.nova_post.post_ettn_order(
-            order=receipt_data,
-        )
+        try:
+            response = client.nova_post.post_ettn_order(
+                order=receipt_data,
+            )
+        except CheckBoxAPIError as e:
+            if "Спочатку додайте токен нової пошти." in str(e):
+                pytest.skip("Skipping test: Nova Post token is missing.")
+            else:
+                raise
         assert response, "Response is empty"
 
         response = client.nova_post.get_ettn_order(

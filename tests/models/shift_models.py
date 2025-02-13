@@ -115,7 +115,6 @@ class TaxesSchema(CheckboxBaseModel):
     created_at: datetime
     updated_at: Optional[datetime]
     no_vat: Optional[bool]
-    advanced_code: Optional[str]
     sales: int
     returns: int
     sales_turnover: int

@@ -15,9 +15,9 @@ class TaxSchema(CheckboxBaseModel):
     extra_rate: Optional[float]
     included: bool
     is_gambling: Optional[bool]
+    is_default: Optional[bool]
     created_at: datetime
     updated_at: Optional[datetime]
     no_vat: Optional[bool]
-    advanced_code: Optional[str]
     decimal_rate: Optional[float]
     decimal_extra_rate: Optional[float]

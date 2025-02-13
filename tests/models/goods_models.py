@@ -18,7 +18,6 @@ class GoodTaxSchema(CheckboxBaseModel):
     created_at: datetime
     updated_at: Optional[datetime]
     no_vat: Optional[bool]
-    advanced_code: Optional[str]
 
 
 class GoodChildSchema(CheckboxBaseModel):

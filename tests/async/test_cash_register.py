@@ -127,12 +127,12 @@ async def test_go_offline(auth_token, license_key):
 
 
 @pytest.mark.asyncio
-async def test_get_offline_time(license_key):
+async def test_get_offline_time(auth_token, license_key):
     assert license_key, "License key is empty"
 
     storage = SessionStorage()
     async with AsyncCheckBoxClient(storage=storage) as client:
-        client.set_license_key(storage, license_key)
+        await client.cashier.authenticate_token(auth_token, license_key=license_key)
 
         offline_time = await client.cash_registers.get_offline_time()
         try:

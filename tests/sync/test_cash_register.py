@@ -123,12 +123,12 @@ def test_go_offline(auth_token, license_key):
             assert response["status"] == "ok"
 
 
-def test_get_offline_time(license_key):
+def test_get_offline_time(auth_token, license_key):
     assert license_key, "License key is empty"
 
     storage = SessionStorage()
     with CheckBoxClient(storage=storage) as client:
-        client.set_license_key(storage, license_key)
+        client.cashier.authenticate_token(auth_token, license_key=license_key)
 
         offline_time = client.cash_registers.get_offline_time()
         try:

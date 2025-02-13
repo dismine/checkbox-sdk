@@ -49,10 +49,11 @@ class TaxSchema(CheckboxBaseModel):
     extra_rate: Optional[float]
     sell_sum: int
     return_sum: int
+    decimal_sell_sum: Optional[float]
+    decimal_return_sum: Optional[float]
     sales_turnover: int
     returns_turnover: int
     no_vat: Optional[bool]
-    advanced_code: Optional[str]
     created_at: datetime
     setup_date: datetime
 

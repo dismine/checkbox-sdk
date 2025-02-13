@@ -5,6 +5,7 @@ import pathlib
 import pytest
 
 from checkbox_sdk.client.asynchronous import AsyncCheckBoxClient
+from checkbox_sdk.exceptions import CheckBoxAPIError
 
 
 @pytest.mark.asyncio
@@ -34,9 +35,15 @@ async def test_ettn_order(auth_token, license_key, client_email, client_phone):
         )
         assert response, "Response is empty"
 
-        response = await client.nova_post.get_ettn_order(
-            order_id=response,
-        )
+        try:
+            response = await client.nova_post.get_ettn_order(
+                order_id=response,
+            )
+        except CheckBoxAPIError as e:
+            if "Спочатку додайте токен нової пошти." in str(e):
+                pytest.skip("Skipping test: Nova Post token is missing.")
+            else:
+                raise
         assert response, "Response is empty"
 
         response = await client.nova_post.update_ettn_order(order_id=response, delivery_email="test@example.com")
