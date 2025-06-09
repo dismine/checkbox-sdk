@@ -75,6 +75,22 @@ class Organization:
         """
         return self.client(organization.GetOrganizationSmsBilling(), storage=storage)
 
+    def get_organization_billing_status(
+        self,
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict[str, Any]:
+        """
+        Retrieves the organization's billing status information using the client with the provided storage.
+
+        Args:
+            storage: An optional session storage to use for the retrieval.
+
+        Returns:
+            A dictionary containing the organization's billing status information.
+
+        """
+        return self.client(organization.GetOrganizationBillingStatus(), storage=storage)
+
 
 class AsyncOrganization:
     def __init__(self, client):
@@ -143,3 +159,19 @@ class AsyncOrganization:
 
         """
         return await self.client(organization.GetOrganizationSmsBilling(), storage=storage)
+
+    async def get_organization_billing_status(
+        self,
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict[str, Any]:
+        """
+        Retrieves the organization's billing status information using the client with the provided storage.
+
+        Args:
+            storage: An optional session storage to use for the retrieval.
+
+        Returns:
+            A dictionary containing the organization's billing status information.
+
+        """
+        return await self.client(organization.GetOrganizationBillingStatus(), storage=storage)

@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 from uuid import UUID
 
@@ -30,3 +31,10 @@ class SmsBillingSchema(CheckboxBaseModel):
     can_send_sms: bool
     billing_enabled: bool
     balance: Optional[int] = 0
+
+
+class BillingStatusSchema(CheckboxBaseModel):
+    date_to_block: Optional[datetime]
+    status: Optional[str]
+    units: Optional[int]
+    status_changed_at: Optional[datetime]

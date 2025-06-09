@@ -26,3 +26,7 @@ class GetOrganizationTextLogo(BaseMethod):
 
 class GetOrganizationSmsBilling(BaseMethod):
     uri = f"{URI_PREFIX}sms-billing"
+
+
+class GetOrganizationBillingStatus(BaseMethod):
+    uri = f"{URI_PREFIX}billing-status"
