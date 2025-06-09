@@ -7,4 +7,4 @@ developers to easily integrate Checkbox services into their applications, manage
 and interact with API endpoints using both synchronous and asynchronous methods.
 """
 
-__version__ = "1.2.0"
+__version__ = "1.3.0"
