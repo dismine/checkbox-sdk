@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [1.4.0] - 2025-08-11
+
+### Added
+
+- Enhanced HTML content cleaning for better error log readability:
+    * Introduced MLStripper parser that removes HTML tags and ignores content inside \<style> \<script>, and \<title>
+      tags.
+    * Added strip_tags utility to normalize whitespace and return clean, plain text.
+    * This improvement targets Checkbox 503 error page responses, producing concise and user-friendly logs.
+
 ## [1.3.0] - 2025-06-09
 
 ### Added
