@@ -6,6 +6,7 @@ from typing import Any, Dict, Union, Optional, Set, Mapping
 from httpx import Response, BaseTransport, URL, Proxy
 
 from checkbox_sdk import __version__
+from checkbox_sdk.client.utils import strip_tags
 from checkbox_sdk.consts import API_VERSION, BASE_API_URL, DEFAULT_REQUEST_TIMEOUT, DEFAULT_RATE_LIMIT
 from checkbox_sdk.exceptions import CheckBoxAPIError, CheckBoxAPIValidationError, CheckBoxError
 from checkbox_sdk.methods.base import AbstractMethod
@@ -111,7 +112,9 @@ class BaseCheckBoxClient(ABC):  # pylint: disable=too-many-instance-attributes
             CheckBoxAPIError: If the response status code indicates a client error (400+).
         """
         if response.status_code >= 500:
-            raise CheckBoxError(f"Failed to make request [status={response.status_code}, text={response.text!r}]")
+            raise CheckBoxError(
+                f"Failed to make request [status={response.status_code}, text={strip_tags(response.text)[:200]!r}]"
+            )
         if response.status_code == 422:
             raise CheckBoxAPIValidationError(status=response.status_code, content=response.json())
         if response.status_code >= 400:

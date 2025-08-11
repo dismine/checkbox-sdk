@@ -44,6 +44,14 @@ checkbox\_sdk.client.synchronous module
    :undoc-members:
    :show-inheritance:
 
+checkbox\_sdk.client.utils module
+---------------------------------
+
+.. automodule:: checkbox_sdk.client.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
