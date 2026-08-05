@@ -13,6 +13,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   blocked while Python 3.9 was supported, since upstream fixes for `black`, `pytest`, `cryptography`, `filelock`,
   `marshmallow`, `nltk`, `requests`, and `urllib3` all dropped Python 3.9 support.
 
+### Fixed
+
+- Fixed the `license-files` glob pattern (`LICEN[CS]E.*` → `LICEN[CS]E*`), which never matched the repo's
+  extension-less `LICENSE` file. Recent `poetry-core` raises a hard build error (per PEP 639) when a declared
+  license-files pattern matches nothing, so this broke `poetry install`/`poetry build` on a clean environment.
+
 ## [1.4.0] - 2025-08-11
 
 ### Added
