@@ -3,7 +3,6 @@ import pytest
 from checkbox_sdk.client.synchronous import CheckBoxClient
 from checkbox_sdk.storage.simple import SessionStorage
 
-
 # This code is used to facilitate testing by allowing dynamic input of credentials
 # such as cashier's login, pin code, and cash register license key.
 # Hardcoding these credentials is not an option as each user must pass their own data.

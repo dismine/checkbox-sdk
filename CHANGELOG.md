@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
+## [Unreleased]
+
+### Changed
+
+- Increased the minimum required Python version to 3.10 (Python 3.9 reached end-of-life on 2025-10-31).
+- Updated `black` and `pytest` dev dependencies to versions without known security vulnerabilities; this was
+  blocked while Python 3.9 was supported, since upstream fixes for `black`, `pytest`, `cryptography`, `filelock`,
+  `marshmallow`, `nltk`, `requests`, and `urllib3` all dropped Python 3.9 support.
+
 ## [1.4.0] - 2025-08-11
 
 ### Added
