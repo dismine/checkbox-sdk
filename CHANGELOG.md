@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.5.0] - 2026-08-05
+
 ### Changed
 
 - Increased the minimum required Python version to 3.10 (Python 3.9 reached end-of-life on 2025-10-31).

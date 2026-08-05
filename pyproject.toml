@@ -1,6 +1,6 @@
 [project]
 name = "checkbox-sdk"
-version = "1.4.0"
+version = "1.5.0"
 description = "Ukraine checkbox api python sdk"
 authors = [
     { name = "Roman Telezhynskyi", email = "dismine@gmail.com" }
