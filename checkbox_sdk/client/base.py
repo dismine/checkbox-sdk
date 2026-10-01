@@ -8,7 +8,12 @@ from httpx import Response, BaseTransport, URL, Proxy
 from checkbox_sdk import __version__
 from checkbox_sdk.client.utils import strip_tags
 from checkbox_sdk.consts import API_VERSION, BASE_API_URL, DEFAULT_REQUEST_TIMEOUT, DEFAULT_RATE_LIMIT
-from checkbox_sdk.exceptions import CheckBoxAPIError, CheckBoxAPIValidationError, CheckBoxError
+from checkbox_sdk.exceptions import (
+    CheckBoxAPIError,
+    CheckBoxAPIValidationError,
+    CheckBoxError,
+    StatusWaitTimeout,
+)
 from checkbox_sdk.methods.base import AbstractMethod
 from checkbox_sdk.storage.simple import SessionStorage
 
@@ -136,10 +141,11 @@ class BaseCheckBoxClient(ABC):  # pylint: disable=too-many-instance-attributes
     @staticmethod
     def handle_wait_status(result: Dict[str, Any], field: str, expected_value: Set[Any], initial: float):
         if result[field] not in expected_value:
-            raise ValueError(
-                f"Object did not change field {field!r} "
-                f"to one of expected values {expected_value} (actually {result[field]!r}) "
-                f"in {time.monotonic() - initial:.3f} seconds"  # noqa: E231
+            raise StatusWaitTimeout(
+                field=field,
+                expected_value=expected_value,
+                actual=result[field],
+                elapsed=time.monotonic() - initial,
             )
 
         logger.info(

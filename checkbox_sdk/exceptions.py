@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, Set
 
 
 class CheckBoxError(Exception):
@@ -46,3 +46,22 @@ class CheckBoxAPIValidationError(CheckBoxAPIError):
 
 class StatusException(CheckBoxError):
     pass
+
+
+class StatusWaitTimeout(StatusException, ValueError):
+    """
+    Raised when a polled object does not reach one of the expected statuses within the timeout.
+
+    Also subclasses `ValueError` for backward compatibility with code that caught the previously raised `ValueError`.
+    """
+
+    def __init__(self, field: str, expected_value: Set[Any], actual: Any, elapsed: float):
+        self.field = field
+        self.expected_value = expected_value
+        self.actual = actual
+        self.elapsed = elapsed
+        super().__init__(
+            f"Object did not change field {field!r} "
+            f"to one of expected values {expected_value} (actually {actual!r}) "
+            f"in {elapsed:.3f} seconds"  # noqa: E231
+        )

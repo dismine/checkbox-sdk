@@ -207,12 +207,13 @@ class CheckBoxClient(BaseSyncCheckBoxClient):  # pylint: disable=too-many-instan
             values.
 
         Raises:
-            ValueError: If the status field does not change to one of the expected values within the timeout period.
+            StatusWaitTimeout: If the status field does not change to one of the expected values within the timeout
+                               period. It subclasses both `StatusException` (a `CheckBoxError`) and `ValueError`.
 
         Notes:
             - This method repeatedly calls the specified method and checks the value of the specified field.
-            - If the field's value does not match any of the expected values within the timeout period, a `ValueError`
-              is raised.
+            - If the field's value does not match any of the expected values within the timeout period, a
+              `StatusWaitTimeout` is raised.
             - The method logs the status of the wait operation and the time taken.
         """
         logger.info("Wait until %r will be changed to one of %s", field, expected_value)

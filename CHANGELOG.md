@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Changed
+
+- `wait_status` (and every method that polls through it: opening/closing shifts, receipt status checks, goods
+  export/import, transactions) now raises `StatusWaitTimeout` on timeout instead of a bare `ValueError`.
+  `StatusWaitTimeout` subclasses both `StatusException` (and therefore `CheckBoxError`) and `ValueError`, so existing
+  `except ValueError` handlers keep working while `except CheckBoxError` now catches it too. The message text is
+  unchanged; the exception also exposes `field`, `expected_value`, `actual` and `elapsed` attributes.
+
 ## [1.5.0] - 2026-08-05
 
 ### Changed
