@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+## [1.6.0] - 2026-10-01
+
 ### Added
 
 - `receipts.get_receipt(receipt_id)` (sync and async): fetches a single receipt by its ID (`GET /receipts/{id}`)
