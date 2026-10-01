@@ -28,6 +28,11 @@ report:
           reason: |
             No known fix.
           expires: '2025-08-24'
+        SFTY-20260902-58666:
+          reason: |
+            CVE-2026-81726 (nltk path traversal). No known fix. nltk is a dev-only dependency pulled in by safety
+            itself; checkbox-sdk never imports it.
+          expires: '2027-01-01'
 
 
 fail-scan-with-exit-code:
