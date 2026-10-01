@@ -43,6 +43,8 @@ jobs:
         with:
           token: ${{ secrets.SOURCERY_TOKEN }}
 
-      - name: Run lint and type checks
+      - name: Run static checks and unit tests
         run: |
-          poetry run tox -e lint,type,deptry # Just static analysis. Safety called as a separate stage.
+          # Static analysis plus the hermetic unit tests in tests/unit. The live tests in tests/sync and tests/async
+          # need Checkbox sandbox credentials and are not run here. Safety is called as a separate stage.
+          poetry run tox -e lint,type,deptry,unit
