@@ -312,3 +312,94 @@
     # Запускаємо асинхронну функцію
     asyncio.run(main())
 
+Захист від дублювання чеків
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+``create_receipt`` спочатку відправляє чек (POST), а вже потім опитує його статус. Якщо опитування не встигло за
+``timeout``, виникає ``StatusWaitTimeout``, але Checkbox, як правило, вже прийняв чек. Якщо в такій ситуації просто
+повторити виклик з новим чеком, буде видано **другий фіскальний чек**.
+
+Щоб цього уникнути:
+
+- Завжди задавайте власний ``id`` чеку (``str(uuid.uuid4())``) і зберігайте його (наприклад, у базі даних) **до**
+  виклику ``create_receipt``. SDK передає його в тілі запиту та в заголовку ``x-request-id``.
+- Повторюйте спробу лише з **тим самим** ``id``. Checkbox ніколи не створює другий чек з уже використаним ``id``:
+  запит відхиляється з кодом 400 і ``"code": "receipt.already_exists"`` — навіть якщо перший чек ще обробляється
+  або тіло запиту відрізняється. Цю помилку слід трактувати як «чек уже існує» і отримати його за ``id``.
+- Ніколи не повторюйте спробу з новим ``id``.
+- Вважайте, що ``id`` використано, навіть якщо чек завершився зі статусом ``ERROR``. Повторно провести такий продаж
+  можна лише з новим ``id`` і лише після того, як підтверджено статус ``ERROR`` попереднього чеку.
+
+**Синхронний приклад**
+
+.. code-block:: python
+
+    import uuid
+
+    from checkbox_sdk.client.synchronous import CheckBoxClient
+    from checkbox_sdk.exceptions import CheckBoxAPIError, StatusWaitTimeout
+    from checkbox_sdk.methods.receipts import GetReceipt
+
+
+    def fiscalize(client: CheckBoxClient, receipt_data: dict, receipt_id: str) -> dict:
+        """receipt_id має бути збережений до першого виклику і не змінюватися між спробами."""
+        try:
+            return client.receipts.create_receipt(receipt={**receipt_data, "id": receipt_id}, timeout=30)
+        except StatusWaitTimeout:
+            pass  # чек, найімовірніше, вже прийнято — дочекаємося його статусу нижче
+        except CheckBoxAPIError as e:
+            if e.status != 400 or e.content.get("code") != "receipt.already_exists":
+                raise
+            # чек з цим id вже існує (попередня спроба дійшла до Checkbox)
+
+        return client.wait_status(
+            GetReceipt(receipt_id=receipt_id),
+            field="status",
+            expected_value={"DONE", "ERROR"},
+            timeout=60,
+        )
+
+
+    receipt_id = str(uuid.uuid4())
+    # ... збережіть receipt_id разом із замовленням до виклику ...
+    receipt = fiscalize(client, receipt_data, receipt_id)
+
+**Асинхронний приклад**
+
+.. code-block:: python
+
+    import uuid
+
+    from checkbox_sdk.client.asynchronous import AsyncCheckBoxClient
+    from checkbox_sdk.exceptions import CheckBoxAPIError, StatusWaitTimeout
+    from checkbox_sdk.methods.receipts import GetReceipt
+
+
+    async def fiscalize(client: AsyncCheckBoxClient, receipt_data: dict, receipt_id: str) -> dict:
+        """receipt_id має бути збережений до першого виклику і не змінюватися між спробами."""
+        try:
+            return await client.receipts.create_receipt(receipt={**receipt_data, "id": receipt_id}, timeout=30)
+        except StatusWaitTimeout:
+            pass  # чек, найімовірніше, вже прийнято — дочекаємося його статусу нижче
+        except CheckBoxAPIError as e:
+            if e.status != 400 or e.content.get("code") != "receipt.already_exists":
+                raise
+            # чек з цим id вже існує (попередня спроба дійшла до Checkbox)
+
+        return await client.wait_status(
+            GetReceipt(receipt_id=receipt_id),
+            field="status",
+            expected_value={"DONE", "ERROR"},
+            timeout=60,
+        )
+
+
+    receipt_id = str(uuid.uuid4())
+    # ... збережіть receipt_id разом із замовленням до виклику ...
+    receipt = await fiscalize(client, receipt_data, receipt_id)
+
+Якщо ``wait_status`` у прикладі теж завершиться ``StatusWaitTimeout``, чек усе ще може бути в обробці: залиште той
+самий ``receipt_id`` і перевірте його пізніше (наприклад, у фоновому завданні), не створюючи новий чек. Результат
+зі статусом ``ERROR`` потрібно перевірити окремо — на відміну від ``create_receipt``, ``wait_status`` не піднімає
+``StatusException``.
+

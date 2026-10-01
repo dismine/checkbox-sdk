@@ -14,6 +14,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
   `except ValueError` handlers keep working while `except CheckBoxError` now catches it too. The message text is
   unchanged; the exception also exposes `field`, `expected_value`, `actual` and `elapsed` attributes.
 
+### Documentation
+
+- Documented how to avoid duplicate fiscal receipts when `create_receipt` times out while polling: set and persist
+  your own receipt `id` before the call and retry only with the same `id`. Checkbox rejects a reused `id` with
+  HTTP 400 `receipt.already_exists` (verified against the sandbox) instead of issuing a second receipt. Added to the
+  `create_receipt` docstrings, as a pointer on the other receipt-creating methods, and as a new "Захист від
+  дублювання чеків" section with sync/async examples in `docs/examples.rst`.
+
 ## [1.5.0] - 2026-08-05
 
 ### Changed

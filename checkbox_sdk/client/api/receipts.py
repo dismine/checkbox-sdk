@@ -86,6 +86,25 @@ class Receipts(PaginationMixin):
         Returns:
             Dict[str, Any]: The result of checking the status of the created receipt if wait is True, otherwise the
                             created receipt itself.
+
+        Raises:
+            StatusWaitTimeout: If ``wait`` is True and the receipt does not reach ``DONE`` or ``ERROR`` within
+                               ``timeout``. The receipt has usually already been accepted by Checkbox at this point.
+            StatusException: If the receipt ends in ``ERROR``.
+            CheckBoxAPIError: If the request is rejected, e.g. with status 400 and
+                              ``content["code"] == "receipt.already_exists"`` when the receipt ``id`` was already used.
+
+        Notes:
+            Always set your own receipt ``id`` (``str(uuid.uuid4())``) and persist it before calling this method. The
+            receipt is POSTed first and only then polled, so a ``StatusWaitTimeout`` does not mean the receipt was not
+            created. Retry with the **same** ``id``: Checkbox never creates a second receipt for a used ``id`` and
+            rejects the request with ``receipt.already_exists`` instead (also while the first one is still being
+            processed, and also if the payload differs). Treat that error as "the receipt exists" and fetch it by
+            ``id`` with ``client(GetReceipt(receipt_id=...))`` (``checkbox_sdk.methods.receipts.GetReceipt``). Never
+            retry with a new ``id`` — that issues a second fiscal receipt.
+
+            Assume an ``id`` is used up even if the receipt ends in ``ERROR``: issue that sale again with a new ``id``,
+            but only after the previous receipt is confirmed to be in ``ERROR``.
         """
         response = self.client(
             receipts.CreateReceipt(receipt=receipt, **payload),
@@ -146,6 +165,9 @@ class Receipts(PaginationMixin):
         Returns:
             A dictionary containing the response of the created receipt.
 
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = self.client(
             receipts.CreateReceiptOffline(receipt=receipt, **payload),
@@ -219,6 +241,9 @@ class Receipts(PaginationMixin):
         Returns:
             A dictionary containing the response of the created service currency receipt.
 
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = self.client(receipts.ServiceCurrency(receipt, **payload), storage=storage)
         logger.info("Trying to create service currency receipt %s", response["id"])
@@ -252,6 +277,9 @@ class Receipts(PaginationMixin):
         Returns:
             A dictionary containing the response of the created currency exchange receipt.
 
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = self.client(receipts.CurrencyExchange(receipt, **payload), storage=storage)
         logger.info("Trying to create currency exchange receipt %s", response["id"])
@@ -283,6 +311,9 @@ class Receipts(PaginationMixin):
         Returns:
             A dictionary containing the response of the created cash withdrawal receipt.
 
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = self.client(receipts.CreateCashWithdrawalReceipt(receipt, **payload), storage=storage)
         logger.info("Trying to create cash withdrawal receipt %s", response["id"])
@@ -399,6 +430,10 @@ class Receipts(PaginationMixin):
 
         Returns:
             The result of checking the status of the created receipt.
+
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = self.client(
             receipts.CreateServiceReceipt(receipt=receipt, **payload),
@@ -663,6 +698,25 @@ class AsyncReceipts(AsyncPaginationMixin):
         Returns:
             Dict[str, Any]: The result of checking the status of the created receipt if wait is True, otherwise the
                             created receipt itself.
+
+        Raises:
+            StatusWaitTimeout: If ``wait`` is True and the receipt does not reach ``DONE`` or ``ERROR`` within
+                               ``timeout``. The receipt has usually already been accepted by Checkbox at this point.
+            StatusException: If the receipt ends in ``ERROR``.
+            CheckBoxAPIError: If the request is rejected, e.g. with status 400 and
+                              ``content["code"] == "receipt.already_exists"`` when the receipt ``id`` was already used.
+
+        Notes:
+            Always set your own receipt ``id`` (``str(uuid.uuid4())``) and persist it before calling this method. The
+            receipt is POSTed first and only then polled, so a ``StatusWaitTimeout`` does not mean the receipt was not
+            created. Retry with the **same** ``id``: Checkbox never creates a second receipt for a used ``id`` and
+            rejects the request with ``receipt.already_exists`` instead (also while the first one is still being
+            processed, and also if the payload differs). Treat that error as "the receipt exists" and fetch it by
+            ``id`` with ``await client(GetReceipt(receipt_id=...))`` (``checkbox_sdk.methods.receipts.GetReceipt``).
+            Never retry with a new ``id`` — that issues a second fiscal receipt.
+
+            Assume an ``id`` is used up even if the receipt ends in ``ERROR``: issue that sale again with a new ``id``,
+            but only after the previous receipt is confirmed to be in ``ERROR``.
         """
         response = await self.client(
             receipts.CreateReceipt(receipt=receipt, **payload),
@@ -723,6 +777,9 @@ class AsyncReceipts(AsyncPaginationMixin):
         Returns:
             A dictionary containing the response of the created receipt.
 
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = await self.client(
             receipts.CreateReceiptOffline(receipt=receipt, **payload),
@@ -796,6 +853,9 @@ class AsyncReceipts(AsyncPaginationMixin):
         Returns:
             A dictionary containing the response of the created service currency receipt.
 
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = await self.client(receipts.ServiceCurrency(receipt, **payload), storage=storage)
         logger.info("Trying to create service currency receipt %s", response["id"])
@@ -829,6 +889,9 @@ class AsyncReceipts(AsyncPaginationMixin):
         Returns:
             A dictionary containing the response of the created currency exchange receipt.
 
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = await self.client(receipts.CurrencyExchange(receipt, **payload), storage=storage)
         logger.info("Trying to create currency exchange receipt %s", response["id"])
@@ -860,6 +923,9 @@ class AsyncReceipts(AsyncPaginationMixin):
         Returns:
             A dictionary containing the response of the created cash withdrawal receipt.
 
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = await self.client(receipts.CreateCashWithdrawalReceipt(receipt, **payload), storage=storage)
         logger.info("Trying to create cash withdrawal receipt %s", response["id"])
@@ -980,6 +1046,10 @@ class AsyncReceipts(AsyncPaginationMixin):
 
         Returns:
             The result of checking the status of the created receipt.
+
+        Notes:
+            Set your own receipt ``id`` in the payload and persist it before the call, so a receipt whose status
+            check timed out can be found again by that ``id`` instead of being re-created. See ``create_receipt``.
         """
         response = await self.client(
             receipts.CreateServiceReceipt(receipt=receipt, **payload),
