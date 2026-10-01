@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/).
 
 ## [Unreleased]
 
+### Added
+
+- `receipts.get_receipt(receipt_id)` (sync and async): fetches a single receipt by its ID (`GET /receipts/{id}`)
+  without polling, e.g. to recover a receipt after `create_receipt` timed out or was rejected with
+  `receipt.already_exists`.
+
 ### Changed
 
 - `wait_status` (and every method that polls through it: opening/closing shifts, receipt status checks, goods

@@ -39,6 +39,11 @@ def test_get_receipts(auth_token, license_key, client_email, client_phone):
 
             # sourcery skip: no-conditionals-in-tests
             if not visualization_tested and receipt["type"] == "SELL":
+                receipt_by_id = client.receipts.get_receipt(receipt["id"])
+                assert receipt_by_id["id"] == receipt["id"]
+
+                time.sleep(0.5)
+
                 visualization = client.receipts.get_receipt_visualization_html(receipt["id"])
                 assert visualization, "HTML visualization is empty"
 

@@ -100,8 +100,7 @@ class Receipts(PaginationMixin):
             created. Retry with the **same** ``id``: Checkbox never creates a second receipt for a used ``id`` and
             rejects the request with ``receipt.already_exists`` instead (also while the first one is still being
             processed, and also if the payload differs). Treat that error as "the receipt exists" and fetch it by
-            ``id`` with ``client(GetReceipt(receipt_id=...))`` (``checkbox_sdk.methods.receipts.GetReceipt``). Never
-            retry with a new ``id`` — that issues a second fiscal receipt.
+            ``id`` with ``get_receipt``. Never retry with a new ``id`` — that issues a second fiscal receipt.
 
             Assume an ``id`` is used up even if the receipt ends in ``ERROR``: issue that sale again with a new ``id``,
             but only after the previous receipt is confirmed to be in ``ERROR``.
@@ -321,6 +320,37 @@ class Receipts(PaginationMixin):
             return response
 
         return check_status(self.client, response, storage, relax, timeout)
+
+    def get_receipt(
+        self,
+        receipt_id: Union[str, UUID],
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict[str, Any]:
+        """
+        Retrieves a specific receipt based on its ID.
+
+        Args:
+            receipt_id: The ID of the receipt to retrieve.
+            storage: An optional session storage to use for the operation.
+
+        Returns:
+            A dictionary containing the details of the retrieved receipt.
+
+        Example:
+            .. code-block:: python
+
+                receipt = client.receipts.get_receipt(receipt_id="123e4567-e89b-12d3-a456-426614174000")
+                print(receipt["status"])
+
+        Notes:
+            - This method sends a single GET request and returns the receipt in its current state; it does not wait
+              for the receipt to reach ``DONE``. Use ``client.wait_status`` for polling.
+            - Raises ``CheckBoxAPIError`` if no receipt with this ID exists.
+        """
+        return self.client(
+            receipts.GetReceipt(receipt_id=receipt_id),
+            storage=storage,
+        )
 
     def get_receipts(  # pylint: disable=too-many-positional-arguments
         self,
@@ -712,8 +742,7 @@ class AsyncReceipts(AsyncPaginationMixin):
             created. Retry with the **same** ``id``: Checkbox never creates a second receipt for a used ``id`` and
             rejects the request with ``receipt.already_exists`` instead (also while the first one is still being
             processed, and also if the payload differs). Treat that error as "the receipt exists" and fetch it by
-            ``id`` with ``await client(GetReceipt(receipt_id=...))`` (``checkbox_sdk.methods.receipts.GetReceipt``).
-            Never retry with a new ``id`` — that issues a second fiscal receipt.
+            ``id`` with ``get_receipt``. Never retry with a new ``id`` — that issues a second fiscal receipt.
 
             Assume an ``id`` is used up even if the receipt ends in ``ERROR``: issue that sale again with a new ``id``,
             but only after the previous receipt is confirmed to be in ``ERROR``.
@@ -933,6 +962,37 @@ class AsyncReceipts(AsyncPaginationMixin):
             return response
 
         return await check_status_async(self.client, response, storage, relax, timeout)
+
+    async def get_receipt(
+        self,
+        receipt_id: Union[str, UUID],
+        storage: Optional[SessionStorage] = None,
+    ) -> Dict[str, Any]:
+        """
+        Asynchronously retrieves a specific receipt based on its ID.
+
+        Args:
+            receipt_id: The ID of the receipt to retrieve.
+            storage: An optional session storage to use for the operation.
+
+        Returns:
+            A dictionary containing the details of the retrieved receipt.
+
+        Example:
+            .. code-block:: python
+
+                receipt = await client.receipts.get_receipt(receipt_id="123e4567-e89b-12d3-a456-426614174000")
+                print(receipt["status"])
+
+        Notes:
+            - This method sends a single GET request and returns the receipt in its current state; it does not wait
+              for the receipt to reach ``DONE``. Use ``client.wait_status`` for polling.
+            - Raises ``CheckBoxAPIError`` if no receipt with this ID exists.
+        """
+        return await self.client(
+            receipts.GetReceipt(receipt_id=receipt_id),
+            storage=storage,
+        )
 
     async def get_receipts(  # pylint: disable=too-many-positional-arguments
         self,
